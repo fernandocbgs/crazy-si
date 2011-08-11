@@ -14,7 +14,8 @@ public class main {
 		inicializaTabuleiro();
 		print();
 		
-		numeroColisoes(3);
+		AnaliseColisoes();
+		printColisoes();
 	}
 	
 	private static void inicializaTabuleiro(){
@@ -23,7 +24,11 @@ public class main {
 				_tabuleiro[i][j] = 0;
 			}
 		}
-		int rainhas = _numeroRainhas;
+		
+		TabuleiroTeste(); return;
+		
+		//comentado para testes
+		/*int rainhas = _numeroRainhas;
 		int posX, posY;
 		while(rainhas > 0){
 			//sorteia a posição inicial
@@ -33,7 +38,29 @@ public class main {
 				_tabuleiro[posX][posY] = 1; //rainha
 				rainhas--;
 			}
-		}
+		}*/
+	}
+	
+	//cria um tabuleiro para análise inicial
+	private static void TabuleiroTeste(){
+		/*
+			00010000
+			00000000
+			00000000
+			01011001
+			00100010
+			00100000
+			00000000
+			00000000
+		 */
+		_tabuleiro[0][3] = 1;
+		_tabuleiro[3][1] = 1;
+		_tabuleiro[3][3] = 1;
+		_tabuleiro[3][4] = 1;
+		_tabuleiro[3][7] = 1;
+		_tabuleiro[4][2] = 1;
+		_tabuleiro[4][6] = 1;
+		_tabuleiro[5][2] = 1;
 	}
 	
 	
@@ -48,6 +75,18 @@ public class main {
 		return rt+"\n";
 	}
 	private static void print(){System.out.print(ToString());}
+	private static void printColisoes(){
+		for (Colisoes c : _colisoes){
+			System.out.println("Colisao: " + c.toString() + ", linha "+c.p1.x+": " + getLinha(c.p1.x) + ", linha "+c.p2.x+": " + getLinha(c.p2.x));
+		}
+	}
+	private static String getLinha(int linha){
+		String rt = "";
+		for (int j = 0; j < _tabuleiro[1].length; j++) { //coluna
+			rt += _tabuleiro[linha][j];
+		}
+		return rt;
+	}
 	
 	//randomiza um int entre um valor máximo e mínimo
 	private static int randomizar(int min, int max){
@@ -58,15 +97,23 @@ public class main {
 	}
 	
 	
+	private static void AnaliseColisoes(){
+		for (int i = 0; i < _tabuleiro[0].length; i++) { //linhas
+			numeroColisoes(i);
+		}
+	} 
+	
 	private static int numeroColisoes(int linha/*cromossomo*/){
 		List<Point> rainhas = rainhasLinha(linha);
 		for (Point r : rainhas){
-			System.out.println("linha: " + linha + " - " + r.toString());
+			//System.out.println("linha: " + linha + " - Rainha: " + r.toString());
 			verificaColisoes(r);
 		}
-		return 0;
+
+		return _colisoes.size();
 	}
 	
+	//retorna as rainhas de uma linha
 	private static List<Point> rainhasLinha(int linha){
 		ArrayList<Point> rt = new ArrayList<Point>();
 		for (int j = 0; j < _tabuleiro[1].length; j++) {
@@ -80,23 +127,112 @@ public class main {
 	 * */
 	private static void verificaColisoes(Point rainha){
 		//verifica coluna
-		for (int x = 0; x < _tabuleiro[0].length; x++){ //up to down
-			if (x==rainha.x) continue; //mesma posição da rainha
+		//parte de onde esta a rainha e sobe
+		int x = rainha.x-1;
+		int h = _tabuleiro[1].length;
+		int l = _tabuleiro[0].length;
+		while (x >= 0) {
+			//System.out.println("verificando1: ["+x+","+rainha.y+"]");
 			if (_tabuleiro[x][rainha.y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+rainha.y+"]");
 				adicionarColisao(rainha, x, rainha.y);
+				break;
 			}
+			x--; //sobe
 		}
+		x = rainha.x+1; //parte de onde esta a rainha e desce
+		while (x < h) {
+			//System.out.println("verificando2: ["+x+","+rainha.y+"]");
+			if (_tabuleiro[x][rainha.y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+rainha.y+"]");
+				adicionarColisao(rainha, x, rainha.y);
+				break;
+			}
+			x++; //desce
+		}
+		
 		//verifica linha
-		for (int y = 0; y < _tabuleiro[1].length; y++){ //up to down
-			if (y==rainha.y) continue; //mesma posição da rainha
+		//parte onde esta a rainha e esquerda
+		int y = rainha.y-1;
+		while (y >= 0){
+			//System.out.println("verificando1: ["+rainha.x+","+y+"]");
 			if (_tabuleiro[rainha.x][y] == 1) { //colisão
+				//System.out.println("colisao ["+rainha.x+","+y+"]");
 				adicionarColisao(rainha, rainha.x, y);
+				break;
 			}
+			y--; //esquerda
 		}
+		//parte onde esta a rainha e direita
+		y = rainha.y+1;
+		while (y < l){
+			//System.out.println("verificando2: ["+rainha.x+","+y+"]");
+			if (_tabuleiro[rainha.x][y] == 1) { //colisão
+				//System.out.println("colisao ["+rainha.x+","+y+"]");
+				adicionarColisao(rainha, rainha.x, y);
+				break;
+			}
+			y++; //direita
+		}
+		//---------------------------------------------------------
 		//verifica diagonal esquerda
-		int x = rainha.x, y = rainha.y;
+		//parte onde esta a rainha e desce + esquerda
+		x = rainha.x+1;
+		y = rainha.y-1;
 		
-		
+		//x--; //sobe
+		//x++; //desce
+		//y--; //esquerda
+		//y++; //direita
+		while (x < h && y >= 0) { //condições de saída
+			//System.out.println("verificando1: ["+x+","+y+"]");
+			if (_tabuleiro[x][y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+y+"]");
+				adicionarColisao(rainha, x, y);
+				break;
+			}
+			x++; //desce
+			y--; //esquerda
+		}
+		//parte onde esta a rainha e desce + direita
+		x = rainha.x+1;
+		y = rainha.y+1;
+		while (x < h && y < l){
+			//System.out.println("verificando2: ["+x+","+y+"]");
+			if (_tabuleiro[x][y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+y+"]");
+				adicionarColisao(rainha, x, y);
+				break;
+			}
+			x++; //desce
+			y++; //direita
+		}
+		//parte onde esta a rainha e sobe + direita
+		x = rainha.x-1;
+		y = rainha.y+1;
+		while (x >= 0 && y < l){
+			//System.out.println("verificando1: ["+x+","+y+"]");
+			if (_tabuleiro[x][y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+y+"]");
+				adicionarColisao(rainha, x, y);
+				break;
+			}
+			x--; //sobe
+			y++; //direita
+		}
+		//parte onde esta a rainha e sobe + esquerda
+		x = rainha.x-1;
+		y = rainha.y-1;
+		while (x >= 0 && y >= 0){
+			//System.out.println("verificando2: ["+x+","+y+"]");
+			if (_tabuleiro[x][y] == 1) { //colisão
+				//System.out.println("colisao ["+x+","+y+"]");
+				adicionarColisao(rainha, x, y);
+				break;
+			}
+			x--; //sobe
+			y--; //esquerda
+		}
 	}
 	private static void adicionarColisao(Point p, int x2, int y2){
 		adicionarColisao(p.x, p.y, x2, y2);
@@ -105,16 +241,14 @@ public class main {
 		Colisoes col = new Colisoes(
 				new Point(x1, y1), 
 				new Point(x2, y2));
-		if (ColisaoNaoAdicionada(col)) _colisoes.add(col); //add a colisão
+		if (!ColisaoAdicionada(col)) _colisoes.add(col); //add a colisão
 	}
-	
-	private static boolean ColisaoNaoAdicionada(Colisoes col){
+	private static boolean ColisaoAdicionada(Colisoes col){
 		for (Colisoes c : _colisoes){
 			if (c.equals(col)){return true;} 
 		}
-		return true;
+		return false;
 	}
-	
 }
 
 class Colisoes {
@@ -124,7 +258,11 @@ class Colisoes {
 	public Colisoes(Point ponto1, Point ponto2){this.p1 = ponto1; this.p2 = ponto2;}
 	
 	public boolean equals(Point ponto1, Point ponto2){
-		return ((verificaPonto(this.p1, ponto1) && verificaPonto(this.p2, ponto2)) || (verificaPonto(this.p2, ponto1) && verificaPonto(this.p1,ponto2)));
+		return 
+			(verificaPonto(this.p1, ponto1) && 
+			verificaPonto(this.p2, ponto2)) || 
+			(verificaPonto(this.p2, ponto1) && 
+			 verificaPonto(this.p1,ponto2));
 	}
 	public boolean equals(Colisoes c){
 		return equals(c.p1, c.p2);
@@ -132,9 +270,14 @@ class Colisoes {
 	
 	private boolean verificaPonto(Point pontoA, Point pontoB){
 		if (
-				(pontoA.getX() == pontoB.getX() || pontoA.getY() == pontoB.getY()) &&
-				(pontoA.getY() == pontoB.getX() || pontoA.getX() == pontoB.getY())
+				(pontoA.getX() == pontoB.getX() && pontoA.getY() == pontoB.getY()) 
+				||
+				(pontoA.getY() == pontoB.getX() && pontoA.getX() == pontoB.getY())
 			) return true;
 		return (pontoA.equals(pontoB));
 	}
+	
+	public String toString(){
+		return "["+p1.x+","+p1.y+"]["+p2.x+","+p2.y+"]";
+	} 
 }
