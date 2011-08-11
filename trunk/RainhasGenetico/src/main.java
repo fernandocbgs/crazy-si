@@ -41,7 +41,7 @@ public class main {
 		}*/
 	}
 	
-	//cria um tabuleiro para análise inicial
+	//cria um tabuleiro para análise inicial - teste
 	private static void TabuleiroTeste(){
 		/*
 			00010000
@@ -103,14 +103,11 @@ public class main {
 		}
 	} 
 	
-	private static int numeroColisoes(int linha/*cromossomo*/){
-		List<Point> rainhas = rainhasLinha(linha);
-		for (Point r : rainhas){
+	private static void numeroColisoes(int linha/*cromossomo*/){
+		for (Point r : rainhasLinha(linha)){
 			//System.out.println("linha: " + linha + " - Rainha: " + r.toString());
 			verificaColisoes(r);
 		}
-
-		return _colisoes.size();
 	}
 	
 	//retorna as rainhas de uma linha
@@ -249,6 +246,25 @@ public class main {
 		}
 		return false;
 	}
+	
+	//CrossOver
+	private static LinhaCrossOver CrossOver(LinhaCrossOver linhas){
+		int pontoCrossOver = randomizar(1, _tabuleiro[0].length);
+		return CrossOver(pontoCrossOver, linhas);
+	}
+	private static LinhaCrossOver CrossOver(int pontoCrossOver, LinhaCrossOver linhas){
+		if (pontoCrossOver <= 0) {pontoCrossOver=1;}
+		
+		return null;
+	}
+}
+
+class LinhaCrossOver{
+	Linha linha1, linha2;
+}
+
+class Linha { //lista de pontos com o mesmo x
+	List<Point> linha;
 }
 
 class Colisoes {
