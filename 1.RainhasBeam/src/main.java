@@ -15,7 +15,7 @@ public class main {
 		}
 		
 		e=null;*/
-		EstadosFilhos es = new EstadosFilhos();
+/*		EstadosFilhos es = new EstadosFilhos();
 		es.CriarListaFilhos();
 		
 		for (Estado e : es.ListaEstadosFilhos) {
@@ -27,7 +27,13 @@ public class main {
 		Estado melhorEstado = es.MelhorEscolha();
 		melhorEstado.print();
 		
-		es=null;
+		es=null;*/
+		
+		AnaliseBeam anB = new AnaliseBeam(500);
+		Estado melhorEncontrado = anB.Busca();
+		melhorEncontrado.print();
+		anB = null;
+		
 	}
 
 }

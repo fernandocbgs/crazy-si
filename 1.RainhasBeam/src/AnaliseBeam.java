@@ -24,11 +24,20 @@ public class AnaliseBeam {
 			}
 			
 			es.CriarListaFilhos();
-			rt = es.MelhorEscolha();
+			Estado ePes = es.MelhorEscolha();
+			if (rt == null) {
+				rt = ePes;				
+			} else {
+				if (ePes.ColisoesEstado < rt.ColisoesEstado) {
+					rt = ePes;
+				}
+			}
+			
+			//rt.print();
 
 			_beam.add(rt); //lista beam
+			MaxProfundidade--;
 		}
-
 		
 		return rt;
 	}
