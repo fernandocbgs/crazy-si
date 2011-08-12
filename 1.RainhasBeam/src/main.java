@@ -1,19 +1,31 @@
+import java.util.List;
 
 public class main {
 
 	public static void main(String[] args) {
-		Estado e = new Estado();
+/*		Estado e = new Estado();
+		e.CalculoColisoesEstado();
 		e.print();
-
-		System.out.println(getDecimal("10000001001010100"));
-		System.out.println(getBinario(66132));
-	}
+		
+		List<String> rainhas = e.getRainhas();
+		for (String r : rainhas){
+			System.out.println(r);
+		}
 	
-	private static int getDecimal(String binario){
-		return Integer.parseInt(binario, 2);
-	}
-	private static String getBinario(int decimal){
-		return Integer.toString(decimal, 2);
+		e=null;*/
+		EstadosFilhos es = new EstadosFilhos();
+		es.CriarListaFilhos();
+		
+		for (Estado e : es.ListaEstadosFilhos) {
+			e.print();
+		}
+		
+		//MelhorEscolha
+		System.out.println("----Escolha do melhor estado: ---");
+		Estado melhorEstado = es.MelhorEscolha();
+		melhorEstado.print();
+		
+		es=null;
 	}
 
 }

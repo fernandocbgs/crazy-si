@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 /**
  * Define um estado
@@ -21,7 +23,6 @@ public class Estado {
 	
 	public Estado(){
 		estado = gerarEstadoAleatorio();
-		CalculoColisoesEstado();
 	}
 	/**
 	 * Retorna um valor aleatório de cromossomo para ser criado
@@ -42,22 +43,73 @@ public class Estado {
 		return estadoAleatorio;
 	}
 	
-	private void CalculoColisoesEstado(){
+	public void CalculoColisoesEstado(){
 		ColisoesEstado = 0;
-		String rainha = "", x, y;
+		String rainha = "";
 		for(int i = 0; i < 48; i++) {
 			if (i > 0 && i%6==0) {
-				x = rainha.substring(0, 3);
-				y = rainha.substring(3, 6);
 				ColisoesEstado += colisoesRainha(rainha);
 				rainha="";
 			}
 			rainha+=(estado.get(i) ? "1" : "0");
 		}
 		//last queen
-		x = rainha.substring(0, 3);
-		y = rainha.substring(3, 6);
 		ColisoesEstado += colisoesRainha(rainha);
+	}
+	
+	public void AtualizaRainha(String rainhaAntiga, String rainhaNova){
+		if (rainhaAntiga.equals(rainhaNova)) {return;}
+		String rainha = "";
+		for(int i = 0; i < 48; i++) {
+			if (i > 0 && i%6==0) {
+				if (rainha.equals(rainhaAntiga)){ //substituir
+					String[] pos = rainhaNova.split("");  //o split não pega a 1ª posição
+					int c = i-6;
+					for (int j = 1; j < pos.length; j++){
+						estado.set(c+j-1, c+j, pos[j].equals("1") );
+					}
+					return;
+				}
+				
+				//rainha
+				rainha="";
+			}
+			rainha+=(estado.get(i) ? "1" : "0");
+		}
+		//last queen
+		if (rainha.equals(rainhaAntiga)){ //substituir
+			String[] pos = rainhaNova.split("");  //o split não pega a 1ª posição
+			int c = 47-6;
+			for (int j = 1; j < pos.length; j++){
+				estado.set(c+j-1, c+j, pos[j].equals("1") );
+			}
+		}
+	}
+	
+	/**
+	 * seta a população
+	 * */
+	public void setQueens(String queens){
+		String[] pos = queens.split(""); //o split não pega a 1ª posição
+		for (int j = 1; j < 48; j++){
+			estado.set(j-1, pos[j].equals("1"));
+		}
+	}
+	
+	//retorna uma lista de Rainhas
+	public List<String> getRainhas(){
+		List<String> rt = new ArrayList<String>();
+		String rainha = "";
+		for(int i = 0; i < 48; i++) {
+			if (i > 0 && i%6==0) {
+				rt.add(rainha);
+				rainha="";
+			}
+			rainha+=(estado.get(i) ? "1" : "0");
+		}
+		//last queen
+		rt.add(rainha);
+		return rt;
 	}
 	
 	private int colisoesRainha(String rainha){
@@ -97,6 +149,7 @@ public class Estado {
 	}
 	
 	public void print(){
+		if (ColisoesEstado == 0){CalculoColisoesEstado();}
 		String rainha = "", x, y;
 		for(int i = 0; i < 48; i++) {
 			if (i > 0 && i%6==0) {
