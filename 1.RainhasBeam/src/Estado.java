@@ -148,6 +148,35 @@ public class Estado {
 		return false;
 	}
 	
+	public Estado copiar(){
+		return copiar(this);
+	}
+	
+	//como java referencia objetos, é necessário se copiar item à item
+	public Estado copiar(Estado original){
+		Estado rt = new Estado();
+		String estado = "";
+		List<String> rainhas = original.getRainhas();
+		for (String r:rainhas){
+			estado += r;
+		}
+		rt.setQueens(estado);
+		return rt;
+	}
+	
+	public boolean equals(Estado e){
+		//compara as rainhas
+		boolean achou = false;
+		for (String r : getRainhas()){
+			achou = false;
+			for (String rComp : e.getRainhas()){
+				if (r.equals(rComp)) {achou = true; continue;}
+			}
+			if (!achou) {return false;} //já é diferente não achou uma rainha
+		}
+		return true;
+	}
+	
 	public void print(){
 		if (ColisoesEstado == 0){CalculoColisoesEstado();}
 		String rainha = "", x, y;

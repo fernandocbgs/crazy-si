@@ -3,15 +3,17 @@ import java.util.List;
 public class main {
 
 	public static void main(String[] args) {
-/*		Estado e = new Estado();
+		/*Estado e = new Estado();
 		e.CalculoColisoesEstado();
 		e.print();
 		
+		String rTeste = "";
 		List<String> rainhas = e.getRainhas();
 		for (String r : rainhas){
+			rTeste = r;
 			System.out.println(r);
 		}
-	
+		
 		e=null;*/
 		EstadosFilhos es = new EstadosFilhos();
 		es.CriarListaFilhos();

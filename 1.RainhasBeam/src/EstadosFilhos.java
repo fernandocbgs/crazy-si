@@ -35,22 +35,19 @@ public class EstadosFilhos {
 	}
 	
 	private void AddListaEstado(String movido, String rainha){
-		Estado estadoTemporario = copiar(this._estado);
+		Estado estadoTemporario = this._estado.copiar();
 		if (!movido.equals(rainha)) { //moveu
 			estadoTemporario.AtualizaRainha(rainha, movido);
-			ListaEstadosFilhos.add(estadoTemporario); //novo sub estado add
+			if (!EstadoAdicionado(estadoTemporario))
+				ListaEstadosFilhos.add(estadoTemporario); //novo sub estado add
 		}
 	}
-	//como java referencia objetos, é necessário se copiar item à item
-	private Estado copiar(Estado original){
-		Estado rt = new Estado();
-		String estado = "";
-		List<String> rainhas = original.getRainhas();
-		for (String r:rainhas){
-			estado += r;
+	
+	private boolean EstadoAdicionado(Estado eAdd){
+		for (Estado e : ListaEstadosFilhos) {
+			if (e.equals(eAdd)) return true;
 		}
-		rt.setQueens(estado);
-		return rt;
+		return false;
 	}
 	
 	public Estado MelhorEscolha(){
