@@ -1,19 +1,19 @@
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class AlgoritmoGenetico {
 
 	protected int totalGenesDoCromossomo = 48;
-	protected int totalCromossomos; // número de cromossomos
+	protected int totalCromossomos; // nÃºmero de cromossomos
 	protected List<Cromossomo> listaDeCromossomos;
 	private float taxaCrossover;
 	private float taxaMutacao;
 	private int[] roleta;
 	private int tamanhoRoleta;
 	private int totalGeracoes;
+	private int totalIndividuosCriadosGeracao = 0;
 
 	public AlgoritmoGenetico(int total_cromossomos,float taxa_crossover, float taxa_mutacao, int totalGeracoes) {
 		taxaCrossover = taxa_crossover;
@@ -23,7 +23,7 @@ public class AlgoritmoGenetico {
 		totalCromossomos = total_cromossomos;
 		
 		
-		//inicia a população
+		//inicia a populaÃ§Ã£o
 		
 		for (int i = 0; i < total_cromossomos; i++) {
 			listaDeCromossomos.add(new Cromossomo());
@@ -36,7 +36,7 @@ public class AlgoritmoGenetico {
 		for (int i = 0; i < totalGenesDoCromossomo; i++) {
 			tamanhoRoleta += i + 1;
 		}
-
+		
 		roleta = new int[tamanhoRoleta];
 		int total_tentativas = totalGenesDoCromossomo;
 		int index = 0;
@@ -49,22 +49,39 @@ public class AlgoritmoGenetico {
 	}
 
 	/**
-	 * Método principal de execucão do algoritmo genético Nele são executadas as
-	 * acões ou jogadas
+	 * MÃ©todo principal de execucÃ£o do algoritmo genÃ©tico Nele sÃ£o executadas as
+	 * acÃµes ou jogadas
 	 */
 	public void executar() {
 		for(int i = 0; i <= totalGeracoes; i++)
 		{
+			totalIndividuosCriadosGeracao = 0;
 			calcularFitness();
+			//continua o algoritmo para saber quais são mais aptos
 			ordenar();
+			//resultado
+			System.out.println("Geração: " + i + " Cromossomo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
+			System.out.println("Geração: " + i + " Cromossomo menos apto: " + listaDeCromossomos.get(0).getFitness());
 			crossovers();
 			mutacoes();
-			//fiz esse método porque alguns cromossomos ficam clonados
-			//ainda não reimplementei, depois faço isso
+			//fiz esse mÃ©todo porque alguns cromossomos ficam clonados
+			//ainda nÃ£o reimplementei, depois faÃ§o isso
 			removerDuplicacoes();
-			//imprime dados da gera��o
-			System.out.println("Gera��o: " + i + " Indiv�duo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
 		}
+	}
+	
+	public void removerDuplicacoes() {
+		//pega o total de indivÃ­duos criados via mutação / crossover
+		//esse total é fornecido como porcentagem em função do valor
+		System.out.println("Total de indivíduos criados na geração: " + totalIndividuosCriadosGeracao);		
+		//remove o mesmo tanto da lista
+		for(int i = 0; i < totalIndividuosCriadosGeracao; i++)
+		{
+			listaDeCromossomos.remove(i);
+		}
+		System.out.println("Número de indivíduos " + listaDeCromossomos.size());
+		//pronto! Agora tiramos os menos aptos e colocamos filhos na geração 
+		
 	}
 	
 	public void calcularFitness()
@@ -93,8 +110,8 @@ public class AlgoritmoGenetico {
 			c1 = roleta[c1];
 			c2 = roleta[c2];
 			if (c1 != c2) {
-				// Trocando uma acão qualquer de c1 por outra de c2
-				//ops! C1 e c2 são os índices dos cromossomos
+				// Trocando uma acÃ£o qualquer de c1 por outra de c2
+				//ops! C1 e c2 sÃ£o os Ã­ndices dos cromossomos
 				Cromossomo cr1 = listaDeCromossomos.get(c1);
 				Cromossomo cr2 = listaDeCromossomos.get(c2);
 				//faz o crossover
@@ -104,14 +121,22 @@ public class AlgoritmoGenetico {
 	}
 	
 	public void crossOver(Cromossomo cr1, Cromossomo cr2){
-		//sorteia uma posi��o
+		Cromossomo filho1 = cr1.clone();
+		Cromossomo filho2= cr2.clone();
+		//sorteia uma posiï¿½ï¿½o
 		int posicao_crossover = sorteiaPosCrossover();
-		BitSet bitsCr1 = cr1.getBitsMutacao(posicao_crossover);
-		BitSet bitsCr2 = cr2.getBitsMutacao(posicao_crossover);
+		BitSet bitsCr1 = filho1.getBitsMutacao(posicao_crossover);
+		BitSet bitsCr2 = filho2.getBitsMutacao(posicao_crossover);
 		//faz o crossover
-		cr1.trocarBits(posicao_crossover, bitsCr2);
-		cr2.trocarBits(posicao_crossover, bitsCr1);
-		//e fez
+		//o crossover nÃ£o elimina os mais aptos, apenas os substitui
+		//temos 2 filhos
+		filho1.trocarBits(posicao_crossover, bitsCr2);
+		filho2.trocarBits(posicao_crossover, bitsCr1);
+		//e agora adicionamos na lista
+		listaDeCromossomos.add(filho1);
+		listaDeCromossomos.add(filho2);
+		//agora incrementamos o valor da variável
+		totalIndividuosCriadosGeracao+=2;
 	}
 
 	public void mutacoes() {
@@ -121,18 +146,10 @@ public class AlgoritmoGenetico {
 		}
 	}
 
-	public void removerDuplicacoes() {
-		for (int i = totalCromossomos - 1; i > 3; i--) {
-			for (int j = 0; j < i; j++) {
-				while (listaDeCromossomos.get(i).equals(listaDeCromossomos.get(j))) {
-					listaDeCromossomos.set(j, new Cromossomo());
-				}
-			}
-		}
-	}
+
 	
 	public int sorteiaPosCrossover(){
-		//necess�rio sortear um n�mero
+		//necessï¿½rio sortear um nï¿½mero
 		//entre 0, 6, 12, 18, 24
 		int numeroRainha = (int)(6.0*(Math.random()))+1;
 		//multiplicando por 6

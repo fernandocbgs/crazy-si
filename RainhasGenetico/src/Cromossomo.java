@@ -13,7 +13,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	private double fitness;
 	
 	/**
-	 * Um cromossomo representa a posição de todas as rainhas no tabuleiro
+	 * Um cromossomo representa a posiï¿½ï¿½o de todas as rainhas no tabuleiro
 	 * Assim, como o tabuleiro Ã© bidimensional temos para cada rainha 3 bits para uma posiÃ§Ã£o e 3 para outra
 	 * ou 6 bits por rainha
 	 * como temos 8 rainhas = 48 bits
@@ -23,6 +23,11 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	public Cromossomo()
 	{
 		valorCromossomo = gerarCromossomoAleatorio();
+	}
+	
+	public Cromossomo(BitSet valorCromossomo)
+	{
+		this.valorCromossomo = valorCromossomo;
 	}
 	
 	
@@ -53,7 +58,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	 */
 	public void calcularFitness(){
 		double colisoes = 0.0;
-		//para cada rainha, verifica se ela está na mesma linha
+		//para cada rainha, verifica se ela estï¿½ na mesma linha
 		//compara o x com o y
 		for(int i = 0; i < 7; i++)
 		{
@@ -107,7 +112,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	}
 	
 	/**
-	 * Retorna se a rainha está na mesma linha que a outra
+	 * Retorna se a rainha estï¿½ na mesma linha que a outra
 	 * @return
 	 */
 	public boolean naMesmaCoordenada(int colRainha1, int colRainha2)
@@ -120,14 +125,14 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	}
 	
 	/**
-	 * Retorna se a rainha está na mesma diagonal que a outra
+	 * Retorna se a rainha estï¿½ na mesma diagonal que a outra
 	 * @return
 	 */
 	public boolean naMesmaDiagonal(int posXRainha1, int posYRainha1, int posXRainha2, int posYRainha2)
 	{
 		int distanciaX = Math.abs(posXRainha1 - posXRainha2);
 		int distanciaY = Math.abs(posYRainha1 - posYRainha2);
-		if(distanciaX == distanciaY)
+		if(distanciaX != distanciaY)
 		{
 			return true;
 		}
@@ -145,9 +150,9 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	private BitSet gerarCromossomoAleatorio()
 	{
 		BitSet cromossomoAleatorio = new BitSet(48);
-		//inicia o cromossomo setando alguns valores de forma aleatória
+		//inicia o cromossomo setando alguns valores de forma aleatï¿½ria
 		for(int i = 0; i < 8; i++){		
-			//a coluna é setada, a linha não
+			//a coluna ï¿½ setada, a linha nï¿½o
 			String coluna = getBinario(i, 3);
 			for(int k = 0; k < 3; k++){
 				if((coluna.charAt(k)) == '1'){
@@ -167,7 +172,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 				}
 			}
 			
-			//imprime a posição da rainha
+			//imprime a posiï¿½ï¿½o da rainha
 //			for(int l = 0; l < 6; l++)
 //			{
 //				System.out.print(cromossomoAleatorio.get(i*6+l) ? "1" : "0");
@@ -228,5 +233,10 @@ public class Cromossomo implements Comparable<Cromossomo>{
 		{
 			valorCromossomo.set(i+inicio, bits.get(i));
 		}
+	}
+	
+	public Cromossomo clone()
+	{
+		return new Cromossomo(this.valorCromossomo);
 	}
 }
