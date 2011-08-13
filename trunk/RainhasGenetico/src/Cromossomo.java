@@ -72,34 +72,34 @@ public class Cromossomo implements Comparable{
 		BitSet cromossomoAleatorio = new BitSet(48);
 		//inicia o cromossomo setando alguns valores de forma aleatória
 		for(int i = 0; i < 8; i++)
-		{
-			for(int j = 3; j < 6; j++)
-			{
-				//sorteia um valor de 0 a 1, se for maior que 0,5 seta o bit do cromossomo
-				//50% de chance de ser 0 e 50% de ser 1
-				double valorAleatorio = Math.random();
-				if(valorAleatorio > 0.5){
-					cromossomoAleatorio.set(i);
-				}
-			}
-			
+		{			
 			//a coluna é setada, a linha não
 			String coluna = getBinario(i, 3);
 			for(int k = 0; k < 3; k++)
 			{
 				if((coluna.charAt(k)) == '1')
 				{
-					System.out.println("Setou o bit");
-					valorCromossomo.set(i+k, true);
+					cromossomoAleatorio.set(i+k, true);
 				}
 				else{
-					valorCromossomo.set(i+k, false);
+					cromossomoAleatorio.set(i+k, false);
 				}
 			}
 			
+			for(int j = 3; j < 6; j++)
+			{
+				//sorteia um valor de 0 a 1, se for maior que 0,5 seta o bit do cromossomo
+				//50% de chance de ser 0 e 50% de ser 1
+				double valorAleatorio = Math.random();
+				if(valorAleatorio > 0.5){
+					cromossomoAleatorio.set(i+j);
+				}
+			}
+			
+			//imprime a posição da rainha
 			for(int l = 0; l < 6; l++)
 			{
-				System.out.print(valorCromossomo.get(i+l) ? "0" : "1");
+				System.out.print(cromossomoAleatorio.get(i+l) ? "1" : "0");
 			}
 			System.out.println("");
 			
