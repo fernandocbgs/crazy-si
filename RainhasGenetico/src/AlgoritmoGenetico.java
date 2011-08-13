@@ -87,6 +87,10 @@ public class AlgoritmoGenetico {
 			if (c1 != c2) {
 				// Trocando uma acão qualquer de c1 por outra de c2
 				//ops! C1 e c2 são os índices dos cromossomos
+				Cromossomo cr1 = listaDeCromossomos.get(c1);
+				Cromossomo cr2 = listaDeCromossomos.get(c2);
+				//faz o crossover
+				
 			}
 		}
 	}
