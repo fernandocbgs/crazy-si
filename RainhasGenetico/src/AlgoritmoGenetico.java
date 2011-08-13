@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -90,9 +91,20 @@ public class AlgoritmoGenetico {
 				Cromossomo cr1 = listaDeCromossomos.get(c1);
 				Cromossomo cr2 = listaDeCromossomos.get(c2);
 				//faz o crossover
-				
+				crossOver(cr1, cr2);
 			}
 		}
+	}
+	
+	public void crossOver(Cromossomo cr1, Cromossomo cr2){
+		//sorteia uma posição
+		int posicao_crossover = sorteiaPosCrossover();
+		BitSet bitsCr1 = cr1.getBitsMutacao(posicao_crossover);
+		BitSet bitsCr2 = cr2.getBitsMutacao(posicao_crossover);
+		//faz o crossover
+		cr1.trocarBits(posicao_crossover, bitsCr2);
+		cr2.trocarBits(posicao_crossover, bitsCr1);
+		//e fez
 	}
 
 	public void mutacoes() {
@@ -110,5 +122,13 @@ public class AlgoritmoGenetico {
 				}
 			}
 		}
+	}
+	
+	public int sorteiaPosCrossover(){
+		//necessário sortear um número
+		//entre 0, 6, 12, 18, 24
+		int numeroRainha = (int)(6.0*(Math.random()))+1;
+		//multiplicando por 6
+		return numeroRainha*6;
 	}
 }
