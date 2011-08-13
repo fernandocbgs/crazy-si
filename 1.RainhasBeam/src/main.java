@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class main {
 
 	public static void main(String[] args) {
@@ -29,7 +27,7 @@ public class main {
 		
 		es=null;*/
 		
-		AnaliseBeam anB = new AnaliseBeam(500);
+		AnaliseBeam anB = new AnaliseBeam(50);
 		Estado melhorEncontrado = anB.Busca();
 		melhorEncontrado.print();
 		anB = null;

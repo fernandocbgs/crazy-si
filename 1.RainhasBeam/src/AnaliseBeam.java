@@ -26,13 +26,16 @@ public class AnaliseBeam {
 			es.CriarListaFilhos();
 			Estado ePes = es.MelhorEscolha();
 			if (rt == null) {
-				rt = ePes;				
+				rt = ePes;
 			} else {
-				if (ePes.ColisoesEstado < rt.ColisoesEstado) {
-					rt = ePes;
-				}
+				//if (podeAnalisar(ePes)) {
+					if (ePes.ColisoesEstado < rt.ColisoesEstado) {
+						//rt.copiar(ePes);
+						rt = ePes;
+					}
+				//}
 			}
-			
+
 			//rt.print();
 
 			_beam.add(rt); //lista beam
@@ -41,5 +44,12 @@ public class AnaliseBeam {
 		
 		return rt;
 	}
-	
+	/*
+	private boolean podeAnalisar(Estado e){
+		for (Estado es : _beam) {
+			if (es.equals(e)) {return false;}
+		}
+		return true;
+	}
+	*/
 }
