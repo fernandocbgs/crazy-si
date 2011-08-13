@@ -20,6 +20,7 @@ public class AlgoritmoGenetico {
 		taxaMutacao = taxa_mutacao;
 		listaDeCromossomos = new ArrayList<Cromossomo>(total_cromossomos);
 		this.totalGeracoes = totalGeracoes;
+		totalCromossomos = total_cromossomos;
 		
 		
 		//inicia a popula√ß√£o
@@ -61,6 +62,8 @@ public class AlgoritmoGenetico {
 			//fiz esse m√©todo porque alguns cromossomos ficam clonados
 			//ainda n√£o reimplementei, depois fa√ßo isso
 			removerDuplicacoes();
+			//imprime dados da geraÁ„o
+			System.out.println("GeraÁ„o: " + i + " IndivÌduo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
 		}
 	}
 	
@@ -74,6 +77,10 @@ public class AlgoritmoGenetico {
 
 	public void ordenar() {
 		Collections.sort(listaDeCromossomos);
+//		for(int i = 0; i < totalCromossomos; i++)
+//		{
+//			System.out.println(listaDeCromossomos.get(i).getFitness());
+//		}
 	}
 
 	public void crossovers() {
