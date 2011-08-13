@@ -70,18 +70,58 @@ public class Cromossomo implements Comparable{
 	private BitSet gerarCromossomoAleatorio()
 	{
 		BitSet cromossomoAleatorio = new BitSet(48);
-		//inicia o cromossomo setando alguns valores de forma aleat√≥ria
-		for(int i = 0; i < 64; i++)
+		//inicia o cromossomo setando alguns valores de forma aleatÛria
+		for(int i = 0; i < 8; i++)
 		{
-			//sorteia um valor de 0 a 1, se for maior que 0,5 seta o bit do cromossomo
-			//50% de chance de ser 0 e 50% de ser 1
-			double valorAleatorio = Math.random();
-			if(valorAleatorio > 0.5){
-				cromossomoAleatorio.set(i);
+			for(int j = 3; j < 6; j++)
+			{
+				//sorteia um valor de 0 a 1, se for maior que 0,5 seta o bit do cromossomo
+				//50% de chance de ser 0 e 50% de ser 1
+				double valorAleatorio = Math.random();
+				if(valorAleatorio > 0.5){
+					cromossomoAleatorio.set(i);
+				}
 			}
+			
+			//a coluna È setada, a linha n„o
+			String coluna = getBinario(i, 3);
+			for(int k = 0; k < 3; k++)
+			{
+				if((coluna.charAt(k)) == '1')
+				{
+					System.out.println("Setou o bit");
+					valorCromossomo.set(i+k, true);
+				}
+				else{
+					valorCromossomo.set(i+k, false);
+				}
+			}
+			
+			for(int l = 0; l < 6; l++)
+			{
+				System.out.print(valorCromossomo.get(i+l));
+			}
+			System.out.println("");
+			
 		}
 		return cromossomoAleatorio;
 	}
+	
+	public void print()
+	{
+		System.out.println(valorCromossomo.toString());
+	}
+	
+	
+	static String getBinario(int decimal){
+		return Integer.toString(decimal, 2);
+	}
+	
+	public static String getBinario(int decimal, int tam){
+		String rt = Integer.toString(decimal, 2);
+		while (rt.length() < tam) {rt = "0" + rt; }
+		return rt;
+	} 
 	
 	public double getFitness()
 	{
