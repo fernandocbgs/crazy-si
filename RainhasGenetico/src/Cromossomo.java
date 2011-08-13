@@ -99,7 +99,7 @@ public class Cromossomo implements Comparable{
 			
 			for(int l = 0; l < 6; l++)
 			{
-				System.out.print(valorCromossomo.get(i+l));
+				System.out.print(valorCromossomo.get(i+l) ? "0" : "1");
 			}
 			System.out.println("");
 			
