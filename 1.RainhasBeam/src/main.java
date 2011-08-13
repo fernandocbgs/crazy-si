@@ -27,11 +27,12 @@ public class main {
 		
 		es=null;*/
 		
-		AnaliseBeam anB = new AnaliseBeam(50);
+		AnaliseBeam anB = new AnaliseBeam(50,2);
 		Estado melhorEncontrado = anB.Busca();
-		melhorEncontrado.print();
+		if (melhorEncontrado!=null)
+			melhorEncontrado.print();
 		anB = null;
-		
+		System.out.println("--end--");
 	}
 
 }

@@ -1,22 +1,58 @@
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class AnaliseBeam {
 	public int MaxProfundidade;
-	private List<Estado> _beam = new ArrayList<Estado>();
+	public int kEstados;
+	//private List<Estado> _beam = new ArrayList<Estado>();
 	
-	public AnaliseBeam(int maxProfundidade){
+	
+	public AnaliseBeam(int maxProfundidade, int kEstados){
 		MaxProfundidade = maxProfundidade;
+		this.kEstados = kEstados;
 	}
 	
 	public Estado Busca(){
 		Estado rt = null;
 		Estado e = new Estado(); //inicia o estado
-		e.CalculoColisoesEstado();
+		e.CalculoColisoesEstado(); //aleatorio
+		
+		int maxBusca = MaxProfundidade;
 		
 		EstadosFilhos es;
-		while (MaxProfundidade > 0 || (rt!=null && rt.ColisoesEstado == 0 /*ideal*/)) {
+		while (maxBusca > 0 
+				|| (rt!=null && rt.ColisoesEstado == 0 /*ideal*/)
+			) {
+			if (rt == null) {
+				es = new EstadosFilhos(e);
+			} else {
+				es = new EstadosFilhos(rt);
+			}
+			es.CriarListaFilhos();
+			List<Estado> ePes = es.MelhorEscolha(kEstados);
+			for (Estado eK : ePes) {
+				rt = buscaEstadosBeam(eK);
+				try {Thread.sleep(10);} catch (InterruptedException e1) {}
+			}
+			
+			if (rt!=null && rt.ColisoesEstado == 0) {return rt;}
+			
+			maxBusca--;
+		}
+		
+		return rt;
+	}
+	
+	private Estado buscaEstadosBeam(Estado e){
+		Estado rt = null;
+		EstadosFilhos es;
+		
+		int maxBusca = MaxProfundidade;
+		
+		while (maxBusca > 0 
+				|| (rt!=null && rt.ColisoesEstado == 0 /*ideal*/)
+			) {
+			
 			if (rt == null) {
 				es = new EstadosFilhos(e);
 			} else {
@@ -25,31 +61,22 @@ public class AnaliseBeam {
 			
 			es.CriarListaFilhos();
 			Estado ePes = es.MelhorEscolha();
+			
 			if (rt == null) {
 				rt = ePes;
 			} else {
-				//if (podeAnalisar(ePes)) {
-					if (ePes.ColisoesEstado < rt.ColisoesEstado) {
-						//rt.copiar(ePes);
-						rt = ePes;
-					}
-				//}
+				if (ePes.ColisoesEstado < rt.ColisoesEstado) {
+					rt = ePes;
+				}
 			}
-
-			//rt.print();
-
-			_beam.add(rt); //lista beam
-			MaxProfundidade--;
+			
+			if (rt!=null && rt.ColisoesEstado == 0) {return rt;}
+			
+			try {Thread.sleep(10);} catch (InterruptedException e1) {}
+			
+			maxBusca--;
 		}
-		
 		return rt;
 	}
-	/*
-	private boolean podeAnalisar(Estado e){
-		for (Estado es : _beam) {
-			if (es.equals(e)) {return false;}
-		}
-		return true;
-	}
-	*/
+	
 }

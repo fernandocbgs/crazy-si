@@ -9,7 +9,7 @@ import java.util.List;
  * @author lucas
  *
  */
-public class Estado {
+public class Estado implements Comparable<Estado> {
 	
 	public int ColisoesEstado; /*total de colisões deste estado*/
 	
@@ -132,9 +132,11 @@ public class Estado {
 			rainhaComparar+=(estado.get(i) ? "1" : "0");
 		}
 		//last queen
-		xC = rainhaComparar.substring(0, 3);
-		yC = rainhaComparar.substring(3, 6);
-		if (colidiu(x, y, xC, yC)) ncolisoes++;
+		if (!rainhaComparar.equals(rainha)) {
+			xC = rainhaComparar.substring(0, 3);
+			yC = rainhaComparar.substring(3, 6);
+			if (colidiu(x, y, xC, yC)) ncolisoes++;
+		}
 		return ncolisoes;
 	}
 	
@@ -211,6 +213,17 @@ public class Estado {
 	
 	public static String getBinario(int decimal){
 		return Integer.toString(decimal, 2);
+	}
+	
+	@Override
+	public int compareTo(Estado e) {
+		if (this.ColisoesEstado <= 0) CalculoColisoesEstado();
+		if (e.ColisoesEstado <= 0) e.CalculoColisoesEstado();
+		
+		if (this.ColisoesEstado == e.ColisoesEstado) return 0; //iguais
+		if (this.ColisoesEstado > e.ColisoesEstado) return 1;
+		if (this.ColisoesEstado < e.ColisoesEstado) return -1;
+		return 0;
 	}
 	
 }

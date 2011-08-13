@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,6 +61,17 @@ public class EstadosFilhos {
 					rt = e;
 				}
 			}
+		}
+		return rt;
+	}
+	
+	public List<Estado> MelhorEscolha(int kEstados){
+		Collections.sort(ListaEstadosFilhos); 
+		List<Estado> rt = new ArrayList<Estado>();
+		for (Estado e : this.ListaEstadosFilhos) {
+			rt.add(e);
+			kEstados--;
+			if (kEstados <= 0) break;
 		}
 		return rt;
 	} 
