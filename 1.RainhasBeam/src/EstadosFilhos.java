@@ -67,6 +67,24 @@ public class EstadosFilhos {
 	 * Movimentação de Rainhas
 	 * */
 	
+	//verifica se não tem uma rainha na posição à ser movida
+	private boolean podeMover(int xMover, int yMover){
+		String x, y;
+		for (Estado e : ListaEstadosFilhos) {
+			for (String r : e.getRainhas()) {
+				x = r.substring(0, 3);
+				y = r.substring(3, 6);
+				if (
+					(x.equals(xMover) && y.equals(yMover)) || 
+					(x.equals(yMover) && y.equals(xMover))
+				){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public String moveRainhaCima(String rainha){
 		String x, y;
 		x = rainha.substring(0, 3);
@@ -75,6 +93,11 @@ public class EstadosFilhos {
 		int ix = Estado.getDecimal(x);
 		if (ix > 0) {//não esta na borda
 			ix--; //cima
+			
+			if (!podeMover(ix, Estado.getDecimal(y))) {
+				return rainha;
+			}
+			
 			String b = Estado.getBinario(ix);
 			while(b.length() < 3) {b = "0" + b;}
 			rainha = b + y;
@@ -89,6 +112,11 @@ public class EstadosFilhos {
 		int ix = Estado.getDecimal(x);
 		if (ix < 7) {//não esta na borda
 			ix++; //baixo
+			
+			if (!podeMover(ix, Estado.getDecimal(y))) {
+				return rainha;
+			}
+			
 			String b = Estado.getBinario(ix);
 			while(b.length() < 3) {b = "0" + b;}
 			rainha = b + y;
@@ -103,6 +131,11 @@ public class EstadosFilhos {
 		int iy = Estado.getDecimal(y);
 		if (iy > 0) {//não esta na borda
 			iy--; //esquerda
+			
+			if (!podeMover(Estado.getDecimal(x),iy)) {
+				return rainha;
+			}
+			
 			String b = Estado.getBinario(iy);
 			while(b.length() < 3) {b = "0" + b;}
 			rainha = x + b;
@@ -117,6 +150,11 @@ public class EstadosFilhos {
 		int iy = Estado.getDecimal(y);
 		if (iy < 7) {//não esta na borda
 			iy++; //direita
+			
+			if (!podeMover(Estado.getDecimal(x),iy)) {
+				return rainha;
+			}
+			
 			String b = Estado.getBinario(iy);
 			while(b.length() < 3) {b = "0" + b;}
 			rainha = x + b;
@@ -133,6 +171,11 @@ public class EstadosFilhos {
 		if (ix > 0 && iy > 0) {//não esta na borda
 			ix--; //cima
 			iy--; //esquerda
+			
+			if (!podeMover(ix,iy)) {
+				return rainha;
+			}
+			
 			String b1 = Estado.getBinario(ix);
 			while(b1.length() < 3) {b1 = "0" + b1;}
 			String b2 = Estado.getBinario(iy);
@@ -151,6 +194,11 @@ public class EstadosFilhos {
 		if (ix < 7 && iy > 0) {//não esta na borda
 			ix++; //baixo
 			iy--; //esquerda
+			
+			if (!podeMover(ix,iy)) {
+				return rainha;
+			}
+			
 			String b1 = Estado.getBinario(ix);
 			while(b1.length() < 3) {b1 = "0" + b1;}
 			String b2 = Estado.getBinario(iy);
@@ -169,6 +217,11 @@ public class EstadosFilhos {
 		if (ix > 0 && iy < 7) {//não esta na borda
 			ix--; //cima
 			iy++; //direita
+			
+			if (!podeMover(ix,iy)) {
+				return rainha;
+			}
+			
 			String b1 = Estado.getBinario(ix);
 			while(b1.length() < 3) {b1 = "0" + b1;}
 			String b2 = Estado.getBinario(iy);
@@ -187,6 +240,11 @@ public class EstadosFilhos {
 		if (ix < 7 && iy < 7) {//não esta na borda
 			ix++; //baixo
 			iy++; //direita
+			
+			if (!podeMover(ix,iy)) {
+				return rainha;
+			}
+			
 			String b1 = Estado.getBinario(ix);
 			while(b1.length() < 3) {b1 = "0" + b1;}
 			String b2 = Estado.getBinario(iy);

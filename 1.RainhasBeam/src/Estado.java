@@ -142,7 +142,9 @@ public class Estado {
 		return colidiu(getDecimal(x), getDecimal(y), getDecimal(xC), getDecimal(yC));
 	}
 	private boolean colidiu(int x, int y, int xC, int yC){
-		if (x == xC || y == yC || ( Math.abs(x-xC) == Math.abs(y-yC) /*diagonal*/ )){
+		if ( (x == xC && y!=yC) || 
+				(y == yC && x != xC) || 
+				(Math.abs(x-xC) == Math.abs(y-yC) /*diagonal*/ )){
 			return true;
 		}
 		return false;
@@ -200,6 +202,13 @@ public class Estado {
 	public static int getDecimal(String binario){
 		return Integer.parseInt(binario, 2);
 	}
+
+	public static String getBinario(int decimal, int tam){
+		String rt = Integer.toString(decimal, 2);
+		while (rt.length() < tam) {rt = "0" + rt; }
+		return rt;
+	}
+	
 	public static String getBinario(int decimal){
 		return Integer.toString(decimal, 2);
 	}
