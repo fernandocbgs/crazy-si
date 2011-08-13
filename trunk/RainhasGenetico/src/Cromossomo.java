@@ -26,11 +26,6 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	}
 	
 	
-	public int calculaColisoes()
-	{
-	    return 0;	
-	}
-	
 	public void mutacao()
 	{
 		valorCromossomo.or(gerarCromossomoAleatorio());
@@ -57,27 +52,47 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	 * Calcula o fitness baseado no número de colisões
 	 */
 	public void calcularFitness(){
+		double colisoes = 0.0;
 		//para cada rainha, verifica se ela est� na mesma linha
 		//compara o x com o y
 		for(int i = 0; i < 7; i++)
 		{
-			 int posXRainha1 = getPosicaoRainha(valorCromossomo.get(i*6,i*6+3));
-			 int posXRainha2 = getPosicaoRainha(valorCromossomo.get(i*6+6,i*6+6+3));
-			 int posYRainha1 = getPosicaoRainha(valorCromossomo.get(i*6+3,i*6+6));
-			 int posYRainha2 = getPosicaoRainha(valorCromossomo.get(i*6+6+3,i*6+6+6));
+			 String posXRainha1 = "";
+			 String posXRainha2 = "";
+			 String posYRainha1 = "";
+			 String posYRainha2 = "";
+			 for(int j = 0; j < 3; j++)
+			 {
+				 posXRainha1 += valorCromossomo.get(i*6+j) ? "1" : "0";
+				 posXRainha2 += valorCromossomo.get(i*6+j+6) ? "1" : "0";
+			 }
+			 
+			 for(int j = 3; j < 6; j++)
+			 {
+				 posYRainha1 += valorCromossomo.get(i*6+j) ? "1" : "0";
+				 posYRainha2 += valorCromossomo.get(i*6+j+6) ? "1" : "0";
+			 }
+			 
+			 int posXR1 = getDecimal(posXRainha1);
+			 int posXR2 = getDecimal(posXRainha2);
+			 int posYR1 = getDecimal(posYRainha1);
+			 int posYR2 = getDecimal(posYRainha2);
+			 
 			 //afora vamos verificar
-			 if(naMesmaCoordenada(posXRainha1, posXRainha2))
+			 if(naMesmaCoordenada(posXR1, posXR2))
 			 {
-				 fitness++;
+				 colisoes++;
 			 }
-			 if(naMesmaCoordenada(posYRainha1, posYRainha2)){
-				 fitness++;
+			 if(naMesmaCoordenada(posYR1, posYR2)){
+				 colisoes++;
 			 }
-			 if(naMesmaDiagonal(posXRainha1, posYRainha1, posXRainha2, posYRainha2))
+			 if(naMesmaDiagonal(posXR1, posYR1, posXR2, posYR2))
 			 {
-				 fitness++;
+				 colisoes++;
 			 }
 		}
+		//seta o fitness
+	    fitness = 1/(colisoes+1);
 	}
 	
 	public int getPosicaoRainha(BitSet coordenadaRainha)
@@ -181,8 +196,9 @@ public class Cromossomo implements Comparable<Cromossomo>{
 		System.out.println("");
 	}
 	
+	
 	public static int getDecimal(String binario){
-		System.out.println(binario);
+//		System.out.println(binario);
 		return Integer.parseInt(binario, 2);
 	}	
 	
