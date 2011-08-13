@@ -32,7 +32,7 @@ public class AnaliseBeam {
 			List<Estado> ePes = es.MelhorEscolha(kEstados);
 			for (Estado eK : ePes) {
 				rt = buscaEstadosBeam(eK);
-				try {Thread.sleep(10);} catch (InterruptedException e1) {}
+				//try {Thread.sleep(10);} catch (InterruptedException e1) {}
 			}
 			
 			if (rt!=null && rt.ColisoesEstado == 0) {return rt;}
@@ -72,7 +72,7 @@ public class AnaliseBeam {
 			
 			if (rt!=null && rt.ColisoesEstado == 0) {return rt;}
 			
-			try {Thread.sleep(10);} catch (InterruptedException e1) {}
+			//try {Thread.sleep(10);} catch (InterruptedException e1) {}
 			
 			maxBusca--;
 		}
