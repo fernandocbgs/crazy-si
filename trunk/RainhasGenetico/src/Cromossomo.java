@@ -132,7 +132,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	{
 		int distanciaX = Math.abs(posXRainha1 - posXRainha2);
 		int distanciaY = Math.abs(posYRainha1 - posYRainha2);
-		if(distanciaX != distanciaY)
+		if(distanciaX == distanciaY)
 		{
 			return true;
 		}
