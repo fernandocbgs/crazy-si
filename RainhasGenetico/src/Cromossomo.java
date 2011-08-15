@@ -172,7 +172,7 @@ public class Cromossomo implements Comparable<Cromossomo>{
 				}
 			}
 			
-			//imprime a posi��o da rainha
+//imprime a posi��o da rainha
 //			for(int l = 0; l < 6; l++)
 //			{
 //				System.out.print(cromossomoAleatorio.get(i*6+l) ? "1" : "0");
