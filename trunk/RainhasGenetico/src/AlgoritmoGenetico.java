@@ -6,7 +6,7 @@ import java.util.List;
 public class AlgoritmoGenetico {
 
 	protected int totalGenesDoCromossomo = 48;
-	protected int totalCromossomos; // nÃƒÂºmero de cromossomos
+	protected int totalCromossomos; // número de cromossomos
 	protected List<Cromossomo> listaDeCromossomos;
 	private float taxaCrossover;
 	private float taxaMutacao;
@@ -60,8 +60,14 @@ public class AlgoritmoGenetico {
 			//continua o algoritmo para saber quais sÃ£o mais aptos
 			ordenar();
 			//resultado
-			System.out.println("GeraÃ§Ã£o: " + i + " Cromossomo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
-			System.out.println("GeraÃ§Ã£o: " + i + " Cromossomo menos apto: " + listaDeCromossomos.get(0).getFitness());
+			System.out.println("Geração: " + i + " Cromossomo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
+			System.out.println("Geração: " + i + " Cromossomo menos apto: " + listaDeCromossomos.get(0).getFitness());
+			//verifica se alguém atingiu a condição de parada, se sim, para
+			if(listaDeCromossomos.get(totalCromossomos-1).getFitness() == 1.0d)
+			{
+				System.out.println("Parou na geração " + i);
+				break;
+			}
 			crossovers();
 			mutacoes();
 			//fiz esse mÃƒÂ©todo porque alguns cromossomos ficam clonados
