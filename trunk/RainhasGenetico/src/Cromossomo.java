@@ -11,6 +11,8 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	
 	//fitness do cromossomo
 	private double fitness;
+	//numero de colisões para o cromossomo
+	private double numeroDeColisoes = 0;
 	
 	/**
 	 * Um cromossomo representa a posiï¿½ï¿½o de todas as rainhas no tabuleiro
@@ -97,9 +99,14 @@ public class Cromossomo implements Comparable<Cromossomo>{
 			 }
 		}
 		//seta o fitness
-	    fitness = 1/(colisoes+1);
+		numeroDeColisoes = colisoes;
+	    fitness = 1/(colisoes+1);	    
 	}
 	
+	public double getNumeroDeColisoes() {
+		return numeroDeColisoes;
+	}
+
 	public int getPosicaoRainha(BitSet coordenadaRainha)
 	{
 		String posRainha = "";

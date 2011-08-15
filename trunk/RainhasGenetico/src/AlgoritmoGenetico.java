@@ -60,8 +60,8 @@ public class AlgoritmoGenetico {
 			//continua o algoritmo para saber quais sÃ£o mais aptos
 			ordenar();
 			//resultado
-			System.out.println("Geração: " + i + " Cromossomo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness());
-			System.out.println("Geração: " + i + " Cromossomo menos apto: " + listaDeCromossomos.get(0).getFitness());
+			System.out.println("Geração: " + i+1 + " Cromossomo mais apto: " + listaDeCromossomos.get(totalCromossomos-1).getFitness() + " com número de colisões: " + listaDeCromossomos.get(totalCromossomos - 1).getNumeroDeColisoes());
+			System.out.println("Geração: " + i+1 + " Cromossomo menos apto: " + listaDeCromossomos.get(0).getFitness() + " com número de colisões: " + listaDeCromossomos.get(0).getNumeroDeColisoes());
 			//verifica se alguém atingiu a condição de parada, se sim, para
 			if(listaDeCromossomos.get(totalCromossomos-1).getFitness() == 1.0d)
 			{
