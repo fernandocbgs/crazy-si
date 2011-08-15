@@ -40,7 +40,7 @@ public class AlgoritmoGenetico {
 		roleta = new int[tamanhoRoleta];
 		int total_tentativas = totalGenesDoCromossomo;
 		int index = 0;
-		for (int i = 0; i < totalCromossomos; i++) {
+		for (int i = totalCromossomos-1; i >= 0 ; i--) {
 			for (int j = 0; j < total_tentativas; j++) {
 				roleta[index++] = i;
 			}
