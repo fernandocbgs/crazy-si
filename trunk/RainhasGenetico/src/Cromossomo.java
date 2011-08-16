@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Arrays;
 import java.util.BitSet;
 
 /**
@@ -20,24 +24,45 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	 * ou 6 bits por rainha
 	 * como temos 8 rainhas = 48 bits
 	 */
-	private BitSet valorCromossomo = new BitSet(48);
+	private int [] valorCromossomo = new int[8];
 	
 	public Cromossomo()
 	{
+		//inicia o valor do cromossomo
+		for(int i = 0; i < valorCromossomo.length; i++)
+		{
+			valorCromossomo[i] = 0;
+		}
+		
 		valorCromossomo = gerarCromossomoAleatorio();
 	}
 	
-	public Cromossomo(BitSet valorCromossomo)
+	public Cromossomo(int [] valorCromossomo)
 	{
 		this.valorCromossomo = valorCromossomo;
-	}
+	}	
 	
-	
-	public void mutacao()
+	public Cromossomo mutacao()
 	{
-		valorCromossomo.or(gerarCromossomoAleatorio());
+		int [] valorCromossomoAux = valorCromossomo.clone();
+		//sorteia uma rainha aleatoria de 0 a 7
+		int rainha = (int)(8*Math.random());
+		//depois um numero aleatorio de 0 a 7
+		int posicaoAleatoria = (int)(8*Math.random());
+		//e troca
+		//antes de trocar vamos guardar o valor
+		int antigaPosicao = valorCromossomoAux[rainha];
+		valorCromossomoAux[rainha] = posicaoAleatoria;	
+		//agora a posicao aleatoria provavelmente está duplicada
+		for(int i = 0; i < valorCromossomoAux.length; i++)
+		{
+			if(valorCromossomoAux[i] == posicaoAleatoria && i != rainha)
+			{
+				valorCromossomoAux[i] = antigaPosicao;
+			}
+		}
+		return new Cromossomo(valorCromossomoAux);
 	}
-
 
 	@Override
 	public int compareTo(Cromossomo cromossomo) {
@@ -62,41 +87,18 @@ public class Cromossomo implements Comparable<Cromossomo>{
 		double colisoes = 0.0;
 		//para cada rainha, verifica se ela estï¿½ na mesma linha
 		//compara o x com o y
-		for(int i = 0; i < 7; i++)
+		for(int i = 0; i < valorCromossomo.length; i++)
 		{
-			 String posXRainha1 = "";
-			 String posXRainha2 = "";
-			 String posYRainha1 = "";
-			 String posYRainha2 = "";
-			 for(int j = 0; j < 3; j++)
-			 {
-				 posXRainha1 += valorCromossomo.get(i*6+j) ? "1" : "0";
-				 posXRainha2 += valorCromossomo.get(i*6+j+6) ? "1" : "0";
-			 }
-			 
-			 for(int j = 3; j < 6; j++)
-			 {
-				 posYRainha1 += valorCromossomo.get(i*6+j) ? "1" : "0";
-				 posYRainha2 += valorCromossomo.get(i*6+j+6) ? "1" : "0";
-			 }
-			 
-			 int posXR1 = getDecimal(posXRainha1);
-			 int posXR2 = getDecimal(posXRainha2);
-			 int posYR1 = getDecimal(posYRainha1);
-			 int posYR2 = getDecimal(posYRainha2);
-			 
-			 //afora vamos verificar
-			 if(naMesmaCoordenada(posXR1, posXR2))
-			 {
-				 colisoes++;
-			 }
-			 if(naMesmaCoordenada(posYR1, posYR2)){
-				 colisoes++;
-			 }
-			 if(naMesmaDiagonal(posXR1, posYR1, posXR2, posYR2))
-			 {
-				 colisoes++;
-			 }
+			for(int j = 0; j < valorCromossomo.length; j++)
+			{
+				if(naMesmaCoordenada(valorCromossomo[i], valorCromossomo[j]))
+				{
+					colisoes++;
+				} else if(naMesmaDiagonal(i, valorCromossomo[i], j, valorCromossomo[j]))
+				{
+					colisoes++;
+				}
+			}
 		}
 		//seta o fitness
 		numeroDeColisoes = colisoes;
@@ -154,58 +156,65 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	 * Ã‰ usado quando o cromossomo Ã© iniciado e tambÃ©m na mutaÃ§Ã£o para gerar um cromossomo de mutaÃ§Ã£o
 	 * @return
 	 */
-	private BitSet gerarCromossomoAleatorio()
+	private int [] gerarCromossomoAleatorio()
 	{
-		BitSet cromossomoAleatorio = new BitSet(48);
+		List<Integer> cromossomoAleatorio = new ArrayList<Integer>();
 		//inicia o cromossomo setando alguns valores de forma aleatï¿½ria
-		for(int i = 0; i < 8; i++){		
-			//a coluna ï¿½ setada, a linha nï¿½o
-			String coluna = getBinario(i, 3);
-			for(int k = 0; k < 3; k++){
-				if((coluna.charAt(k)) == '1'){
-					cromossomoAleatorio.set(i*6+k, true);
-				}
-				else{
-					cromossomoAleatorio.set(i*6+k, false);
-				}
+	    for(int i = 0; i < 8; i++)
+	    {
+	    	cromossomoAleatorio.add(i);
+	    }
+	    //agora vamos embaralharar o cromossomo
+	    Collections.shuffle(cromossomoAleatorio);
+	    
+	    int [] listaValores = new int[cromossomoAleatorio.size()];
+	    for(int i = 0; i < listaValores.length; i++){
+	    	listaValores[i] = cromossomoAleatorio.get(i);
+	    }
+	   	
+	    return listaValores;
+	}
+	
+	/**
+	 * retorna verdadeiro se o cromossomo contem o dado valor
+	 * @param valor
+	 * @return
+	 */
+	private boolean contemValor(int valor){
+		for(int i = 0; i < valorCromossomo.length; i++)
+		{
+			if(valorCromossomo[i] == valor)
+			{
+				return true;
 			}
-			
-			for(int j = 3; j < 6; j++){
-				//sorteia um valor de 0 a 1, se for maior que 0,5 seta o bit do cromossomo
-				//50% de chance de ser 0 e 50% de ser 1
-				double valorAleatorio = Math.random();
-				if(valorAleatorio > 0.5){
-					cromossomoAleatorio.set(i*6+j);
-				}
-			}
-			
-//imprime a posiï¿½ï¿½o da rainha
-//			for(int l = 0; l < 6; l++)
-//			{
-//				System.out.print(cromossomoAleatorio.get(i*6+l) ? "1" : "0");
-//			}
-//			System.out.println("");
-			
 		}
-
-//		for(int i = 0; i < 48; i++){
-//			System.out.print(cromossomoAleatorio.get(i) ? "1" : "0");
-//		}
-//		System.out.println();
-		return cromossomoAleatorio;
+		return false;
+	}
+	
+	public void printRainhas()
+	{
+		for(int i = 0; i < valorCromossomo.length; i++)
+		{
+			System.out.print("{"+valorCromossomo[i]+"} ");
+		}
 	}
 	
 	public void print()
 	{
-		for(int i =0; i < 48; i++)
+		
+		for(int i =0; i < valorCromossomo.length; i++)
 		{
-			if(i%6 == 0){
-				System.out.print(":");
+			for(int j = 0; j < valorCromossomo.length; j++)
+			{
+				if(j == valorCromossomo[i]){
+					System.out.print("1    ");
+				}
+				else{
+					System.out.print("0    ");
+				}
 			}
-			System.out.print(valorCromossomo.get(i) ? "1" : "0");
-
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 	
 	
@@ -228,18 +237,38 @@ public class Cromossomo implements Comparable<Cromossomo>{
 	{
 		return this.fitness;
 	}
-
-	public BitSet getBitsMutacao(int inicio)
-	{
-		return valorCromossomo.get(inicio, inicio+6);
+	
+	public int [] getValorParaCrossOver(){
+		//sorteia uma rainha aleatoria
+		int rainhaAleatoria = (int)(8*Math.random());
+		//e uma posição aleatória
+		int posicaoRainhaAleatoria = valorCromossomo[rainhaAleatoria];
+		//agora declaramos um array e enviamos
+		int [] rainhaPosicao = new int[2];
+		//na sequencia: Rainha depois posição
+		rainhaPosicao[0] = rainhaAleatoria;
+		rainhaPosicao[1] = posicaoRainhaAleatoria;
+		return rainhaPosicao;
 	}
 	
-	public void trocarBits(int inicio, BitSet bits)
+	public int getPosicaoRainha(int index){
+		return valorCromossomo[index];
+	}
+	
+	public void setPosicaoRainha(int rainha, int valor)
 	{
-		for(int i = 0; i < 6; i++)
+		valorCromossomo[rainha] = valor;
+	}
+	
+	public int getRainhaPorPosicao(int posicao){
+		for(int i = 0; i < valorCromossomo.length; i++)
 		{
-			valorCromossomo.set(i+inicio, bits.get(i));
+			if(valorCromossomo[i] == posicao){
+				return i;
+			}
 		}
+		//só pra indicar erro
+		return Integer.MAX_VALUE;
 	}
 	
 	public Cromossomo clone()
