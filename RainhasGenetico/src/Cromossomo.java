@@ -19,10 +19,7 @@ public class Cromossomo implements Comparable<Cromossomo> {
 	private double numeroDeColisoes = 0;
 
 	/**
-	 * Um cromossomo representa a posiï¿½ï¿½o de todas as rainhas no tabuleiro
-	 * Assim, como o tabuleiro Ã© bidimensional temos para cada rainha 3 bits
-	 * para uma posiÃ§Ã£o e 3 para outra ou 6 bits por rainha como temos 8
-	 * rainhas = 48 bits
+	 * Um cromossomo representa a posição de todas as rainhas no tabuleiro
 	 */
 	private int[] valorCromossomo = new int[8];
 
