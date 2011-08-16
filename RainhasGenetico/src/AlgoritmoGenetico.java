@@ -66,6 +66,7 @@ public class AlgoritmoGenetico {
 			if(listaDeCromossomos.get(totalCromossomos-1).getFitness() == 1.0d)
 			{
 				System.out.println("Parou na gera��o " + i);
+				listaDeCromossomos.get(totalCromossomos-1).printRainhas();
 				break;
 			}
 			crossovers();
@@ -73,6 +74,18 @@ public class AlgoritmoGenetico {
 			//fiz esse mÃ©todo porque alguns cromossomos ficam clonados
 			//ainda nÃ£o reimplementei, depois faÃ§o isso
 			removerDuplicacoes();
+		}
+		calcularFitness();
+		ordenar();
+		printCromossomos();
+	}
+	
+	public void printCromossomos()
+	{
+		for(Cromossomo cromo : listaDeCromossomos)
+		{
+			cromo.printRainhas();
+			System.out.println(" com fitness = " + cromo.getFitness());
 		}
 	}
 	
@@ -129,15 +142,20 @@ public class AlgoritmoGenetico {
 	public void crossOver(Cromossomo cr1, Cromossomo cr2){
 		Cromossomo filho1 = cr1.clone();
 		Cromossomo filho2= cr2.clone();
-		//sorteia uma posiï¿½ï¿½o
-		int posicao_crossover = sorteiaPosCrossover();
-		BitSet bitsCr1 = filho1.getBitsMutacao(posicao_crossover);
-		BitSet bitsCr2 = filho2.getBitsMutacao(posicao_crossover);
+		//sorteia uma posi��o
+		int [] rainhaPosicaoCromossomo1 = filho1.getValorParaCrossOver();
+		int [] rainha2PosicaoCromossomo1 = filho1.getValorParaCrossOver();
+		int rainhaCromossomo2 = filho2.getRainhaPorPosicao(rainhaPosicaoCromossomo1[1]);
+		int posicaoRainhaCromossomo2 = filho2.getPosicaoRainha(rainhaCromossomo2);
+		int rainha2Cromossomo2 = filho2.getRainhaPorPosicao(rainha2PosicaoCromossomo1[1]);
+		int posicao2RainhaCromossomo2 = filho2.getPosicaoRainha(rainha2Cromossomo2);
 		//faz o crossover
-		//o crossover nÃ£o elimina os mais aptos, apenas os substitui
+		//o crossover n�o�o elimina os mais aptos, apenas os substitui
 		//temos 2 filhos
-		filho1.trocarBits(posicao_crossover, bitsCr2);
-		filho2.trocarBits(posicao_crossover, bitsCr1);
+		filho1.setPosicaoRainha(rainhaPosicaoCromossomo1[0], posicao2RainhaCromossomo2);
+		filho1.setPosicaoRainha(rainha2PosicaoCromossomo1[0], posicaoRainhaCromossomo2);
+		filho2.setPosicaoRainha(rainhaCromossomo2, rainha2PosicaoCromossomo1[1]);
+		filho2.setPosicaoRainha(rainha2Cromossomo2, rainhaPosicaoCromossomo1[1]);
 		//e agora adicionamos na lista
 		listaDeCromossomos.add(filho1);
 		listaDeCromossomos.add(filho2);
@@ -148,11 +166,11 @@ public class AlgoritmoGenetico {
 	public void mutacoes() {
 		int num = (int) (totalCromossomos * taxaMutacao);
 		for (int i = 0; i < num; i++) {
-            listaDeCromossomos.get(i).mutacao();
+            Cromossomo mutado = listaDeCromossomos.get(i).mutacao();
+            listaDeCromossomos.add(mutado);
+            totalIndividuosCriadosGeracao++;
 		}
 	}
-
-
 	
 	public int sorteiaPosCrossover(){
 		//necessï¿½rio sortear um nï¿½mero

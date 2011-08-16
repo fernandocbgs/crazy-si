@@ -20,7 +20,7 @@ public class TesteAG {
 		showMemoryInfo();
 		calculateUsedMemoryBefore();
 		
-		AlgoritmoGenetico Ag = new AlgoritmoGenetico(30, 0.3f, 0.1f, 10000);
+		AlgoritmoGenetico Ag = new AlgoritmoGenetico(100, 0.3f, 0.01f, 10000);
 		Ag.executar();	
 		
 		System.out.println("--end--");
