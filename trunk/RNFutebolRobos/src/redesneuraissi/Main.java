@@ -29,10 +29,13 @@ public class Main {
 			if (entrada == 1) {
 				TreinaRedeNeural treinador = new TreinaRedeNeural();
 			} else if (entrada == 2) {
-				TestaRedeNeural teste = new TestaRedeNeural();
+				ErroMape mape = new ErroMape();
+				TestaRedeNeural teste = new TestaRedeNeural(mape);
 				// nunca faça testes de treinamento depois, já que os vetores
 				// sao ordenados!
-				teste.testarRedeNeuralTreinamento();
+				teste.testarRedeNeural();
+				//salva o erro
+				mape.salvarErroMape();
 			}
 		} while (entrada != 3);
 

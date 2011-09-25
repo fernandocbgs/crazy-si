@@ -92,7 +92,6 @@ public class TreinaRedeNeural {
 		adicionaEntradasTreinamentoClasse2();
 		adicionaEntradasTreinamentoClasse3();
 		adicionaEntradasTreinamentoClasse4();
-
 		// aqui são adicionadas algumas entradas aleatórias e calculadas algumas
 		// saídas
 	}
