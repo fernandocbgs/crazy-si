@@ -3,13 +3,11 @@
  * and open the template in the editor.
  */
 package redesneuraissi;
-import java.util.ArrayList;
-import org.neuroph.core.learning.*;
 import org.neuroph.core.*;
-import org.neuroph.nnet.learning.*;
 
 /**
  * Classe usada para treinar e testar a rede neural
+ * @author Emerson
  * @author Lucas
  */
 public class TestaRedeNeural {
@@ -25,13 +23,11 @@ public class TestaRedeNeural {
      * Testa a rede neural na etapa de treinamento
      */
     public void testarRedeNeuralTreinamento(){
-//            neuralN.setInput(i);
-//            neuralN.calculate();
-//            double[] valorSaidaTeste = neuralN.getOutput();
-    	neuralN.setInput(new double[]{1.0, 1.0});
+    	neuralN.setInput(new double[]{0.0, 1.0});
     	neuralN.calculate();
     	double[] valorSaidaTeste = neuralN.getOutput();
+    	System.out.println("Saída:");
     	for(double saidaTeste : valorSaidaTeste)
-    	    System.out.println(saidaTeste);
+    	    System.out.println(Math.round(saidaTeste));
     }
 }
