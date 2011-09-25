@@ -70,7 +70,7 @@ public class TreinaRedeNeural {
 		// camada 1 : 2 neuronios
 		camadas.add(numeroDeEntradas);
 		// Camada 2 : 12 neuronios
-		camadas.add(12);
+//		camadas.add(12);
 		// Camada 3 : 2 neuronios
 		camadas.add(numeroDeSaidas);
 		// Cria um perceptron
