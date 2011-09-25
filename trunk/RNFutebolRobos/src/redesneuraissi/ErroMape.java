@@ -19,27 +19,31 @@ public class ErroMape {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
 		//inicia o log
+		salvar("-----------");
 		salvar("Início do teste: " + formattedDate);
+		salvar("-----------");
 	}
 	
 	public void adicionarErro(double[] valoresEntrada, double encontrado, double esperado){
-		double erro = (encontrado - esperado)/encontrado;
+		double erro = Math.abs(encontrado - esperado)/encontrado;
 		numeroExemplos++;
 		erroMape += erro;
-		salvarErro(valoresEntrada, erro);
+		salvarErro(valoresEntrada, erro, encontrado, esperado);
 	}
 	
-	public void salvarErro(double [] valoresEntrada, double erro){
+	public void salvarErro(double [] valoresEntrada, double erro, double encontrado, double esperado){
 		String erroSalvar = "";
 		for(double valor : valoresEntrada)
 			erroSalvar += valor + " ";
+		erroSalvar += " Encontrado: " + encontrado;
+		erroSalvar += " Esperado: " + esperado;
 		erroSalvar += " Erro: " + erro;
 		salvar(erroSalvar);
 	}
 	
 	public void salvarErroMape(){
 		//calcula o erro total para depois salvar
-		erroMape += 1/numeroExemplos*erroMape;
+		erroMape /= numeroExemplos;
 		salvar(Double.toString(erroMape));
 	}
 	
