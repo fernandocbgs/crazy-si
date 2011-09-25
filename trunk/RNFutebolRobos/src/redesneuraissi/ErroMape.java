@@ -49,7 +49,7 @@ public class ErroMape {
 		try {
 			writer = new FileWriter(file, true);
 			BufferedWriter writerBuffer = new BufferedWriter(writer);
-			writerBuffer.write("Erro mape: " + Double.toString(erroMape) + "\n");
+			writerBuffer.write(mensagem + "\n");
 			writerBuffer.flush();
 			writerBuffer.close();
 			writer.close();
