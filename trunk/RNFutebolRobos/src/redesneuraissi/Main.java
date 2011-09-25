@@ -29,7 +29,9 @@ public class Main {
 			if (entrada == 1) {
 				TreinaRedeNeural treinador = new TreinaRedeNeural();
 			} else if (entrada == 2) {
-				ErroMape mape = new ErroMape();
+                System.out.println("Insira um comentário para o teste (Para salvar no arquivo): ");
+                String comentario = sc.nextLine();
+				ErroMape mape = new ErroMape(comentario);
 				TestaRedeNeural teste = new TestaRedeNeural(mape);
 				// nunca faça testes de treinamento depois, já que os vetores
 				// sao ordenados!

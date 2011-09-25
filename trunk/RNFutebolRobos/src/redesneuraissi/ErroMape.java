@@ -13,13 +13,14 @@ public class ErroMape {
 	private double numeroExemplos = 0.0;
 	private String caminhoSalvarErroMape =  "erroMape.txt";
 	
-	public ErroMape()
+	public ErroMape(String comentario)
 	{
 		Date todaysDate = new java.util.Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
 		//inicia o log
 		salvar("-----------");
+		salvar(comentario);
 		salvar("Início do teste: " + formattedDate);
 		salvar("-----------");
 	}
