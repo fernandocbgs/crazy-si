@@ -29,6 +29,6 @@ public class TestesUtils extends TestCase {
 		EntradasList lista = new EntradasList();
 		double [] valores = new double[] {1.0, 2.0, 3.0, 4.0, 5.0};
 		lista.adicionarEntrada(valores);
-		assertEquals(true,lista.contem(new double[] {1.0, 3.0, 4.0, 5.0, 2.0}));
+		assertEquals(true,lista.contem(new double[] {1.0, 3.0, 4.0, 2.0, 5.0}));
 	}
 }
