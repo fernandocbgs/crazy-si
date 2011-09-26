@@ -60,7 +60,9 @@ public class TreinaRedeNeural {
 	/**
 	 * Cria uma rede neural para testes O conteúdo dela é salvo em um arquivo
 	 */
-	public TreinaRedeNeural() {
+	public TreinaRedeNeural(int numeroCamadas, int numeroNeuronios, double porcentagem) {
+		porcentagemTreinamento = porcentagem;
+		
 		// necessário para realizar o backPropagation
 		learning = new DynamicBackPropagation();
 		learning.setMaxIterations(500);
@@ -69,8 +71,12 @@ public class TreinaRedeNeural {
 		ArrayList<Integer> camadas = new ArrayList<Integer>();
 		// camada 1 : 2 neuronios
 		camadas.add(numeroDeEntradas);
-		// Camada 2 : 12 neuronios
-		camadas.add(12);
+		
+		for (int i = 0; i < numeroCamadas; i++){
+			// Camada 2 : 12 neuronios
+			camadas.add(numeroNeuronios);
+		}
+		
 		// Camada 3 : 2 neuronios
 		camadas.add(numeroDeSaidas);
 		// Cria um perceptron
