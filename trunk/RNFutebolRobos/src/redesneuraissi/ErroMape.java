@@ -7,14 +7,29 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JTextArea;
+
 public class ErroMape {
 	
+	private JTextArea _jta;
 	private double erroMape = 0.0;
 	private double numeroExemplos = 0.0;
 	private String caminhoSalvarErroMape =  "erroMape.txt";
 	
-	public ErroMape(String comentario)
+	public ErroMape(String comentario){init(comentario);}
+	
+	public ErroMape(String comentario, JTextArea jta)
 	{
+		_jta = jta;
+		init(comentario);
+	}
+	
+	private void setTextJta(String tx){
+		String txAntigo = _jta.getText();
+		_jta.setText(txAntigo + "\n" + tx);
+	}
+	
+	private void init(String comentario){
 		Date todaysDate = new java.util.Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
@@ -23,6 +38,12 @@ public class ErroMape {
 		salvar(comentario);
 		salvar("Início do teste: " + formattedDate);
 		salvar("-----------");
+		
+		setTextJta("-----------");
+		//setTextJta(comentario);
+		setTextJta("Início do teste: " + formattedDate);
+		setTextJta("-----------");
+		
 	}
 	
 	public void adicionarErro(double[] valoresEntrada, double encontrado, double esperado){
@@ -40,12 +61,16 @@ public class ErroMape {
 		erroSalvar += " Esperado: " + esperado;
 		erroSalvar += " Erro: " + erro;
 		salvar(erroSalvar);
+		
+		setTextJta(erroSalvar);
 	}
 	
 	public void salvarErroMape(){
 		//calcula o erro total para depois salvar
 		erroMape /= numeroExemplos;
 		salvar(Double.toString(erroMape));
+		
+		setTextJta(Double.toString(erroMape));
 	}
 	
 	public void salvar(String mensagem){
@@ -64,4 +89,6 @@ public class ErroMape {
 		}
 	}
 
+	public double getErroMAPE(){return erroMape;}
+	
 }
