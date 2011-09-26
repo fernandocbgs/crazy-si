@@ -56,9 +56,8 @@ public class TestaRedeNeural {
     	  return decimal;
     }
     
-    /**
-	 * Para a classe 1 do artigo, correspondente a ação pegar a bola, treina a
-	 * rede para 10% dos casos
+	/**
+	 * Para a classe 1 do artigo, correspondente a andar até a bola
 	 */
 	public void adicionaEntradasTreinamentoClasse1() {
 		// Nessa classe os jogadores ocupam uma posição diferente da bola
@@ -90,8 +89,7 @@ public class TestaRedeNeural {
 	}
 
 	/**
-	 * Para a classe 2 do artigo, correspondente a ação andar com a bola, treina
-	 * a rede para 10% dos casos
+	 * Para a classe 2 do artigo, correspondente a ação andar com a bola
 	 */
 	public void adicionaEntradasTreinamentoClasse2() {
 		// Casos tratados:
@@ -142,8 +140,7 @@ public class TestaRedeNeural {
 	}
 
 	/**
-	 * Para a classe 3 do artigo, correspondente a ação andar com a bola, treina
-	 * a rede para 10% dos casos
+	 * Para a classe 3 do artigo, correspondente a ação passar a bola
 	 */
 	public void adicionaEntradasTreinamentoClasse3() {
 		int totalTreinamento = (int) (405 * porcentagemTeste);
@@ -194,8 +191,7 @@ public class TestaRedeNeural {
 	}
 
 	/**
-	 * Para a classe 4 do artigo, correspondente a ação chutar a gol, treina a
-	 * rede para 10% dos casos
+	 * Para a classe 4 do artigo, correspondente a ação chutar a gol
 	 */
 	public void adicionaEntradasTreinamentoClasse4() {
 		int totalTreinamento = (int) (252 * porcentagemTeste);
