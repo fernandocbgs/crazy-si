@@ -16,17 +16,22 @@ public class TestaRedeNeural {
 	/**
 	 * Erro mape para testes
 	 */
-	ErroMape erroMape;
+	private ErroMape erroMape;
 	/**
 	 * Referência para a rede neural
 	 */
-    NeuralNetwork neuralN;
+    private NeuralNetwork neuralN;
+    /**
+     * Entradas utilizadas no treinamento
+     */
+    private EntradasList entradas;
     
     
     /**
      * Cria um teste de rede neural
      */
-    public TestaRedeNeural(ErroMape erroMape) {
+    public TestaRedeNeural(EntradasList entradas, ErroMape erroMape) {
+    	this.entradas = entradas;
         neuralN = NeuralNetwork.load("MLP.nnet");
         this.erroMape = erroMape;
     }
@@ -68,6 +73,11 @@ public class TestaRedeNeural {
 				valoresTreinamento[i] = valoresDistintos[i];
 			}
 			valoresTreinamento[4] = metodos.gerarPosicaoGoleiro();
+			if(entradas.contem(valoresTreinamento))
+			{
+				//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+				continue;
+			}
 			//testa
 	    	neuralN.setInput(valoresTreinamento);
 	    	neuralN.calculate();
@@ -99,6 +109,11 @@ public class TestaRedeNeural {
 			int posicaoBola = posicoes[0];
 			if (metodos.naDefesa(posicaoBola)) {
 				double [] valoresEntrada = new double[] {posicaoBola, 0, 3, 6, metodos.gerarPosicaoGoleiro()};
+				if(entradas.contem(valoresEntrada))
+				{
+					//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+					continue;
+				}
 				//testa
 		    	neuralN.setInput(valoresEntrada);
 		    	neuralN.calculate();
@@ -109,6 +124,11 @@ public class TestaRedeNeural {
 			} else {
 				double [] valoresEntrada = new double[] {posicaoBola, posicaoBola, posicoes[1], posicoes[2],
 						metodos.gerarPosicaoGoleiro() };
+				if(entradas.contem(valoresEntrada))
+				{
+					//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+					continue;
+				}
 				//testa
 		    	neuralN.setInput(valoresEntrada);
 		    	neuralN.calculate();
@@ -138,6 +158,11 @@ public class TestaRedeNeural {
 						metodos.getValorDefesa(), metodos.getValorDefesa(),
 						metodos.getValorAtaque(), metodos.getValorMeio(),
 						metodos.gerarPosicaoGoleiro() };
+				if(entradas.contem(valoresEntrada))
+				{
+					//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+					continue;
+				}
 				//testa
 		    	neuralN.setInput(valoresEntrada);
 		    	neuralN.calculate();
@@ -151,6 +176,11 @@ public class TestaRedeNeural {
 						metodos.getValorMeio(), metodos.getValorDefesa(),
 						metodos.getValorAtaque(), metodos.getValorMeio(),
 						metodos.gerarPosicaoGoleiro() };
+				if(entradas.contem(valoresEntrada))
+				{
+					//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+					continue;
+				}
 				//testa
 		    	neuralN.setInput(valoresEntrada);
 		    	neuralN.calculate();
@@ -184,6 +214,12 @@ public class TestaRedeNeural {
 	    			valoresDistintos[valorNoAtaque + 1],
 	    			valoresDistintos[valorNoAtaque + 2],
 	    			metodos.gerarPosicaoGoleiro()};
+	
+			if(entradas.contem(valoresEntrada))
+			{
+				//não pode fazer o teste com variáveis que já foram utilizadas no treinamento
+				continue;
+			}
 			
 	    	neuralN.setInput(valoresEntrada);
 	    	neuralN.calculate();
