@@ -60,7 +60,7 @@ public class Utils {
      * @return valor entre 0 e 8
      */
     public int[] gerar4ValoresDistintos0a8(){
-        Collections.shuffle(Arrays.asList(valoresDistintos));
+        shuffleArray(valoresDistintos);
         return valoresDistintos;
     }
     
@@ -70,7 +70,7 @@ public class Utils {
      * @return valor entre 0 e 8
      */
     public int[] gerar6ValoresDistintosCamposDefesaMeio(){
-        Collections.shuffle(Arrays.asList(camposMeioDefesa));
+        shuffleArray(camposMeioDefesa);
         return camposMeioDefesa;
     }
     
@@ -137,8 +137,32 @@ public class Utils {
     	return camposMeio[0];
     }
     
+    /**
+     * Gera uma posição aleatória para o goleiro
+     * @return
+     */
     public int gerarPosicaoGoleiro()
     {
     	return random.nextInt(2);
     }
+    
+    /**
+     * Embaralha um vetor
+     * @param a
+     */
+    public static void shuffleArray(int[] a) {
+		int n = a.length;
+		Random random = new Random();
+		random.nextInt();
+		for (int i = 0; i < n; i++) {
+			int change = i + random.nextInt(n - i);
+			swap(a, i, change);
+		}
+	}
+
+	private static void swap(int[] a, int i, int change) {
+		int helper = a[i];
+		a[i] = a[change];
+		a[change] = helper;
+	}
 }

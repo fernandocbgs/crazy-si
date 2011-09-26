@@ -70,7 +70,7 @@ public class TreinaRedeNeural {
 		// camada 1 : 2 neuronios
 		camadas.add(numeroDeEntradas);
 		// Camada 2 : 12 neuronios
-//		camadas.add(12);
+		camadas.add(12);
 		// Camada 3 : 2 neuronios
 		camadas.add(numeroDeSaidas);
 		// Cria um perceptron
@@ -92,8 +92,6 @@ public class TreinaRedeNeural {
 		adicionaEntradasTreinamentoClasse2();
 		adicionaEntradasTreinamentoClasse3();
 		adicionaEntradasTreinamentoClasse4();
-		// aqui são adicionadas algumas entradas aleatórias e calculadas algumas
-		// saídas
 	}
 
 	/**
@@ -150,8 +148,8 @@ public class TreinaRedeNeural {
 				// meio ou defesa
 				training.addElement(new SupervisedTrainingElement(new double[] {
 						posicaoBola, posicaoBola, posicoes[1], posicoes[2],
-						metodos.gerarPosicaoGoleiro() }, new double[] { 0.0,
-						0.0, 0.0 }));
+						metodos.gerarPosicaoGoleiro()}, new double[] { 0.0,
+						0.0 }));
 			}
 			contagemTreinamento++;
 		}
