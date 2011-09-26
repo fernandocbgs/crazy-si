@@ -20,8 +20,15 @@ import org.neuroph.nnet.learning.DynamicBackPropagation;
  */
 public class TreinaRedeNeural {
 
+	EntradasList listaDeValores = new EntradasList();
+	/**
+	 * Metodos auxiliares
+	 */
 	Utils metodos = new Utils();
 
+	/**
+	 * Gerador de números aleatórios
+	 */
 	Random geradorNumerosAleatorios = new Random();
 
 	double porcentagemTreinamento = 0.1;
@@ -120,9 +127,15 @@ public class TreinaRedeNeural {
 			}
 			valoresTreinamento[4] = metodos.gerarPosicaoGoleiro();
 			// cria a entrada para o treinamento
+			if(listaDeValores.contem(valoresTreinamento))
+			{
+				//não adiciona
+			    continue;
+			}
 			training.addElement(new SupervisedTrainingElement(
 					valoresTreinamento, new double[] { 0.0, 1.0 }));
 			numeroValoresTreinamentoAdicionados++;
+			listaDeValores.adicionarEntrada(valoresTreinamento);
 		}
 	}
 
@@ -146,16 +159,28 @@ public class TreinaRedeNeural {
 			int posicaoBola = posicoes[0];
 			if (metodos.naDefesa(posicaoBola)) {
 				// treina com todo mundo na defesa
-				training.addElement(new SupervisedTrainingElement(new double[] {
-						posicaoBola, 0, 3, 6, metodos.gerarPosicaoGoleiro() },
+				double [] entradaTreinamento = new double[] {
+						posicaoBola, 0, 3, 6, metodos.gerarPosicaoGoleiro() };
+				//para pular se já contem
+				if(listaDeValores.contem(entradaTreinamento))
+					continue;
+				//adiciona
+				training.addElement(new SupervisedTrainingElement(entradaTreinamento,
 						new double[] { 0.0, 0.0 }));
+				listaDeValores.adicionarEntrada(entradaTreinamento);
+				//adiciona na lista
 			} else {
 				// treina com um na posição da bola e os demais podendo ficar no
 				// meio ou defesa
-				training.addElement(new SupervisedTrainingElement(new double[] {
+				double [] entradaTreinamento = new double[] {
 						posicaoBola, posicaoBola, posicoes[1], posicoes[2],
-						metodos.gerarPosicaoGoleiro()}, new double[] { 0.0,
+						metodos.gerarPosicaoGoleiro()};
+				//para pular se já contem
+				if(listaDeValores.contem(entradaTreinamento))
+					continue;
+				training.addElement(new SupervisedTrainingElement(entradaTreinamento, new double[] { 0.0,
 						0.0 }));
+				listaDeValores.adicionarEntrada(entradaTreinamento);
 			}
 			contagemTreinamento++;
 		}
@@ -173,17 +198,26 @@ public class TreinaRedeNeural {
 			// chuncho
 			double valorAleatorio = Math.random();
 			if (valorAleatorio > 0.5) {
-				training.addElement(new SupervisedTrainingElement(new double[] {
+				double [] entradaTreinamento = new double[] {
 						metodos.getValorDefesa(), metodos.getValorDefesa(),
 						metodos.getValorAtaque(), metodos.getValorMeio(),
-						metodos.gerarPosicaoGoleiro() }, new double[] { 1.0,
+						metodos.gerarPosicaoGoleiro() };
+				if(listaDeValores.contem(entradaTreinamento))
+					continue;
+				training.addElement(new SupervisedTrainingElement(entradaTreinamento, new double[] { 1.0,
 						0.0 }));
+				listaDeValores.adicionarEntrada(entradaTreinamento);
+				
 			} else {
-				training.addElement(new SupervisedTrainingElement(new double[] {
+				double [] entradaTreinamento = new double[] {
 						metodos.getValorMeio(), metodos.getValorDefesa(),
 						metodos.getValorAtaque(), metodos.getValorMeio(),
-						metodos.gerarPosicaoGoleiro() }, new double[] { 1.0,
+						metodos.gerarPosicaoGoleiro() };
+				if(listaDeValores.contem(entradaTreinamento))
+					continue;
+				training.addElement(new SupervisedTrainingElement(entradaTreinamento, new double[] { 1.0,
 						0.0 }));
+				listaDeValores.adicionarEntrada(entradaTreinamento);
 			}
 			contagemTreinamento++;
 		}
@@ -204,14 +238,18 @@ public class TreinaRedeNeural {
 					break;
 				}
 			}
-			// adiciona para o treinamento
-			training.addElement(new SupervisedTrainingElement(new double[] {
+			double [] entradaTreinamento = new double[] {
 					valoresDistintos[valorNoAtaque],
 					valoresDistintos[valorNoAtaque],
 					valoresDistintos[valorNoAtaque + 1],
 					valoresDistintos[valorNoAtaque + 2],
-					metodos.gerarPosicaoGoleiro() }, new double[] { 1.0, 1.0 }));
+					metodos.gerarPosicaoGoleiro() };
+			if(listaDeValores.contem(entradaTreinamento))
+				continue;
+			// adiciona para o treinamento
+			training.addElement(new SupervisedTrainingElement(entradaTreinamento, new double[] { 1.0, 1.0 }));
 			contagemTreinamento++;
+			listaDeValores.adicionarEntrada(entradaTreinamento);
 		}
 	}
 
@@ -221,5 +259,9 @@ public class TreinaRedeNeural {
 	public void treinarRede() {
 		// Treina a rede!
 		mlp.learnInSameThread(training, learning);
+	}
+	
+	public EntradasList getListaDeValores(){
+		return listaDeValores;
 	}
 }

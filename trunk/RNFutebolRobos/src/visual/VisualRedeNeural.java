@@ -114,7 +114,7 @@ public class VisualRedeNeural extends JFrame {
 						);
 				
 				
-				TestaRedeNeural teste = new TestaRedeNeural(mape);
+				TestaRedeNeural teste = new TestaRedeNeural(treinador.getListaDeValores(), mape);
 				// nunca faça testes de treinamento depois, já que os vetores
 				// sao ordenados!
 				teste.testarRedeNeural();
