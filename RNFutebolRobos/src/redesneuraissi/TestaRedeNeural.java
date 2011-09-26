@@ -13,9 +13,16 @@ public class TestaRedeNeural {
 	Utils metodos = new Utils();
 	//porcentagem de teste
 	double porcentagemTeste = 0.1;
-	//ErroMape
+	/**
+	 * Erro mape para testes
+	 */
 	ErroMape erroMape;
+	/**
+	 * Referência para a rede neural
+	 */
     NeuralNetwork neuralN;
+    
+    
     /**
      * Cria um teste de rede neural
      */
@@ -28,9 +35,6 @@ public class TestaRedeNeural {
      * Testa a rede neural na etapa de treinamento
      */
     public void testarRedeNeural(){
-//    	neuralN.setInput(new double[]{0.0, 0.0, 1.0, 2.0, 2.0});
-//    	neuralN.calculate();
-//    	double[] valorSaidaTeste = neuralN.getOutput();
     	adicionaEntradasTreinamentoClasse1();
 		adicionaEntradasTreinamentoClasse2();
 		adicionaEntradasTreinamentoClasse3();
