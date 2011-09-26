@@ -150,7 +150,7 @@ public class TreinaRedeNeural {
 		// meio)
 		// todos na defesa
 		// Nessa classe os jogadores ocupam uma posição diferente da bola
-		int totalTreinamento = (int) (180 * porcentagemTreinamento);
+		int totalTreinamento = (int) (99 * porcentagemTreinamento);
 		int contagemTreinamento = 0;
 		while (contagemTreinamento < totalTreinamento) {
 			// pega o vetor de posições
@@ -191,7 +191,7 @@ public class TreinaRedeNeural {
 	 * a rede para 10% dos casos
 	 */
 	public void adicionaEntradasTreinamentoClasse3() {
-		int totalTreinamento = (int) (180 * porcentagemTreinamento);
+		int totalTreinamento = (int) (405 * porcentagemTreinamento);
 		int contagemTreinamento = 0;
 
 		while (contagemTreinamento < totalTreinamento) {
@@ -228,7 +228,7 @@ public class TreinaRedeNeural {
 	 * rede para 10% dos casos
 	 */
 	public void adicionaEntradasTreinamentoClasse4() {
-		int totalTreinamento = (int) (180 * porcentagemTreinamento);
+		int totalTreinamento = (int) (252 * porcentagemTreinamento);
 		int contagemTreinamento = 0;
 		while (contagemTreinamento < totalTreinamento) {
 			int[] valoresDistintos = metodos.gerar4ValoresDistintos0a8();
