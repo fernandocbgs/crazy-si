@@ -1,9 +1,13 @@
 // Block definition (there may be more than one block per file)
 FUNCTION_BLOCK Futebol
 
+//campo com 100 metros
+
 // Define input variables
 VAR_INPUT
     posicao : REAL;
+    colega1 : REAL;
+    colega2 : REAL;
     adversario : REAL;
 END_VAR
 
@@ -14,23 +18,33 @@ END_VAR
 
 // Fuzzify input variable 'posicao'
 FUZZIFY posicao
-    TERM defesa := (0, 1) (4, 0) ; 
-    TERM meio := (1, 0) (4,1) (6,1) (9,0);
-    TERM ataque := (6, 0) (9, 1);
+    TERM defesa := (0,1)(33,1) (38,0);
+    TERM meio := (33,0)(38,1)(66,1)(75,0);
+    TERM ataque := (66,0)(75,1)(100,1);
+END_FUZZIFY
+FUZZIFY colega1
+    TERM defesa := (0,1)(33,1) (38,0);
+    TERM meio := (33,0)(38,1)(66,1)(75,0);
+    TERM ataque := (66,0)(75,1)(100,1);
+END_FUZZIFY
+FUZZIFY colega2
+    TERM defesa := (0,1)(33,1) (38,0);
+    TERM meio := (33,0)(38,1)(66,1)(75,0);
+    TERM ataque := (66,0)(75,1)(100,1);
 END_FUZZIFY
 
 // Fuzzify input variable 'adversario'
 FUZZIFY adversario
-    TERM perto := (0, 1) (1, 1) (3,0) ;
-    TERM meio_perto := (2,0) (4,1) (6,1) (8,0);
-    TERM longe := (7,0) (9,1);
+    TERM perto := (0,1)(20,1) (32,0);
+    TERM meio_perto := (20,0)(32,1)(50,1)(63,0);
+    TERM longe := (50,0)(63,1)(100,1);
 END_FUZZIFY
 
 // Defzzzify output variable 'forca'
 DEFUZZIFY forca
-    TERM pouca := (0,0) (5,1) (10,0);
-    TERM media := (10,0) (15,1) (20,0);
-    TERM muita := (20,0) (25,1) (30,0);
+    TERM fraca := (0,0) (1.65,1)(3.3,0);
+    TERM media := (3.3,0) (4.95,1) (6.6,0);
+    TERM forte := (6.6,0) (8.25,1) (10.0,0);
     // Use 'Center Of Gravity' defuzzification method
     METHOD : COG;
     // Default value is 0 (if no rule activates defuzzifier)
@@ -46,21 +60,53 @@ RULEBLOCK No1
     // Use 'max' accumulation method
     ACCU : MAX;
 
-    RULE 1 : IF posicao IS defesa OR adversario IS perto 
-                THEN forca IS pouca;
+    //AND colega1 IS perto AND colega2 IS perto
+    RULE 1 : IF posicao IS defesa 
+	     AND (adversario IS longe OR adversario IS meio_perto) 
+	     AND (colega1 IS defesa OR colega2 IS defesa)
+                THEN forca IS fraca;
+    RULE 2 : IF posicao IS defesa 
+	     AND (adversario IS longe OR adversario IS meio_perto) 
+	     AND (colega1 IS meio OR colega2 IS meio)
+                THEN forca IS media;
+    RULE 3 : IF posicao IS defesa 
+	     AND adversario IS perto
+	     AND (colega1 IS meio OR colega2 IS meio)
+                THEN forca IS media;
+    RULE 4 : IF posicao IS defesa 
+	     AND adversario IS perto
+	     AND (colega1 IS ataque OR colega2 IS ataque)
+                THEN forca IS forte;
+//-----------------------------------------------
+    RULE 5 : IF posicao IS meio 
+	     AND (adversario IS longe OR adversario IS meio_perto) 
+	     AND (colega1 IS meio OR colega2 IS meio)
+                THEN forca IS fraca;
+    RULE 6 : IF posicao IS meio 
+	     AND (adversario IS longe OR adversario IS meio_perto) 
+	     AND (colega1 IS ataque OR colega2 IS ataque)
+                THEN forca IS media;
+    RULE 7 : IF posicao IS meio 
+	     AND adversario IS perto
+	     AND (colega1 IS ataque OR colega2 IS ataque)
+                THEN forca IS media;
+//---------------------------------------------
+    RULE 8 : IF posicao IS ataque 
+	     AND adversario IS longe 
+                THEN forca IS media;
+    RULE 9 : IF posicao IS ataque 
+	     AND adversario IS meio_perto 
+                THEN forca IS media;
+    RULE 10 : IF posicao IS ataque 
+	     AND adversario IS perto 
+                THEN forca IS forte;
+//--------------------------------------------
 
-    RULE 2 : IF posicao IS meio 
-                THEN forca IS media; 
-
-    RULE 3 : IF posicao IS ataque AND adversario IS longe 
-                THEN forca is muita;
-
-    RULE 4 : IF posicao IS ataque AND adversario IS meio_perto 
-                THEN forca is media;
 
 
-    RULE 6 : IF posicao IS defesa AND adversario IS meio_perto 
-                THEN forca is pouca;
+
+
+
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK
