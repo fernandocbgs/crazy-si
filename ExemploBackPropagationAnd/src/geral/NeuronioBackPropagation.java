@@ -12,6 +12,7 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	
 	private double taxaDeAprendizado;
 	private double [] pesos;
+	private double [] ajustes;
 	private double uW = 0.0;
 	private IFuncaoAtivacao funcaoAtivacao;
 	
@@ -29,6 +30,8 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 			//feitos de -1 a 1 como solicitado
 			pesos[i] = (2*random()-1.0);
 		}
+		//ajustes também
+		ajustes = new double[numeroPesos];
 	}
 
 	@Override
@@ -48,13 +51,24 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	}
 
 	@Override
-	public void ajustaPesos(ArrayList<double[]> entradas, double[] saidasDesejadas) {
-		//para cada peso
+	public void ajustaPesos(ArrayList<double[]> entradas, ArrayList<double[]> saidasDesejadas, int indiceDesteNeuronio) {
+		calculaAjustes(entradas, saidasDesejadas, indiceDesteNeuronio);
+		//faz os ajustes
 		for(int i = 0; i < pesos.length; i++){
-            double djDW = 0.0;
-			//para cada par de treinamento
-			
-			
+			pesos[i] = pesos[i]-ajustes[i];
+		}
+	}
+	
+	private void calculaAjustes(ArrayList<double[]> entradas, ArrayList<double[]> saidasDesejadas, int indiceDesteNeuronio){
+	//para cada peso
+		for(int i = 0; i < pesos.length; i++){
+	        double djDW = 0.0;
+		    //para cada par de treinamento
+			for(int p = 0; p < entradas.size(); p++){
+				djDW += erro(getSaida(entradas.get(p)),saidasDesejadas.get(p)[indiceDesteNeuronio])
+						*funcaoAtivacao.derivada(uW)*entradas.get(p)[i];
+			}			
+			ajustes[i] = taxaDeAprendizado*djDW;
 		}
 	}
 	

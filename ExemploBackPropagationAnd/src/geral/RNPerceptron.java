@@ -3,19 +3,24 @@ import java.util.ArrayList;
 import interfaces.IFuncaoAtivacao;
 import interfaces.INeuronioBackPropagation;
 import interfaces.IRN;
+import interfaces.ITestador;
 import interfaces.ITreinador;
 
 public class RNPerceptron implements IRN {
 	
 	private double taxaDeAprendizado;
 	private ITreinador treinador;
+	private ITestador testador;
 	private IFuncaoAtivacao funcaoAtivacao;
 	private ArrayList<double []> entradasSupervisionadas = new ArrayList<double []>();
 	private ArrayList<double []> saidasDesejadas = new ArrayList<double []>();
 	private ArrayList<INeuronioBackPropagation[]> camadasRN = new ArrayList<INeuronioBackPropagation[]>();
 	
-	public RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, IFuncaoAtivacao funcaoAtivacao, double taxaDeAprendizado){
+	public RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, IFuncaoAtivacao funcaoAtivacao, double taxaDeAprendizado){
 		this.treinador = treinador;
+		treinador.setRN(this);
+		this.testador = testador;
+		testador.setRN(this);
 		this.taxaDeAprendizado = taxaDeAprendizado;
 		this.funcaoAtivacao = funcaoAtivacao;
 		instancia(camadas);
@@ -33,6 +38,7 @@ public class RNPerceptron implements IRN {
 	    			neuronios[i] = new NeuronioBackPropagation(camadas.get(i-1), taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    	}
+	    	camadasRN.add(neuronios);
 	    }
 	}
 
@@ -40,6 +46,11 @@ public class RNPerceptron implements IRN {
 	public void treina() {
 	    treinador.treinaRede();			
 	}
+	
+	@Override
+	public void testa(ArrayList<double[]> entradasTeste,ArrayList<double[]> saidasTeste) {
+	   testador.testa(entradasTeste, saidasTeste);			
+	}	
 
 	@Override
 	public void insereEntradaSupervisionada(double[] entrada, double[] saida) {
@@ -70,5 +81,5 @@ public class RNPerceptron implements IRN {
 	@Override
 	public ArrayList<double[]> getSaidasDesejadas() {
 		return saidasDesejadas;
-	}	
+	}
 }
