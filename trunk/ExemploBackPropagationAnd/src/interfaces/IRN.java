@@ -1,7 +1,14 @@
 package interfaces;
+
+import java.util.ArrayList;
+
 public interface IRN {
-	public void instancia(int numeroEntradas, int numeroCamadas, int numeroSaidas);
+	public void instancia(ArrayList<Integer> camadas);
 	public void insereEntradaSupervisionada(double [] entrada, double [] saida);
-	public void calculaBackPropagation();
+	public void treina();
+	public void setTreinador(ITreinador treinador);
 	public void setFuncaoAtivacao(IFuncaoAtivacao funcaoAtivacao);
+	public ArrayList<double []> getEntradasSupervisionadas();
+	public ArrayList<double []> getSaidasDesejadas();
+	public ArrayList<INeuronioBackPropagation[]> getNeuronios();
 }
