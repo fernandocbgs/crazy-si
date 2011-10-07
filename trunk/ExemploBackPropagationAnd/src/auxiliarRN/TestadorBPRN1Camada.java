@@ -2,7 +2,6 @@ package auxiliarRN;
 
 import java.util.ArrayList;
 import static java.lang.Math.*;
-import geral.NeuronioBackPropagation;
 import interfaces.INeuronioBackPropagation;
 import interfaces.IRN;
 import interfaces.ITestador;
@@ -33,6 +32,10 @@ public class TestadorBPRN1Camada implements ITestador {
 			   double saidaEncontrada = neuronio.getSaida(entradasTreinamento.get(j));
 			   double saidaEsperada = saidasTreinamento.get(j)[i];
 			   errosMape[i] += abs(saidaEncontrada-saidaEsperada);
+			   System.out.println("-----------------------------------------");
+			   System.out.println("Entrada: " + entradasTreinamento.get(j)[0]);
+			   System.out.println("Saida da RN " + round(saidaEncontrada));
+			   System.out.println("-----------------------------------------");
 			}
 			errosMape[i] /= entradasTreinamento.size();
 		}

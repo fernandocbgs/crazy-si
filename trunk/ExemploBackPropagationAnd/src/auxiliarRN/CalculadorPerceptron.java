@@ -4,7 +4,6 @@ import interfaces.ICalculadorSaidaRN;
 import interfaces.IRN;
 
 public class CalculadorPerceptron implements ICalculadorSaidaRN {
-
 	private IRN redeNeural;
 	
 	@Override
@@ -16,5 +15,4 @@ public class CalculadorPerceptron implements ICalculadorSaidaRN {
 	public double[] calculaSaida() {
 		return null;
 	}
-
 }

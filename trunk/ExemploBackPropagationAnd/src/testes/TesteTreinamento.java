@@ -28,8 +28,7 @@ public class TesteTreinamento {
 		IFuncaoAtivacao sigmoide = new FuncaoSigmoide();
 		IRN perceptron = new RNPerceptron(camadas, treinador, testador, sigmoide, 0.1);
 		//alguns valores de treinamento
-		perceptron.insereEntradaSupervisionada(new double[]{-1}, new double[]{0.0});
-		perceptron.insereEntradaSupervisionada(new double[]{+1}, new double[]{1});
+		adicionaEntradasTreinamento(perceptron);
 		//treina
 		perceptron.treina();
 		//testa
@@ -41,22 +40,22 @@ public class TesteTreinamento {
 	
 	
 	public void adicionaEntradasTreinamento(IRN rn){
-		for(double i = -20.0; i <= -10.0; i++){
-			rn.insereEntradaSupervisionada(new double[]{i},new double[]{0});
-		}
-		for(double i = 10.0; i <= 20.0; i++){
+		for(double i = -200.0; i <= -100.0; i++){
 			rn.insereEntradaSupervisionada(new double[]{i},new double[]{1});
+		}
+		for(double i = 100.0; i <= 200.0; i++){
+			rn.insereEntradaSupervisionada(new double[]{i},new double[]{0});
 		}
 	}
 	
 	public void adicionaEntradasTeste(ArrayList<double []> entradasTeste, ArrayList<double []> saidasTeste){
 		for(double i = -30.0; i <= -20.0; i++){
 			entradasTeste.add(new double[]{i});
-			saidasTeste.add(new double[]{0});
+			saidasTeste.add(new double[]{1});
 		}
 		for(double i = 20.0; i <= 30.0; i++){
 			entradasTeste.add(new double[]{i});
-			saidasTeste.add(new double[]{1});
+			saidasTeste.add(new double[]{0});
 		}
 	}
 
