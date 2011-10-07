@@ -32,6 +32,32 @@ public class TesteTreinamento {
 		perceptron.insereEntradaSupervisionada(new double[]{+1}, new double[]{1});
 		//treina
 		perceptron.treina();
+		//testa
+		ArrayList<double []> entradasTeste = new ArrayList<double []>();
+		ArrayList<double []> saidasTeste = new ArrayList<double []>();
+		adicionaEntradasTeste(entradasTeste, saidasTeste);
+		perceptron.testa(entradasTeste, saidasTeste);
+	}
+	
+	
+	public void adicionaEntradasTreinamento(IRN rn){
+		for(double i = -20.0; i <= -10.0; i++){
+			rn.insereEntradaSupervisionada(new double[]{i},new double[]{0});
+		}
+		for(double i = 10.0; i <= 20.0; i++){
+			rn.insereEntradaSupervisionada(new double[]{i},new double[]{1});
+		}
+	}
+	
+	public void adicionaEntradasTeste(ArrayList<double []> entradasTeste, ArrayList<double []> saidasTeste){
+		for(double i = -30.0; i <= -20.0; i++){
+			entradasTeste.add(new double[]{i});
+			saidasTeste.add(new double[]{0});
+		}
+		for(double i = 20.0; i <= 30.0; i++){
+			entradasTeste.add(new double[]{i});
+			saidasTeste.add(new double[]{1});
+		}
 	}
 
 }

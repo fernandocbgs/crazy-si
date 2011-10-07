@@ -6,6 +6,6 @@ public interface ITestador {
 	
 	public void setRN(IRN redeNeural);
 	public void testa(ArrayList<double []> entradasTreinamento, ArrayList<double []> saidasTreinamento);
-	public double getErroMape();
+	public double [] getErrosMape();
 
 }
