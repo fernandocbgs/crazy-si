@@ -25,20 +25,27 @@ public class TestadorBPRN1Camada implements ITestador {
 		//instancia os erros mape
 		errosMape = new double[camada.length];
 		//foreach
+		System.out.println("-----------------------------------------");
 		for(int i = 0; i < camada.length; i++){
 			INeuronioBackPropagation neuronio = camada[i];
 			errosMape[i] = 0;
+			System.out.println("Neuronio " + i);
+			System.out.println("-----------------------------------------");
 			for(int j = 0; j < entradasTreinamento.size(); j++){
 			   double saidaEncontrada = neuronio.getSaida(entradasTreinamento.get(j));
 			   double saidaEsperada = saidasTreinamento.get(j)[i];
 			   errosMape[i] += abs(saidaEncontrada-saidaEsperada);
-			   System.out.println("-----------------------------------------");
-			   System.out.println("Entrada: " + entradasTreinamento.get(j)[0]);
-			   System.out.println("Saida da RN " + round(saidaEncontrada));
-			   System.out.println("-----------------------------------------");
+			   
+			   for(double entrada : entradasTreinamento.get(j))
+			      System.out.println("Entrada: " + entrada);
+			   
+			   for(double saida : saidasTreinamento.get(j))
+				      System.out.println("Saida: " + saida);
 			}
+			System.out.println("-----------------------------------------");
 			errosMape[i] /= entradasTreinamento.size();
 		}
+		System.out.println("-----------------------------------------");
 		//Imprime os erros mape
 		for(int i = 0; i < errosMape.length; i++){
 			System.out.println("Erro mape: " + errosMape[i]);
