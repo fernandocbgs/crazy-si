@@ -36,11 +36,21 @@ public class TestadorBPRN1Camada implements ITestador {
 			   double saidaEsperada = saidasTreinamento.get(j)[i];
 			   errosMape[i] += abs(saidaEncontrada-saidaEsperada);
 			   
-			   for(double entrada : entradasTreinamento.get(j))
-			      System.out.println("Entrada: " + entrada);
+			   if(round(saidaEncontrada-saidaEsperada) != 0){
+				   
+				   for(double entrada : entradasTreinamento.get(j))
+					      System.err.println("Entrada: " + entrada);
+					   
+   			      System.err.println("Saida: " + saidaEncontrada);
+			   }
+			   else{
 			   
-			   for(double saida : saidasTreinamento.get(j))
-				      System.out.println("Saida: " + saida);
+				   for(double entrada : entradasTreinamento.get(j))
+				      System.out.println("Entrada: " + entrada);
+				   
+				   for(double saida : saidasTreinamento.get(j))
+					      System.out.println("Saida: " + saida);
+			   }
 			}
 			System.out.println("-----------------------------------------");
 			errosMape[i] /= entradasTreinamento.size();

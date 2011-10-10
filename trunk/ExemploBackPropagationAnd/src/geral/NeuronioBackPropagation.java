@@ -13,11 +13,12 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	private double taxaDeAprendizado;
 	private double [] pesos;
 	private double [] ajustes;
-	private double uW = 0.0;
+//	private double uW = 0.0;
 	private IFuncaoAtivacao funcaoAtivacao;
+	private double [] ultimaAlteracao;
 	
-	public NeuronioBackPropagation(int numeroDePesos, double taxaDeAprendizado, IFuncaoAtivacao funcaoAtivacao){
-		iniciaPesos(numeroDePesos);
+	public NeuronioBackPropagation(int numeroDeEntradas, double taxaDeAprendizado, IFuncaoAtivacao funcaoAtivacao){
+		iniciaPesos(numeroDeEntradas);
 		this.taxaDeAprendizado = taxaDeAprendizado;
 		this.funcaoAtivacao = funcaoAtivacao;
 	}
@@ -32,6 +33,7 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 		}
 		//ajustes também
 		ajustes = new double[numeroPesos];
+		ultimaAlteracao = new double[numeroPesos];
 	}
 
 	@Override
@@ -55,7 +57,8 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 		calculaAjustes(entradas, saidasDesejadas, indiceDesteNeuronio);
 		//faz os ajustes
 		for(int i = 0; i < pesos.length; i++){
-			pesos[i] = pesos[i]-ajustes[i];
+			pesos[i] = pesos[i]-ajustes[i]+0.8*ultimaAlteracao[i];
+			ultimaAlteracao[i]=ajustes[i];
 		}
 	}
 	
@@ -64,21 +67,33 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 		for(int i = 0; i < pesos.length; i++){
 	        double djDW = 0.0;
 		    //para cada par de treinamento
+	        // p = par de entradas (xp,yp)
 			for(int p = 0; p < entradas.size(); p++){
-				djDW += erro(getSaida(entradas.get(p)),saidasDesejadas.get(p)[indiceDesteNeuronio])
+				double uW = calculaUW(entradas.get(p));
+				double saidaNeuronio = getSaida(uW);
+				djDW += erro(saidaNeuronio,saidasDesejadas.get(p)[indiceDesteNeuronio])
 						*funcaoAtivacao.derivada(uW)*entradas.get(p)[i];
 			}			
+			//uW = somatório de wixi de i=1 até n entradas
 			ajustes[i] = taxaDeAprendizado*djDW;
 		}
 	}
 	
-	public double getSaida(double [] entrada){
-		//calcula o somatorio de wi*entrada_i
-		double somatorioEntradas = 0.0;
+	public double calculaUW(double [] entrada){
+	   //calcula o somatorio de wi*entrada_i
+		double uW = 0.0;
 		for(int i = 0; i < entrada.length; i++){
-			somatorioEntradas += pesos[i]*entrada[i];
+		uW += pesos[i]*entrada[i];
 		}
-		uW = somatorioEntradas;
-		return funcaoAtivacao.funcao(somatorioEntradas);
+		return uW;
+	}
+	
+	public double getSaida(double uW){
+		return funcaoAtivacao.funcao(uW);
+	}
+	
+	public double getSaida(double [] entrada){
+		double uW = calculaUW(entrada);
+		return funcaoAtivacao.funcao(uW);
 	}
 }
