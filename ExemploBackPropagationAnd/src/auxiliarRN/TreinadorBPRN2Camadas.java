@@ -9,7 +9,7 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 
 	@Override
 	public void treinaRede() {
-				
+	    			
 	}
 
 	@Override
