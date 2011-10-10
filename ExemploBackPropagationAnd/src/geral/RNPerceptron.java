@@ -32,9 +32,11 @@ public class RNPerceptron implements IRN {
 	    	INeuronioBackPropagation[] neuronios = new INeuronioBackPropagation[camada];
 	    	for(int i = 0; i < camada; i++){
 	    		if(i == 0){
+	    			//na primeira camada o número de entradas = número de neurônios desta camada
 	    		    neuronios[i] =  new NeuronioBackPropagation(camadas.get(i), taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    		else{
+	    			//quando não é a primeira camada, o número de entradas é o número de neurônios na camada anterior
 	    			neuronios[i] = new NeuronioBackPropagation(camadas.get(i-1), taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    	}

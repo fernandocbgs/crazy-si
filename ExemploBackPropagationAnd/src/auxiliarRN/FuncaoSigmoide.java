@@ -6,13 +6,13 @@ import interfaces.IFuncaoAtivacao;
 public class FuncaoSigmoide implements IFuncaoAtivacao{
 
 	@Override
-	public double funcao(double entrada) {
-		return 1/(1+exp(-1*entrada));
+	public double funcao(double x) {
+		return 1/(1+exp(-1*x));
 	}
 
 	@Override
-	public double derivada(double entrada) {
-		return funcao(entrada)*(1-funcao(entrada));
+	public double derivada(double x) {
+		return funcao(x)*(1-funcao(x));
 	}
 
 }
