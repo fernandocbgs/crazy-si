@@ -20,7 +20,7 @@ public class Main {
 		ITreinador treinador = new TreinadorBPRN1Camada(500);
 		ITestador testador = new TestadorBPRN1Camada();
 		IFuncaoAtivacao sigmoide = new FuncaoSigmoide();
-		IRN perceptron = new RNPerceptron(camadas, treinador, testador, sigmoide, 0.7);
+		IRN perceptron = new RNPerceptron(camadas, treinador, testador, sigmoide, 0.1);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
 	}
