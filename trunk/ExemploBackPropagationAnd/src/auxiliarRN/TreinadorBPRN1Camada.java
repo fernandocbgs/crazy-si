@@ -26,7 +26,8 @@ public class TreinadorBPRN1Camada implements ITreinador{
 		    INeuronioBackPropagation[] camadaNeuronios = camadasNeuronios.get(0);
 		    for(int i = 0; i < camadaNeuronios.length; i++){
 		    	INeuronioBackPropagation neuronio = camadaNeuronios[i];
-		    	neuronio.ajustaPesos(redeNeural.getEntradasSupervisionadas(), redeNeural.getSaidasDesejadas(), i);
+		    	neuronio.calculaAjustes(redeNeural.getEntradasSupervisionadas(), redeNeural.getSaidasDesejadas(), i);
+		    	neuronio.ajustaPesos();
 		    }
 	    }
 	}
