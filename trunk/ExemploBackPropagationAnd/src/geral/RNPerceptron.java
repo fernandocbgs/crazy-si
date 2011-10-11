@@ -1,5 +1,8 @@
 package geral;
 import java.util.ArrayList;
+
+import funcoes.FuncaoCossenoidal;
+import funcoes.FuncaoSigmoide;
 import interfaces.IFuncaoAtivacao;
 import interfaces.INeuronioBackPropagation;
 import interfaces.IRN;
@@ -7,6 +10,11 @@ import interfaces.ITestador;
 import interfaces.ITreinador;
 
 public class RNPerceptron implements IRN {
+	
+	public enum TIPO_FUNCAO {
+		sigmodal,
+		cossenoidal
+	}
 	
 	private double taxaDeAprendizado;
 	private ITreinador treinador;
@@ -16,13 +24,13 @@ public class RNPerceptron implements IRN {
 	private ArrayList<double []> saidasDesejadas = new ArrayList<double []>();
 	private ArrayList<INeuronioBackPropagation[]> camadasRN = new ArrayList<INeuronioBackPropagation[]>();
 	
-	public RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, IFuncaoAtivacao funcaoAtivacao, double taxaDeAprendizado){
+	public RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao, double taxaDeAprendizado){
 		this.treinador = treinador;
 		treinador.setRN(this);
 		this.testador = testador;
 		testador.setRN(this);
 		this.taxaDeAprendizado = taxaDeAprendizado;
-		this.funcaoAtivacao = funcaoAtivacao;
+		this.funcaoAtivacao = getFuncaoAtivacao(tpfuncao);
 		instancia(camadas);
 	}
 	
@@ -84,4 +92,16 @@ public class RNPerceptron implements IRN {
 	public ArrayList<double[]> getSaidasDesejadas() {
 		return saidasDesejadas;
 	}
+	
+	/**
+	 * @return uma funcao sigmodal ou cossenoidal
+	 * */
+	private IFuncaoAtivacao getFuncaoAtivacao(TIPO_FUNCAO tp) {
+		switch (tp) {
+			case sigmodal: return new FuncaoSigmoide();
+			case cossenoidal: return new FuncaoCossenoidal();
+		}
+		return new FuncaoSigmoide();
+	}
+	
 }

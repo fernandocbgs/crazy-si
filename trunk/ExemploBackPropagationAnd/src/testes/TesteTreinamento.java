@@ -1,19 +1,21 @@
 package testes;
-import static org.junit.Assert.*;
-import static java.lang.Math.*;
 import java.util.ArrayList;
 
+import funcoes.FuncaoSigmoide;
 import geral.ARedeNeuralExecutor;
 import geral.RNPerceptron;
+import geral.RNPerceptron.TIPO_FUNCAO;
 import interfaces.IFuncaoAtivacao;
 import interfaces.IRN;
 import interfaces.ITestador;
 import interfaces.ITreinador;
 import org.junit.Test;
-import auxiliarRN.FuncaoSigmoide;
 import auxiliarRN.TestadorBPRN1Camada;
 import auxiliarRN.TreinadorBPRN1Camada;
 
+/**
+ * classe de teste treinamento
+ * */
 public class TesteTreinamento {
 	@Test
 	public void test() {
@@ -22,8 +24,7 @@ public class TesteTreinamento {
 		camadas.add(2);
 		ITreinador treinador = new TreinadorBPRN1Camada(50);
 		ITestador testador = new TestadorBPRN1Camada();
-		IFuncaoAtivacao sigmoide = new FuncaoSigmoide();
-		IRN perceptron = new RNPerceptron(camadas, treinador, testador, sigmoide, 0.1);
+		IRN perceptron = new RNPerceptron(camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
 	}

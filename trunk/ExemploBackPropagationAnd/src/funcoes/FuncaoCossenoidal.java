@@ -1,4 +1,4 @@
-package auxiliarRN;
+package funcoes;
 import static java.lang.Math.*;
 import interfaces.IFuncaoAtivacao;
 
