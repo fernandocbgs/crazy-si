@@ -10,12 +10,12 @@ import interfaces.INeuronioBackPropagation;
 
 public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	
-	private double taxaDeAprendizado;
-	private double [] pesos;
-	private double [] ajustes;
+	protected double taxaDeAprendizado;
+	protected double [] pesos;
+	protected double [] ajustes;
 //	private double uW = 0.0;
-	private IFuncaoAtivacao funcaoAtivacao;
-	private double [] ultimaAlteracao;
+	protected IFuncaoAtivacao funcaoAtivacao;
+	protected double [] ultimaAlteracao;
 	
 	public NeuronioBackPropagation(int numeroDeEntradas, double taxaDeAprendizado, IFuncaoAtivacao funcaoAtivacao){
 		iniciaPesos(numeroDeEntradas);
@@ -53,8 +53,7 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	}
 
 	@Override
-	public void ajustaPesos(ArrayList<double[]> entradas, ArrayList<double[]> saidasDesejadas, int indiceDesteNeuronio) {
-		calculaAjustes(entradas, saidasDesejadas, indiceDesteNeuronio);
+	public void ajustaPesos() {
 		//faz os ajustes
 		for(int i = 0; i < pesos.length; i++){
 			pesos[i] = pesos[i]-ajustes[i]+0.8*ultimaAlteracao[i];
@@ -62,7 +61,7 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 		}
 	}
 	
-	private void calculaAjustes(ArrayList<double[]> entradas, ArrayList<double[]> saidasDesejadas, int indiceDesteNeuronio){
+	public void calculaAjustes(ArrayList<double[]> entradas, ArrayList<double[]> saidasDesejadas, int indiceDesteNeuronio){
 	//para cada peso
 		for(int i = 0; i < pesos.length; i++){
 	        double djDW = 0.0;
@@ -83,7 +82,7 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 	   //calcula o somatorio de wi*entrada_i
 		double uW = 0.0;
 		for(int i = 0; i < entrada.length; i++){
-		uW += pesos[i]*entrada[i];
+		   uW += pesos[i]*entrada[i];
 		}
 		return uW;
 	}
