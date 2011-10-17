@@ -18,5 +18,4 @@ public class CalculadorPerceptron implements ICalculadorSaidaRN {
 	public double[] calculaSaida() {
 		return null;
 	}
-
 }

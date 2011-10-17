@@ -24,7 +24,7 @@ public class TesteTreinamento {
 		camadas.add(2);
 		ITreinador treinador = new TreinadorBPRN1Camada(50);
 		ITestador testador = new TestadorBPRN1Camada();
-		IRN perceptron = new RNPerceptron(camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
+		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS,camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
 	}
