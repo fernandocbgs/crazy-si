@@ -26,7 +26,7 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 				INeuronioBackPropagation neuronio = ultimaCamada[k];
 				neuronio.calculaAjustes(getEntradasSupervisionadasUltimaCamada(redeNeural.getEntradasSupervisionadas()), redeNeural.getSaidasDesejadas(), k);
 			}
-			//calculados os ajustes vamos a cada neurônio da camada de entrada
+			//calculados os ajustes vamos a cada neurï¿½nio da camada de entrada
 			
 			for(int j = 0; j < ultimaCamada.length; j++){
 				INeuronioBackPropagation neuronio = camadaIntermediaria[j];
@@ -39,7 +39,7 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 				INeuronioBackPropagation neuronio = ultimaCamada[k];
 				neuronio.ajustaPesos();
 			}
-			//calculados os ajustes vamos a cada neurônio da camada de entrada
+			//calculados os ajustes vamos a cada neurï¿½nio da camada de entrada
 			
 			for(int j = 0; j < ultimaCamada.length; j++){
 				INeuronioBackPropagation neuronio = camadaIntermediaria[j];
@@ -49,7 +49,18 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 	}
 	
 	private ArrayList<double []> getEntradasSupervisionadasUltimaCamada(ArrayList<double []> entradasRede){
-		return null;
+		ArrayList<double [] > saidas = new ArrayList<double [] >();
+		for(double [] entrada : entradasRede){
+			INeuronioBackPropagation [] neuroniosIntermediaria = redeNeural.getNeuronios().get(1);
+			double [] saida = new double[neuroniosIntermediaria.length];
+			for(int i = 0; i < neuroniosIntermediaria.length; i++){
+				saida[i] = neuroniosIntermediaria[i].getSaida(entrada);
+			}
+			saidas.add(saida);
+		}
+		//trim para evitar problemas
+		saidas.trimToSize();
+		return saidas;
 	}
 
 	@Override
