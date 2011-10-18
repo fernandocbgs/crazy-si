@@ -159,7 +159,7 @@ class RNPerceptron2Camadas extends RNPerceptron{
 	public void instancia(ArrayList<Integer> camadas) {
 	    for(int k = camadas.size()-1; k >= 0; k--){
 	    	INeuronioBackPropagation[] neuronios = new INeuronioBackPropagation[camadas.get(k)];
-	    	for(int i = 0; i < camadas.size(); i++){
+	    	for(int i = 0; i < camadas.get(k); i++){
 	    		if(k == 0){
 	    			neuronios[i] =  new NeuronioBackPropagationCamadaIntermediaria(numeroEntradasPrimeiraCamada, taxaDeAprendizado, funcaoAtivacao,camadasRN.get(camadasRN.size()-1));
 	    		}

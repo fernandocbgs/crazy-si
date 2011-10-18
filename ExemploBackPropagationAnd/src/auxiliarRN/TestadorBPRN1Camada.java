@@ -10,6 +10,7 @@ public class TestadorBPRN1Camada implements ITestador {
 	
 	private IRN redeNeural;
 	double[] errosMape;
+	double numeroErros = 0;
 
 	@Override
 	public void setRN(IRN redeNeural) {
@@ -42,6 +43,9 @@ public class TestadorBPRN1Camada implements ITestador {
 					      System.err.println("Entrada: " + entrada);
 					   
    			      System.err.println("Saida: " + saidaEncontrada);
+   			      
+   			      //incrementa o numero de erros
+   			      numeroErros++;
 			   }
 			   else{
 			   
@@ -60,6 +64,7 @@ public class TestadorBPRN1Camada implements ITestador {
 		for(int i = 0; i < errosMape.length; i++){
 			System.out.println("Erro mape: " + errosMape[i]);
 		}
+
 	}
 
 	@Override

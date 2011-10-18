@@ -30,7 +30,7 @@ public class NeuronioBackPropagationCamadaIntermediaria extends NeuronioBackProp
 					somatorioSigmaW += neuron.getSigmaW(j, entradasPropagadas.get(p), saidasRede.get(p), k);
 				}
 				double uW = calculaUW(entradas.get(p));
-				djDw += somatorioSigmaW*funcaoAtivacao.derivada(uW)*entradas.get(p)[j];		
+				djDw += somatorioSigmaW*funcaoAtivacao.derivada(uW)*entradas.get(p)[i];
 			    somatorioSigmaW = 0;
 			}
 			ajustes[i] = taxaDeAprendizado*djDw;

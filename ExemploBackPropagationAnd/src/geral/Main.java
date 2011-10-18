@@ -22,13 +22,13 @@ public class Main {
 	private static void testeLinear() {
 		ArrayList<Integer> camadas = new ArrayList<Integer>();
 		//2 neuronios
-		camadas.add(2);
+		camadas.add(6);
 		camadas.add(2);
 		//tira as camadas em branco
 		camadas.trimToSize();
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
-		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1, 2);
+		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.cossenoidal, 0.1, 2);
 		perceptron.treina();
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
@@ -40,7 +40,7 @@ public class Main {
 	private static void testeFutebolRobos(){
 		ArrayList<Integer> camadas = new ArrayList<Integer>();
 		//2 neuronios
-		camadas.add(2);
+		camadas.add(10);
 		camadas.add(2);
 		//tira as camadas em branco
 		camadas.trimToSize();

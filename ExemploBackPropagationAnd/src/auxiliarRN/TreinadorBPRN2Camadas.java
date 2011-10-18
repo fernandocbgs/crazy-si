@@ -30,6 +30,7 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 			//calculados os ajustes vamos a cada neur�nio da camada de entrada
 			
 			for(int j = 0; j < camadaIntermediaria.length; j++){
+				System.out.println("Neuronio " + j);
 				INeuronioBackPropagation neuronio = camadaIntermediaria[j];
 				NeuronioBackPropagationCamadaIntermediaria neuron = (NeuronioBackPropagationCamadaIntermediaria) neuronio;
 				neuron.setEntradasPropagadas(getEntradasUltimaCamada(redeNeural.getEntradasSupervisionadas(), camadaIntermediaria));
@@ -59,7 +60,6 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 				entradaUltimaCamada[i] = camadaIntermediaria[i].getSaida(entrada);
 			}
 			entradasUltimacamada.add(entradaUltimaCamada);
-			System.out.println("Entrada ultima camada tamanho calculado: " + entradaUltimaCamada.length);
 		}
 		return entradasUltimacamada;
 	}
