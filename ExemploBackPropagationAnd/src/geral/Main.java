@@ -28,7 +28,7 @@ public class Main {
 		camadas.trimToSize();
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
-		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
+		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1, 2);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
 	}
@@ -45,7 +45,7 @@ public class Main {
 		camadas.trimToSize();
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
-		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
+		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1, 5);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.FUTEBOL_ROBOS, perceptron);
 		executor.executa();
 	}
@@ -63,7 +63,7 @@ public class Main {
 		camadas.trimToSize();
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
-		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
+		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1,2);
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.NAO_LINEAR, perceptron);
 		executor.executa();
 	}

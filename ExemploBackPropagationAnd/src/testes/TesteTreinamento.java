@@ -19,13 +19,13 @@ import auxiliarRN.TreinadorBPRN1Camada;
 public class TesteTreinamento {
 	@Test
 	public void test() {
-		ArrayList<Integer> camadas = new ArrayList<Integer>();
-		//1 neuronio
-		camadas.add(2);
-		ITreinador treinador = new TreinadorBPRN1Camada(50);
-		ITestador testador = new TestadorBPRN1Camada();
-		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS,camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
-		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
-		executor.executa();
+//		ArrayList<Integer> camadas = new ArrayList<Integer>();
+//		//1 neuronio
+//		camadas.add(2);
+//		ITreinador treinador = new TreinadorBPRN1Camada(50);
+//		ITestador testador = new TestadorBPRN1Camada();
+//		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS,camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1);
+//		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
+//		executor.executa();
 	}
 }
