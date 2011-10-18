@@ -12,4 +12,5 @@ public interface IRN {
 	public ArrayList<double []> getEntradasSupervisionadas();
 	public ArrayList<double []> getSaidasDesejadas();
 	public ArrayList<INeuronioBackPropagation[]> getNeuronios();
+	public double [] getSaida(double [] entrada);
 } 
