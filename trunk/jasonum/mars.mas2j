@@ -1,14 +1,18 @@
-// Implementation of the example described in chapter 2
-// of the Jason's manual
+/*
+    Jason Project
+
+    -- created on Outubro 17, 2011
+*/
 
 MAS mars {
+   infrastructure: Centralised
 
-    infrastructure: Centralised
-	
-	//repare no nome do pacote 'ambiente'
-    environment: ambiente.MarsEnv
-    
-    agents: r1; r2;
-    
-    aslSourcePath: "src/asl";
+   environment: ambiente.MarsEnv
+
+   agents:
+       //r1;
+       //r2;
+       ag_robot1;
+
+   aslSourcePath: "src/asl"; 
 }
