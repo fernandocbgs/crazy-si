@@ -37,8 +37,17 @@ public class TestadorBPRN2Camadas implements ITestador {
 				   
 				   for(double entrada : entradasTreinamento.get(j))
 					      System.err.println("Entrada: " + entrada);
-					   
-   			      System.err.println("Saida: " + saidaEncontrada);
+				   
+				  if(i == 0)
+				  {
+	   			       System.err.println("Saida: " + saidaEncontrada);
+				       System.err.println("Saida: " + saidasTreinamento.get(j)[1]);
+				  }
+				  else if(i == 1)
+				  {
+				       System.err.println("Saida: " + saidasTreinamento.get(j)[0]);
+		   			   System.err.println("Saida: " + saidaEncontrada);
+				  }
 			   }
 			   else{
 			   
