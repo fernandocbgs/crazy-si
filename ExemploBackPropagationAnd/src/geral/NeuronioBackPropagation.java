@@ -78,11 +78,11 @@ public class NeuronioBackPropagation implements INeuronioBackPropagation {
 		}
 	}
 	
-	public double calculaUW(double [] entrada){
+	protected double calculaUW(double [] entrada){
 	   //calcula o somatorio de wi*entrada_i
 		double uW = 0.0;
 		for(int i = 0; i < entrada.length; i++){
-		   uW += pesos[i]*entrada[i];
+		       uW += pesos[i]*entrada[i];
 		}
 		return uW;
 	}

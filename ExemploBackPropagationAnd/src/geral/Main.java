@@ -29,6 +29,7 @@ public class Main {
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
 		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1, 2);
+		perceptron.treina();
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.LINEAR, perceptron);
 		executor.executa();
 	}
@@ -64,9 +65,8 @@ public class Main {
 		ITreinador treinador = new TreinadorBPRN2Camadas(50);
 		ITestador testador = new TestadorBPRN2Camadas();
 		IRN perceptron = RNPerceptron.getInstancia(RNPerceptron.TIPO_RN.DUAS_CAMADAS, camadas, treinador, testador, TIPO_FUNCAO.sigmodal, 0.1,2);
+		perceptron.treina();
 		ARedeNeuralExecutor executor = ARedeNeuralExecutor.instancia(ARedeNeuralExecutor.TIPO_EXECUTOR.NAO_LINEAR, perceptron);
 		executor.executa();
-	}
-	
-	
+	}	
 }
