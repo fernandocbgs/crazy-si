@@ -10,6 +10,7 @@ public class TestadorBPRN2Camadas implements ITestador {
 	
 	private IRN redeNeural;
 	double[] errosMape;
+	double [] numeroErros;
 
 	@Override
 	public void setRN(IRN redeNeural) {
@@ -22,6 +23,7 @@ public class TestadorBPRN2Camadas implements ITestador {
 		ArrayList<INeuronioBackPropagation[]> camadasRN = redeNeural.getNeuronios();
 		//instancia os erros mape
 		errosMape = new double[camadasRN.get(camadasRN.size()-1).length];
+		numeroErros = new double[camadasRN.get(camadasRN.size()-1).length];
 		//foreach
 		System.out.println("-----------------------------------------");
 		for(int i = 0; i < errosMape.length; i++){
@@ -48,6 +50,7 @@ public class TestadorBPRN2Camadas implements ITestador {
 				       System.err.println("Saida: " + saidasTreinamento.get(j)[0]);
 		   			   System.err.println("Saida: " + saidaEncontrada);
 				  }
+				  numeroErros[i]++;
 			   }
 			   else{
 			   
@@ -57,6 +60,8 @@ public class TestadorBPRN2Camadas implements ITestador {
 				   for(double saida : saidasTreinamento.get(j))
 					      System.out.println("Saida: " + saida);
 			   }
+			   
+			   //incrementa o numero de erros
 			}
 			System.out.println("-----------------------------------------");
 			errosMape[i] /= entradasTreinamento.size();
@@ -66,6 +71,12 @@ public class TestadorBPRN2Camadas implements ITestador {
 		for(int i = 0; i < errosMape.length; i++){
 			System.out.println("Erro mape: " + errosMape[i]);
 		}
+		//Erro percentual
+		for(int i = 0; i < numeroErros.length; i++){
+			double erroPercentual = (numeroErros[i]/entradasTreinamento.size()) * 100;
+			System.out.println("Erro percentual no neuronio " + i + " : " + erroPercentual);
+		}
+		System.out.println("FIM");
 	}
 
 	@Override
