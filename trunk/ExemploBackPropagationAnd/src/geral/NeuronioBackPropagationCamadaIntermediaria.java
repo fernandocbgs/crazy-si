@@ -33,5 +33,4 @@ public class NeuronioBackPropagationCamadaIntermediaria extends NeuronioBackProp
 			ajustes[i] = taxaDeAprendizado*djDw;
 		}
 	}
-
 }

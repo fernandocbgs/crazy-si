@@ -24,7 +24,7 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 		for(int cicloAtual = 0; cicloAtual < ciclosTreinamento; cicloAtual++){
 			for(int k = 0; k < ultimaCamada.length; k++){
 				INeuronioBackPropagation neuronio = ultimaCamada[k];
-				neuronio.calculaAjustes(getEntradasSupervisionadasUltimaCamada(redeNeural.getEntradasSupervisionadas()), redeNeural.getSaidasDesejadas(), k);
+				neuronio.calculaAjustes(redeNeural.getEntradasSupervisionadas(), redeNeural.getSaidasDesejadas(), k);
 			}
 			//calculados os ajustes vamos a cada neur�nio da camada de entrada
 			
@@ -47,25 +47,9 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 			}
 		}		
 	}
-	
-	private ArrayList<double []> getEntradasSupervisionadasUltimaCamada(ArrayList<double []> entradasRede){
-		ArrayList<double [] > saidas = new ArrayList<double [] >();
-		for(double [] entrada : entradasRede){
-			INeuronioBackPropagation [] neuroniosIntermediaria = redeNeural.getNeuronios().get(1);
-			double [] saida = new double[neuroniosIntermediaria.length];
-			for(int i = 0; i < neuroniosIntermediaria.length; i++){
-				saida[i] = neuroniosIntermediaria[i].getSaida(entrada);
-			}
-			saidas.add(saida);
-		}
-		//trim para evitar problemas
-		saidas.trimToSize();
-		return saidas;
-	}
 
 	@Override
 	public void setRN(IRN redeNeural) {
 	    this.redeNeural = redeNeural;			
 	}
-
 }

@@ -27,12 +27,11 @@ public class TestadorBPRN2Camadas implements ITestador {
 		//foreach
 		System.out.println("-----------------------------------------");
 		for(int i = 0; i < camada.length; i++){
-			INeuronioBackPropagation neuronio = camada[i];
 			errosMape[i] = 0;
 			System.out.println("Neuronio " + i);
 			System.out.println("-----------------------------------------");
 			for(int j = 0; j < entradasTreinamento.size(); j++){
-			   double saidaEncontrada = round(neuronio.getSaida(entradasTreinamento.get(j)));
+			   double saidaEncontrada = Math.round(redeNeural.getSaida(entradasTreinamento.get(j))[i]);
 			   double saidaEsperada = saidasTreinamento.get(j)[i];
 			   errosMape[i] += abs(saidaEncontrada-saidaEsperada);
 			   

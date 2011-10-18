@@ -1,10 +1,6 @@
 package geral;
 
-import static java.lang.Math.random;
 import static utils.Utils.erro;
-
-import java.util.ArrayList;
-
 import interfaces.IFuncaoAtivacao;
 
 public class NeuronioBackPropagationUltimaCamada extends NeuronioBackPropagation {
