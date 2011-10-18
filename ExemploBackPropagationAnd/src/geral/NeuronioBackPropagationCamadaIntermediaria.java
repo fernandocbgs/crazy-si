@@ -3,13 +3,15 @@ package geral;
 import java.util.ArrayList;
 
 import interfaces.IFuncaoAtivacao;
+import interfaces.INeuronioBackPropagation;
 
 public class NeuronioBackPropagationCamadaIntermediaria extends NeuronioBackPropagation {
 
-    private NeuronioBackPropagationUltimaCamada [] neuroniosUltimaCamada;
+    private INeuronioBackPropagation [] neuroniosUltimaCamada;
+    private ArrayList<double []> entradasPropagadas;
 
 	public NeuronioBackPropagationCamadaIntermediaria(int numeroDeEntradas,
-			double taxaDeAprendizado, IFuncaoAtivacao funcaoAtivacao, NeuronioBackPropagationUltimaCamada [] neuroniosUltimaCamada) {
+			double taxaDeAprendizado, IFuncaoAtivacao funcaoAtivacao, INeuronioBackPropagation [] neuroniosUltimaCamada) {
 		super(numeroDeEntradas, taxaDeAprendizado, funcaoAtivacao);
 		this.neuroniosUltimaCamada = neuroniosUltimaCamada;
 	}
@@ -24,13 +26,19 @@ public class NeuronioBackPropagationCamadaIntermediaria extends NeuronioBackProp
 			for(int p = 0; p < entradas.size(); p++){
 				double somatorioSigmaW = 0.0;
 				for(int k = 0; k < neuroniosUltimaCamada.length; k++){
-					somatorioSigmaW += neuroniosUltimaCamada[k].getSigmaW(j, entradas.get(p), saidasRede.get(p), k);
+					NeuronioBackPropagationUltimaCamada neuron = (NeuronioBackPropagationUltimaCamada) neuroniosUltimaCamada[k];
+					somatorioSigmaW += neuron.getSigmaW(j, entradasPropagadas.get(p), saidasRede.get(p), k);
 				}
 				double uW = calculaUW(entradas.get(p));
-				djDw += somatorioSigmaW*funcaoAtivacao.derivada(uW)*entradas.get(p)[j];					
+				djDw += somatorioSigmaW*funcaoAtivacao.derivada(uW)*entradas.get(p)[j];		
 			    somatorioSigmaW = 0;
 			}
 			ajustes[i] = taxaDeAprendizado*djDw;
+			System.out.println("Ajustes " + ajustes[i]);
 		}
+	}
+	
+	public void setEntradasPropagadas(ArrayList<double []> entradasPropagadas){
+		this.entradasPropagadas = entradasPropagadas;
 	}
 }

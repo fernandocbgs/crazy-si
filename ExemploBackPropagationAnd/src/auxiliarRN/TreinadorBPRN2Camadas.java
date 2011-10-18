@@ -2,6 +2,7 @@ package auxiliarRN;
 
 import java.util.ArrayList;
 
+import geral.NeuronioBackPropagationCamadaIntermediaria;
 import interfaces.INeuronioBackPropagation;
 import interfaces.IRN;
 import interfaces.ITreinador;
@@ -24,7 +25,9 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 		for(int cicloAtual = 0; cicloAtual < ciclosTreinamento; cicloAtual++){
 			for(int k = 0; k < ultimaCamada.length; k++){
 				INeuronioBackPropagation neuronio = ultimaCamada[k];
-				neuronio.calculaAjustes(redeNeural.getEntradasSupervisionadas(), redeNeural.getSaidasDesejadas(), k);
+				NeuronioBackPropagationCamadaIntermediaria neuron = (NeuronioBackPropagationCamadaIntermediaria) neuronio;
+				neuron.setEntradasPropagadas(getEntradasUltimaCamada(redeNeural.getEntradasSupervisionadas(), camadaIntermediaria));
+				neuronio.calculaAjustes(getEntradasUltimaCamada(redeNeural.getEntradasSupervisionadas(), camadaIntermediaria), redeNeural.getSaidasDesejadas(), k);
 			}
 			//calculados os ajustes vamos a cada neur�nio da camada de entrada
 			
@@ -46,6 +49,18 @@ public class TreinadorBPRN2Camadas implements ITreinador{
 				neuronio.ajustaPesos();
 			}
 		}		
+	}
+	
+	public ArrayList<double []> getEntradasUltimaCamada(ArrayList<double []> entradas, INeuronioBackPropagation [] camadaIntermediaria){
+		ArrayList<double []> entradasUltimacamada = new ArrayList<double []>();
+		for(double [] entrada : entradas){
+			double [] entradaUltimaCamada = new double[camadaIntermediaria.length];
+			for(int i  = 0; i < camadaIntermediaria.length; i++){
+				entradaUltimaCamada[i] = camadaIntermediaria[i].getSaida(entrada);
+			}
+			entradasUltimacamada.add(entradaUltimaCamada);
+		}
+		return entradasUltimacamada;
 	}
 
 	@Override

@@ -20,13 +20,11 @@ public class TestadorBPRN2Camadas implements ITestador {
 	public void testa(ArrayList<double[]> entradasTreinamento,ArrayList<double[]> saidasTreinamento) {
 	    //vamos calcular o erro mape de treinamento
 		ArrayList<INeuronioBackPropagation[]> camadasRN = redeNeural.getNeuronios();
-		//truncando em uma camada para facilitar
-		INeuronioBackPropagation [] camada = camadasRN.get(1);
 		//instancia os erros mape
-		errosMape = new double[camada.length];
+		errosMape = new double[camadasRN.get(camadasRN.size()-1).length];
 		//foreach
 		System.out.println("-----------------------------------------");
-		for(int i = 0; i < camada.length; i++){
+		for(int i = 0; i < errosMape.length; i++){
 			errosMape[i] = 0;
 			System.out.println("Neuronio " + i);
 			System.out.println("-----------------------------------------");
