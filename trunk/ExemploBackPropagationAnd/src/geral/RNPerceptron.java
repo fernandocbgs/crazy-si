@@ -29,14 +29,16 @@ public class RNPerceptron implements IRN {
 	protected ArrayList<double []> entradasSupervisionadas = new ArrayList<double []>();
 	protected ArrayList<double []> saidasDesejadas = new ArrayList<double []>();
 	protected ArrayList<INeuronioBackPropagation[]> camadasRN = new ArrayList<INeuronioBackPropagation[]>();
+	protected int numeroEntradasPrimeiraCamada = 0;
 	
-	protected RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao, double taxaDeAprendizado){
+	protected RNPerceptron(ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao, double taxaDeAprendizado, int numeroEntradasPrimeiraCamada){
 		this.treinador = treinador;
 		treinador.setRN(this);
 		this.testador = testador;
 		testador.setRN(this);
 		this.taxaDeAprendizado = taxaDeAprendizado;
 		this.funcaoAtivacao = getFuncaoAtivacao(tpfuncao);
+		this.numeroEntradasPrimeiraCamada = numeroEntradasPrimeiraCamada;
 		instancia(camadas);
 	}
 	
@@ -46,11 +48,11 @@ public class RNPerceptron implements IRN {
 	    	INeuronioBackPropagation[] neuronios = new INeuronioBackPropagation[camadas.get(k)];
 	    	for(int i = 0; i < camadas.get(k); i++){
 	    		if(k == 0){
-	    			//na primeira camada o número de entradas = número de neurônios desta camada
-	    		    neuronios[i] =  new NeuronioBackPropagation(camadas.get(i), taxaDeAprendizado, funcaoAtivacao);
+	    			//na primeira camada o nï¿½mero de entradas = nï¿½mero de neurï¿½nios desta camada
+	    		    neuronios[i] =  new NeuronioBackPropagation(numeroEntradasPrimeiraCamada, taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    		else{
-	    			//quando não é a primeira camada, o número de entradas é o número de neurônios na camada anterior
+	    			//quando nï¿½o ï¿½ a primeira camada, o nï¿½mero de entradas ï¿½ o nï¿½mero de neurï¿½nios na camada anterior
 	    			neuronios[i] = new NeuronioBackPropagation(camadas.get(i-1), taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    	}
@@ -110,12 +112,12 @@ public class RNPerceptron implements IRN {
 		return new FuncaoSigmoide();
 	}
 	
-	public static RNPerceptron getInstancia(TIPO_RN tipo, ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao, double taxaDeAprendizado){
+	public static RNPerceptron getInstancia(TIPO_RN tipo, ArrayList<Integer> camadas, ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao, double taxaDeAprendizado, int numeroEntradasPrimeiraCamada){
 		switch(tipo){
 		case UMA_CAMADA : 
-			return new RNPerceptron(camadas, treinador, testador, tpfuncao, taxaDeAprendizado);
+			return new RNPerceptron(camadas, treinador, testador, tpfuncao, taxaDeAprendizado, numeroEntradasPrimeiraCamada);
 		case DUAS_CAMADAS:
-			return new RNPerceptron2Camadas(camadas, treinador, testador, tpfuncao, taxaDeAprendizado);
+			return new RNPerceptron2Camadas(camadas, treinador, testador, tpfuncao, taxaDeAprendizado,numeroEntradasPrimeiraCamada);
 		}
 		return null;
 	}
@@ -131,10 +133,10 @@ public class RNPerceptron implements IRN {
 			//calcula a saida para cada camada
 			entradaProximaCamada = new double[neuronios.length];
 			for(int j = 0; j < neuronios.length; j++){
-				//iguala cada saida a saida de cada neurônio da camada
+				//iguala cada saida a saida de cada neurï¿½nio da camada
 				entradaProximaCamada[j] = neuronios[j].getSaida(entrada);
 			}
-			//joga na próxima camada
+			//joga na prï¿½xima camada
 			entrada = entradaProximaCamada;
 		}
 		return entradaProximaCamada;
@@ -145,8 +147,8 @@ class RNPerceptron2Camadas extends RNPerceptron{
 
 	protected RNPerceptron2Camadas(ArrayList<Integer> camadas,
 			ITreinador treinador, ITestador testador, TIPO_FUNCAO tpfuncao,
-			double taxaDeAprendizado) {
-		super(camadas, treinador, testador, tpfuncao, taxaDeAprendizado);
+			double taxaDeAprendizado, int numeroEntradasPrimeiraCamada) {
+		super(camadas, treinador, testador, tpfuncao, taxaDeAprendizado, numeroEntradasPrimeiraCamada);
 	}
 	
 	@Override
@@ -158,7 +160,7 @@ class RNPerceptron2Camadas extends RNPerceptron{
 	    			neuronios[i] =  new NeuronioBackPropagationCamadaIntermediaria(camadas.get(1), taxaDeAprendizado, funcaoAtivacao,camadasRN.get(camadasRN.size()-1));
 	    		}
                 if(k == 1){
-	    			//quando não é a primeira camada, o número de entradas é o número de neurônios na camada anterior
+	    			//quando nï¿½o ï¿½ a primeira camada, o nï¿½mero de entradas ï¿½ o nï¿½mero de neurï¿½nios na camada anterior
 	    			neuronios[i] =  new NeuronioBackPropagationUltimaCamada(camadas.get(0), taxaDeAprendizado, funcaoAtivacao);
 	    		}
 	    	}
