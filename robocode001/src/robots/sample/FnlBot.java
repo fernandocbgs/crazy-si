@@ -1,4 +1,4 @@
-package robos;
+package robots.sample;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -20,7 +20,7 @@ public class FnlBot extends Robot {
 		setGunColor(Color.green);
 		setRadarColor(Color.red);
 		setBulletColor(Color.green);
-		setScanColor(Color.green);
+		setScanColor(Color.GREEN);
 		
 		turnLeft(getHeading() % 90);
 		turnGunRight(90);
