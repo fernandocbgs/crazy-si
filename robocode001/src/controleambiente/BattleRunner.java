@@ -15,25 +15,27 @@ import robocode.control.events.*;
 //ver http://protefun.googlecode.com/svn/trunk/ - desenvolvedores robocode
 
 /*
- * Para Rodar tem que passar os parametros:
- * 
+ * Se não Rodar, passar os parametros:
  * -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
+ * Para carregar os robos proprios, copiar os robos do package sample para 'C:\robocode\robots\sample' (pasta padrão),
+ * compilar usando o proprio robocode (Ctrl+E, Abre as classe, Ctrl+B), o package dos robos deve ser 'sample'
+ * cria o arquivo .properties com as informações dos robos
  * */
 public class BattleRunner {
 	
+	private static String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
+	
 	private static String pastaRoboCode = "C:/Robocode"; //C:/Robocode
-	private static String pastaMeusRobos = "D:/Meus Documentos/Emerson/UTFPR/6º Semestre/"+
-						  "Sistemas Inteligentes/Parte 2/TrabalhoFinal/parte1_integracao/"+
-						  "robocode001/bin"; //C:/Robocode
-	private static int numberOfRounds = 20;
+	private static int numberOfRounds = 5;
 	
 	
     public static void main(String[] args) {
-
+    	//3 robos que não fazem nada
+    	_meusRobos = "sample.RoboFazNada, sample.RoboFazNada, sample.RoboFazNada"; 
+    	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
-        //RobocodeEngine engine = new RobocodeEngine(new java.io.File(pastaRoboCode)); // pasta padrão C:/Robocode
-        RobocodeEngine engine = new RobocodeEngine(new java.io.File(pastaMeusRobos));
+        RobocodeEngine engine = new RobocodeEngine(new java.io.File(pastaRoboCode)); // pasta padrão C:/Robocode
 
         // Add our own battle listener to the RobocodeEngine 
         engine.addBattleListener(new BattleObserver());
@@ -44,15 +46,11 @@ public class BattleRunner {
         // Setup the battle specification
 
         BattlefieldSpecification battlefield = new BattlefieldSpecification(800, 600); // 800x600
-        //RobotSpecification[] selectedRobots = engine.getLocalRepository("sample.RamFire,sample.Corners");
-        RobotSpecification[] selectedRobots = engine.getLocalRepository("sample.FnlBot, sample.MeuPrimeiroRobo");
-      
-        RobotSpecification[] sel = new RobotSpecification[selectedRobots.length /*+ selectedRobots2.length*/];
-        int i = 0;
-        for (RobotSpecification r : selectedRobots) {sel[i++] = r;}
-        //for (RobotSpecification r : selectedRobots2) {sel[i++] = r;}
         
-        //BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, sel);
+        //"sample.RamFire,sample.Corners,"
+        RobotSpecification[] selectedRobots = engine.getLocalRepository(_meusRobos);
+        //RobotSpecification[] selectedRobots = engine.getLocalRepository("sample.FnlBot, sample.MeuPrimeiroRobo");
+
         BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
         
         //---------------- testes emerson -------------
@@ -69,7 +67,8 @@ public class BattleRunner {
         System.exit(0);
     }
     
-    private static void TestesEmerson(BattleSpecification battleSpec){
+    @SuppressWarnings("unused")
+	private static void TestesEmerson(BattleSpecification battleSpec){
         for (RobotSpecification r : battleSpec.getRobots()) {
         	System.out.print("r.toString(): " + r.toString() + " - ");
         	System.out.println(r.getJarFile());
