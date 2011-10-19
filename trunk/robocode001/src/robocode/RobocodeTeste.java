@@ -32,16 +32,16 @@ import java.awt.Frame;
 import java.io.File;
 import java.security.Policy;
 import java.util.logging.Logger;
-
-import net.sf.robocode.battle.BattleManager;
-import net.sf.robocode.battle.BattleProperties;
-import net.sf.robocode.host.IThreadManager;
-import net.sf.robocode.host.security.RobocodeSecurityManager;
-import net.sf.robocode.host.security.RobocodeSecurityPolicy;
-import net.sf.robocode.host.security.SecureInputStream;
-import net.sf.robocode.host.security.SecurePrintStream;
-import net.sf.robocode.io.FileUtil;
-import net.sf.robocode.ui.dialog.WindowUtil;
+//
+//import net.sf.robocode.battle.BattleManager;
+//import net.sf.robocode.battle.BattleProperties;
+//import net.sf.robocode.host.IThreadManager;
+//import net.sf.robocode.host.security.RobocodeSecurityManager;
+//import net.sf.robocode.host.security.RobocodeSecurityPolicy;
+//import net.sf.robocode.host.security.SecureInputStream;
+//import net.sf.robocode.host.security.SecurePrintStream;
+//import net.sf.robocode.io.FileUtil;
+//import net.sf.robocode.ui.dialog.WindowUtil;
 
 //import net.sf.robocode.manager.RobocodeManager;
 

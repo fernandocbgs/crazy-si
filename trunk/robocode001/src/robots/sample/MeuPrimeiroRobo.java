@@ -1,4 +1,6 @@
-package robos;
+package robots.sample;
+
+import java.awt.Color;
 
 import robocode.HitByBulletEvent;
 import robocode.HitWallEvent;
@@ -9,7 +11,8 @@ public class MeuPrimeiroRobo extends RateControlRobot {
 	
 	int turnCounter;
 	public void run() {
-
+		setScanColor(Color.GREEN);
+		
 		turnCounter = 0;
 		setGunRotationRate(15);
 		
@@ -30,12 +33,17 @@ public class MeuPrimeiroRobo extends RateControlRobot {
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(1);
+		//stop();
+		//ahead(10);
+		fire(10);
+		//resume();
 	}
 
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Turn to confuse the other robot
 		setTurnRate(5);
+		turnRight(90);
+		back(100);
 	}
 	
 	public void onHitWall(HitWallEvent e) {

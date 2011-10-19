@@ -1,12 +1,8 @@
-package robos;
+package robots.sample;
 
-import robocode.AdvancedRobot;
+import java.awt.Color;
+
 import robocode.*;
-import robocode.HitByBulletEvent;
-import robocode.HitRobotEvent;
-import robocode.HitWallEvent;
-import robocode.BulletHitEvent;
-import robocode.BulletMissedEvent;
 
 public class Candidate120 extends AdvancedRobot {
 	private double enemyEnergy;
@@ -16,6 +12,8 @@ public class Candidate120 extends AdvancedRobot {
 	private double bulletHeading;
 
 	public void run() {
+		setScanColor(Color.GREEN);
+		
 		execute();
 		setTurnRight(87);
 		setTurnGunRight(2);
