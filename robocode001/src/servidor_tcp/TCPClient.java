@@ -1,6 +1,5 @@
-package sample;
+package servidor_tcp;
 
-import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -8,53 +7,13 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import robocode.HitWallEvent;
-import robocode.Robot;
-import robocode.ScannedRobotEvent;
-
-/**
- * Robo Faz Nada<br />
- * ideia é ser controlado via Jason 
- * */
-public class RoboFazNada extends Robot {
+public class TCPClient {
 	
 	private static int portaServidor = 7896;
-	private static String mensagem = "Ola sou um robo cliente TCP";
+	private static String mensagem = "Ola sou um cliente";
 	private static String ip = "localhost";
 	
-	public void run(){
-		setBodyColor(Color.WHITE);
-		setGunColor(Color.BLACK);
-		setRadarColor(Color.BLUE);
-		setBulletColor(Color.green);
-		setScanColor(Color.GREEN);
-		
-		while(true){
-			clienteTCP();
-			
-			//espera um pouco antes de enviar a próxima mensagem
-			try {Thread.sleep(1000); } catch (InterruptedException e) {e.printStackTrace();}
-			
-			//stop();
-			//turnRadarRight(360);
-			//turnRadarLeft(360);
-//			ahead(1000);
-//			turnRight(90);
-		}
-	}
-	
-	@Override
-	public void onHitWall(HitWallEvent event) {
-		
-	}
-	
-	public void onScannedRobot(ScannedRobotEvent e) {
-
-	}
-	
-	
-	//cliente TCP
-	private void clienteTCP(){
+	public void iniciarCliente(){
 		// arguments supply message and hostname
 		Socket s = null;
 		try {
@@ -82,4 +41,6 @@ public class RoboFazNada extends Robot {
 				}
 		}
 	}
+	
+	
 }

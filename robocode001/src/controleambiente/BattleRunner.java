@@ -2,6 +2,7 @@ package controleambiente;
 
 import robocode.control.*;
 import robocode.control.events.*;
+import servidor_tcp.gui.FrameServidorTCP;
 
 //
 // Application that demonstrates how to run two sample robots in Robocode using the
@@ -30,6 +31,10 @@ public class BattleRunner {
 	
 	
     public static void main(String[] args) {
+    	
+    	//FRAME Servidor TCP
+    	new FrameServidorTCP().setVisible(true);
+    	
     	//3 robos que não fazem nada
     	_meusRobos = "sample.RoboFazNada, sample.RoboFazNada, sample.RoboFazNada"; 
     	
