@@ -17,7 +17,7 @@ import robocode.WinEvent;
  * ideia é ser controlado via Jason 
  * */
 public class RoboFazNada extends AdvancedRobot {
-	private int _ultimaAcao;
+	private int _ultimaAcao, _numeroAcoesTomadas = 0;
 	private ControlRobot _controleRobo;
 	
 	public void run(){
@@ -29,23 +29,38 @@ public class RoboFazNada extends AdvancedRobot {
 		setRadarColor(Color.BLUE);
 		setBulletColor(Color.green);
 		setScanColor(Color.GREEN);
-
+		
+		//arruma a posição inicial do robo
+		double vlr = getAnaliseValor(90, getHeading());
+		turnRight(vlr);
+		
+		//if (vlr < 0){turnRight(vlr);}else{turnLeft(vlr);}
+		
 		while(true){
 			//stop();
 			//turnRadarRight(360);
 			//turnRadarLeft(360);
-			//ahead(1000);
+			//ahead(1.0);
 			//turnRight(90);
 			
 			//getInteractiveEventListener()
 			
 			/*
-			 * O ROBO SÓ VAI CHAMAR A PROXIMA AÇÃO ASSIM QUE TIVER TERMINAD A ÚLTIMA
+			 * O ROBO SÓ VAI CHAMAR A PROXIMA AÇÃO ASSIM QUE TIVER TERMINAR A ÚLTIMA
 			 */
 			
-			
+			//System.out.println("[" + getX() + "," + getY() + "]");
 			//atualiza as informações do robo
-			_controleRobo.setParams(getEnergy(),getX()-getWidth(),getY()-getHeight(),getVelocity(), _ultimaAcao);
+			_controleRobo.setParams(
+					getEnergy(),
+					getX(),
+					getY(),
+					getVelocity(),
+					getHeading(),
+					_ultimaAcao,
+					_numeroAcoesTomadas,
+					getWidth(),
+					getHeight());
 			executar(_controleRobo.getAcaoRealizar());
 			
 		}
@@ -86,6 +101,8 @@ public class RoboFazNada extends AdvancedRobot {
 	}
 	
 	private void executar(List<String> params){
+		if (params.size() <= 1) return;
+		_numeroAcoesTomadas++;
 		_ultimaAcao = Integer.valueOf(params.get(0));
 		if (_ultimaAcao <= 0) return;
 		if (_ultimaAcao == 1) {
@@ -96,10 +113,17 @@ public class RoboFazNada extends AdvancedRobot {
 			ahead(Double.valueOf(params.get(1)));
 		} else if (_ultimaAcao == 4) {
 			turnRight(Double.valueOf(params.get(1)));
-		} else if (_ultimaAcao == 5) {
-			turnLeft(Double.valueOf(params.get(1)));
+//		} else if (_ultimaAcao == 5) {
+//			turnLeft(Double.valueOf(params.get(1)));
 		}
-		
+	}
+	
+	private double getAnaliseValor(double valorEscolhido, double referencia){
+		double vlr;
+		vlr = valorEscolhido - referencia;
+		//informa o lado à ser rotacionado
+		//if (getHeading() < headingEscolhido) {if (vlr<0) vlr *=-1;}
+		return vlr;
 	}
 	
 }
