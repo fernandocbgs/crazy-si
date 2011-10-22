@@ -1,21 +1,16 @@
 package servidor_tcp;
 
-import interfaces.IRobo;
-
 import java.net.*;
 import java.io.*;
-
 import javax.swing.JTextArea;
-
 import servidor_tcp.pacotes.AnalisePacotes;
 
 public class TCPServer extends Thread {
-	private IRobo _irobo;
 	private static int _portaServidor = 7896;
 	private JTextArea _jta;
+	public boolean continuar = true;
 	
-	public TCPServer(int portaServidor, IRobo irobo){
-		_irobo = irobo;
+	public TCPServer(int portaServidor){
 		_portaServidor = portaServidor;
 	}
 	
@@ -33,14 +28,14 @@ public class TCPServer extends Thread {
 			ServerSocket listenSocket = new ServerSocket(serverPort);
 			print("[s] iniciando servidor TCP");
 			
-			while(true) {
+			while(continuar) {
 				Socket clientSocket = listenSocket.accept();
 				
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				
 				byte[] pacote = new byte[1000];
 				in.read(pacote);
-				new AnalisePacotes(_jta, _irobo).Analisar(pacote);
+				new AnalisePacotes(_jta).Analisar(pacote);
 				
 				//String data = in.readUTF(); // read a line of data from the stream
 				//print("[s] recebi: " + data);
