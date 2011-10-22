@@ -1,13 +1,23 @@
 package servidor_tcp;
 
+import interfaces.IRobo;
+
 import java.net.*;
 import java.io.*;
 
 import javax.swing.JTextArea;
 
+import servidor_tcp.pacotes.AnalisePacotes;
+
 public class TCPServer extends Thread {
-	private static int portaServidor = 7896;
+	private IRobo _irobo;
+	private static int _portaServidor = 7896;
 	private JTextArea _jta;
+	
+	public TCPServer(int portaServidor, IRobo irobo){
+		_irobo = irobo;
+		_portaServidor = portaServidor;
+	}
 	
 	public TCPServer(JTextArea jta){
 		_jta = jta;
@@ -19,69 +29,37 @@ public class TCPServer extends Thread {
 	
 	public void iniciarServidor(){
 		try {
-			int serverPort = portaServidor; // the server port
+			int serverPort = _portaServidor; // the server port
 			ServerSocket listenSocket = new ServerSocket(serverPort);
-			while (true) {
-				
-//				String msg = "[Servidor] iniciado servidor TCP";
-//				if (_jta == null) {
-//					System.out.println(msg);
-//				} else {
-//					_jta.setText(msg + "\n" + _jta.getText());
-//				}
-				
+			print("[s] iniciando servidor TCP");
+			
+			while(true) {
 				Socket clientSocket = listenSocket.accept();
-				new Connection(clientSocket, _jta);
-
 				
+				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+				
+				byte[] pacote = new byte[1000];
+				in.read(pacote);
+				new AnalisePacotes(_jta, _irobo).Analisar(pacote);
+				
+				//String data = in.readUTF(); // read a line of data from the stream
+				//print("[s] recebi: " + data);
+				//DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+				//out.writeUTF(data);
 			}
+			
 		} catch (IOException e) {
-			System.out.println("Listen socket:" + e.getMessage());
+			System.err.println("[s] Listen socket:" + e.getMessage());
 		}
 	}
 	
-}
-
-class Connection extends Thread {
-	private DataInputStream in;
-	private DataOutputStream out;
-	private Socket clientSocket;
-	private JTextArea _jta;
+	private void print(String msg){
+		if (msg.equals("")) return;
+		if (_jta != null) {
+			_jta.setText(msg + "\n" + _jta.getText());
+		} else {
+			System.out.println(msg);
+		}
+	}
 	
-	public Connection(Socket aClientSocket, JTextArea jta) {
-		_jta = jta;
-		try {
-			clientSocket = aClientSocket;
-			in = new DataInputStream(clientSocket.getInputStream());
-			out = new DataOutputStream(clientSocket.getOutputStream());
-			
-			String msg = "[Servidor] recebi: " + in.readUTF();
-			if (_jta == null) {
-				System.out.println(msg);
-			} else {
-				_jta.setText(msg + "\n" + _jta.getText());
-			}
-			
-			this.start();
-		} catch (IOException e) {
-			System.out.println("Connection:" + e.getMessage());
-		}
-	}
-
-	public void run() {
-		try { // an echo server
-			String data = in.readUTF(); // read a line of data from the stream
-			out.writeUTF(data);
-		} catch (EOFException e) {
-			System.out.println("EOF:" + e.getMessage());
-		} catch (IOException e) {
-			System.out.println("readline:" + e.getMessage());
-		} finally {
-			try {
-				clientSocket.close();
-			} catch (IOException e) {/* close failed */
-			}
-		}
-
-	}
 }

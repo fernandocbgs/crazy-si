@@ -1,45 +1,70 @@
 package servidor_tcp;
 
-import java.io.DataInputStream;
+import interfaces.IRobo;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class TCPClient {
+import servidor_tcp.pacotes.CriadorPacotes;
+
+public class TCPClient implements IRobo {
+	private static int _portaServidor = 7896;
+	//private static String mensagem = "Ola sou um cliente";
+	private static String _ip = "localhost";
+	private static int portaServidorRobo = 7890;
 	
-	private static int portaServidor = 7896;
-	private static String mensagem = "Ola sou um cliente";
-	private static String ip = "localhost";
+	public TCPClient(){
+		_portaServidor = 7896;
+		_ip = "localhost";
+	}
+	
+	public TCPClient(int portaServidor, String ip){
+		_portaServidor = portaServidor;
+		_ip = ip;
+	}
 	
 	public void iniciarCliente(){
-		// arguments supply message and hostname
+		
+		//cria o servidor do Robo
+		new TCPServer(portaServidorRobo, this).start();
+		
 		Socket s = null;
 		try {
-			int serverPort = portaServidor;
-			s = new Socket(ip, serverPort);
-			DataInputStream in = new DataInputStream(s.getInputStream());
-			DataOutputStream out = new DataOutputStream(s.getOutputStream());
-			out.writeUTF(mensagem); // UTF is a string encoding see Sn. 4.4
-			String data = in.readUTF(); // read a line of data from the stream
+			s = new Socket(_ip, _portaServidor);
 			
-			System.out.println("(cliente) Received: " + data);
+			DataOutputStream out = new DataOutputStream(s.getOutputStream());
+			out.write(new CriadorPacotes().getPacoteOqueDevoFazer());
+			//out.write(new CriadorPacotes().getPacoteOi());	
+			
+			
+			//out.writeUTF(mensagem); // UTF is a string encoding see Sn. 4.4
+			
+			//seria uma resposta do servidor
+			//DataInputStream in = new DataInputStream(s.getInputStream());
+			//String data = in.readUTF(); // read a line of data from the stream
+			//System.out.println("[c] Received: " + data);
 			
 		} catch (UnknownHostException e) {
-			System.out.println("Socket:" + e.getMessage());
+			System.err.println("[c] Socket:" + e.getMessage());
 		} catch (EOFException e) {
-			System.out.println("EOF:" + e.getMessage());
+			System.err.println("[c] EOF:" + e.getMessage());
 		} catch (IOException e) {
-			System.out.println("readline:" + e.getMessage());
+			System.err.println("[c] readline:" + e.getMessage());
 		} finally {
 			if (s != null)
 				try {
 					s.close();
 				} catch (IOException e) {
-					System.out.println("close:" + e.getMessage());
+					System.err.println("[c] close:" + e.getMessage());
 				}
 		}
+	}
+
+	@Override
+	public void ExecutarAcao(int acao) {
+		System.out.println("[c] ExecutarAcao acao " + acao);
 	}
 	
 	

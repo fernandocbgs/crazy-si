@@ -63,6 +63,10 @@ public class FrameServidorTCP extends JFrame {
 		btnIniciarTcp.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnIniciarTcp.setBounds(302, 10, 122, 23);
 		contentPane.add(btnIniciarTcp);
+		
+		//já inicia
+		iniciarServidor();
+		
 	}
 	
 	private void iniciarServidor(){

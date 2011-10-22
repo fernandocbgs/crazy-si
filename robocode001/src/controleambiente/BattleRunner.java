@@ -35,8 +35,8 @@ public class BattleRunner {
     	//FRAME Servidor TCP
     	new FrameServidorTCP().setVisible(true);
     	
-    	//3 robos que não fazem nada
-    	_meusRobos = "sample.RoboFazNada, sample.RoboFazNada, sample.RoboFazNada"; 
+    	//1 robos que não fazem nada
+    	_meusRobos = "sample.RoboFazNada"; 
     	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
