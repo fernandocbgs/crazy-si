@@ -24,10 +24,23 @@ import robocode.control.events.*;
 public class BattleRunner {
 	
 	private static String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
-	
 	private static String pastaRoboCode = "C:/Robocode"; //C:/Robocode
 	private static int numberOfRounds = 5;
 	
+	/**
+	 * initialPositions - a comma or space separated list like: 
+	 * 		x1,y1,heading1, x2,y2,heading2
+	 * which are the coordinates and heading of robot #1 and #2. 
+	 * So e.g. 0,0,180, 50,80,270 means that robot #1 has position (0,0) and heading 180
+	 * and robot #2 has position (50,80) and heading 270.
+	 * 
+	 * heading - face do robo
+	 * */
+	private static int _width = 800, _heigth = 600, _tamRobo = 18;
+	private static String posicaoRobo1  = (0-_tamRobo) + ","  +(0-_tamRobo) + ",90";
+	private static String posicaoRobo2  = "0.0,0.0,0";
+	//private static String posicaoRobo3  = "0.0,0.0,0";
+	private static String initialPositions = posicaoRobo1 ;//+ ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
 	
     public static void main(String[] args) {
     	iniciar();
@@ -36,27 +49,22 @@ public class BattleRunner {
     public static void iniciar(){
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
-    	
-    	//3 robos que não fazem nada
-    	_meusRobos = "sample.RoboFazNada" + ",sample.RoboFazNada,sample.RoboFazNada"; 
+    	_meusRobos = "sample.RoboFazNada"
+    			     +",sample.RoboFazNada"
+    			     + ",sample.RoboFazNada" 
+    				 ;
     	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
         RobocodeEngine engine = new RobocodeEngine(new java.io.File(pastaRoboCode)); // pasta padrão C:/Robocode
-
         // Add our own battle listener to the RobocodeEngine 
         engine.addBattleListener(new BattleObserver());
         // Show the Robocode battle view
         engine.setVisible(true);
         
-        
         // Setup the battle specification
-
-        BattlefieldSpecification battlefield = new BattlefieldSpecification(800, 600); // 800x600
-        
-        //"sample.RamFire,sample.Corners,"
+        BattlefieldSpecification battlefield = new BattlefieldSpecification(_width, _heigth); // 800x600
         RobotSpecification[] selectedRobots = engine.getLocalRepository(_meusRobos);
-
         BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
         
         //---------------- testes emerson -------------
@@ -64,23 +72,23 @@ public class BattleRunner {
         //---------------- testes emerson -------------
         
        // Run our specified battle and let it run till it is over
+        
+        //initialPositions
+        
         engine.runBattle(battleSpec, true); // waits till the battle finishes
-        
         //engine.printRunningThreads();
-        
         // Cleanup our RobocodeEngine
         engine.close();
-        
         // Make sure that the Java VM is shut down properly
         System.exit(0);
     }
     
-    @SuppressWarnings("unused")
-	private static void TestesEmerson(BattleSpecification battleSpec){
-        for (RobotSpecification r : battleSpec.getRobots()) {
-        	System.out.print("r.toString(): " + r.toString() + " - ");
-        }
-    }
+//    @SuppressWarnings("unused")
+//	private static void TestesEmerson(BattleSpecification battleSpec){
+//        for (RobotSpecification r : battleSpec.getRobots()) {
+//        	System.out.print("r.toString(): " + r.toString() + " - ");
+//        }
+//    }
     
 }
 
