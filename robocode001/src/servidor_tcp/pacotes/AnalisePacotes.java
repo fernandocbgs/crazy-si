@@ -1,7 +1,5 @@
 package servidor_tcp.pacotes;
 
-import interfaces.IRobo;
-
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -9,17 +7,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Random;
+
 import javax.swing.JTextArea;
 
 public class AnalisePacotes {
-	private IRobo _irobo;
 	private String _ipRobo = "localhost";
 	private int _portaRobo = 7890;
 	
 	private JTextArea _jta;
 	
-	public AnalisePacotes(JTextArea jta, IRobo irobo){
-		_irobo = irobo;
+	public AnalisePacotes(JTextArea jta){
 		_jta = jta;
 	}
 	
@@ -83,14 +81,13 @@ public class AnalisePacotes {
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		bb.getInt(); //tipo
-		return 3; //retorna o número
+		return new Random().nextInt(3)+1; //retorna o número
 	}
 	public void AnaliseRespostaAcao(byte[] pacote){
-		if (_irobo == null) return;
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		bb.getInt(); //tipo
-		_irobo.ExecutarAcao(bb.getInt());
+		//_irobo.ExecutarAcao(bb.getInt());
 	}
 	//--------------------------------------------------------------------
 	//retorna o tipo do pacote

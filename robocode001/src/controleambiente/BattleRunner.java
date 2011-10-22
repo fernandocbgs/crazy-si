@@ -2,7 +2,6 @@ package controleambiente;
 
 import robocode.control.*;
 import robocode.control.events.*;
-import servidor_tcp.gui.FrameServidorTCP;
 
 //
 // Application that demonstrates how to run two sample robots in Robocode using the
@@ -31,12 +30,15 @@ public class BattleRunner {
 	
 	
     public static void main(String[] args) {
-    	
+    	iniciar();
+    }
+    
+    public static void iniciar(){
     	//FRAME Servidor TCP
-    	new FrameServidorTCP().setVisible(true);
+    	//new FrameServidorTCP().setVisible(true);
     	
-    	//1 robos que não fazem nada
-    	_meusRobos = "sample.RoboFazNada"; 
+    	//3 robos que não fazem nada
+    	_meusRobos = "sample.RoboFazNada" + ",sample.RoboFazNada,sample.RoboFazNada"; 
     	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
@@ -54,7 +56,6 @@ public class BattleRunner {
         
         //"sample.RamFire,sample.Corners,"
         RobotSpecification[] selectedRobots = engine.getLocalRepository(_meusRobos);
-        //RobotSpecification[] selectedRobots = engine.getLocalRepository("sample.FnlBot, sample.MeuPrimeiroRobo");
 
         BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
         
@@ -64,6 +65,8 @@ public class BattleRunner {
         
        // Run our specified battle and let it run till it is over
         engine.runBattle(battleSpec, true); // waits till the battle finishes
+        
+        //engine.printRunningThreads();
         
         // Cleanup our RobocodeEngine
         engine.close();
@@ -76,7 +79,6 @@ public class BattleRunner {
 	private static void TestesEmerson(BattleSpecification battleSpec){
         for (RobotSpecification r : battleSpec.getRobots()) {
         	System.out.print("r.toString(): " + r.toString() + " - ");
-        	System.out.println(r.getJarFile());
         }
     }
     
