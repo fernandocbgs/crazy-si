@@ -10,9 +10,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-
-import RMI.ClienteRobo;
-import RMI.ServidorRobo;
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
 import robocode.DeathEvent;
@@ -31,10 +28,7 @@ public class RoboFazNada extends AdvancedRobot implements Serializable, External
 	private int _ultimaAcao, _numeroAcoesTomadas = 0;
 	private List<String> _acaoExecutar;
 	//private boolean executar = false;
-	
-	//private ControlRobot _controleRobo;
-	private ServidorRobo _servidorRobo;
-	
+
 	public RoboFazNada() { }
 	
 	private static int getIndiceRobo(String nomeRobo){
@@ -42,49 +36,10 @@ public class RoboFazNada extends AdvancedRobot implements Serializable, External
 		//return Integer.valueOf(nomeRobo.substring(nomeRobo.lastIndexOf('(')+1, nomeRobo.lastIndexOf(')')));
 	}
 	
-	private void iniciarServidor(){
-		if (_acaoExecutar!=null) return;
-		try {
-			int indice = getIndiceRobo(getName());
-			System.out.println("indice: " + indice);
-			
-			_servidorRobo = new ServidorRobo(indice, this);
-			_servidorRobo.iniciar(false);
-			
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void ClienteRMI(){
-		if (_acaoExecutar!=null) return;
-		//try {Thread.sleep(100);} catch (InterruptedException e) { e.printStackTrace(); }
-		try {
-			ClienteRobo cli = new ClienteRobo();
-			RoboFazNada r1 = cli.recuperarRobo(1);
-			System.out.println("ROBO 1 " + r1);
-			
-			if (r1 == null) return;
-			
-			r1.Hello();
-			
-			ArrayList<String> acoes = new ArrayList<String>();
-			acoes.add(2+"");
-			acoes.add(3+"");
-			r1.SetAcoes(acoes);
-			//r1.notify();
-						
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void run(){
 		if (_acaoExecutar==null) {
-			iniciarServidor();
-			ClienteRMI();
+			//iniciarServidor();
+			//ClienteRMI();
 			//_controleRobo = new ControlRobot(getName().toString(),getBattleFieldWidth(), getBattleFieldHeight(),getX(),getY(),getOthers());
 	
 			setBodyColor(Color.WHITE);

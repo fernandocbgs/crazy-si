@@ -6,9 +6,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
-
-import RMI.ClienteRobo;
-import RMI.ServidorRobo;
 import controleambiente.BattleRunner;
 import sample.RoboFazNada;
 
@@ -19,68 +16,8 @@ public class MainTeste {
 
 
 	public static void main(String[] args) {
-		//CriaRegistry();
 		roboBattle();
-		ClienteRMI();
 	}
-	
-	@SuppressWarnings("unused")
-	private static void testeRMI(){
-		int idRobo = 1;
-		
-		try {
-			RoboFazNada ar = new RoboFazNada();
-			ServidorRobo serv = new ServidorRobo(idRobo, ar);
-			serv.iniciar(true);
-			
-			//lookup
-			ClienteRobo cli = new ClienteRobo();
-			RoboFazNada r1 = cli.recuperarRobo(1);
-			System.out.println("Resposta: " + r1);
-			
-//			 Registry registry = LocateRegistry.getRegistry("localhost", 3637); /*ip, porta*/
-//			 IRMIRobo _msg = (IRMIRobo) registry.lookup("ServidorROBOT"+idRobo);  
-//		     CheckerCallBack _checker = new CheckerCallBack(_msg);
-			
-		     //_msg.getRobo(_checker);
-			
-		} catch (RemoteException e) {
-			System.err.println("1 err: " + e.getMessage()); 
-		} catch (NotBoundException e) {
-			System.err.println("2 err: " + e.getMessage());
-		}
-	}
-	
-	private static void ClienteRMI(){
-		try {
-			ClienteRobo cli = new ClienteRobo();
-			RoboFazNada r1 = cli.recuperarRobo(1);
-			System.out.println("ROBO 1 " + r1);
-			
-			//if (r1 == null) return;
-			
-			r1.Hello();
-			
-			ArrayList<String> acoes = new ArrayList<String>();
-			acoes.add(2+"");
-			acoes.add(3+"");
-			r1.SetAcoes(acoes);
-			//r1.notify();
-						
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-//	private static void CriaRegistry(){
-//		try {
-//			LocateRegistry.createRegistry(3637); /* porta */
-//		} catch (RemoteException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	private static void roboBattle(){
 		//apenas para compilar
