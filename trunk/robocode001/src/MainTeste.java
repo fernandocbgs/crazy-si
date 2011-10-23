@@ -4,9 +4,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 
 import RMI.ClienteRobo;
+import RMI.ServidorRobo;
 import controleambiente.BattleRunner;
 import sample.RoboFazNada;
 
@@ -17,38 +19,45 @@ public class MainTeste {
 
 
 	public static void main(String[] args) {
-//		int idRobo = 1;
-//		
-//		try {
-//			RoboFazNada ar = new RoboFazNada();
-//			ServidorRobo serv = new ServidorRobo(idRobo, ar);
-//			serv.iniciar();
-//			
-//			//lookup
-//			ClienteRobo cli = new ClienteRobo();
-//			cli.consultar();
-//			System.out.println("Resposta: " + cli.doneIt());
-////			 Registry registry = LocateRegistry.getRegistry("localhost", 3637); /*ip, porta*/
-////			 IRMIRobo _msg = (IRMIRobo) registry.lookup("ServidorROBOT"+idRobo);  
-////		     CheckerCallBack _checker = new CheckerCallBack(_msg);
-//			
-//		     //_msg.getRobo(_checker);
-//			
-//		} catch (RemoteException e) {
-//			System.err.println("1 err: " + e.getMessage()); 
-//		} catch (NotBoundException e) {
-//			System.err.println("2 err: " + e.getMessage());
-//		}
+		//CriaRegistry();
 		roboBattle();
 		ClienteRMI();
+	}
+	
+	@SuppressWarnings("unused")
+	private static void testeRMI(){
+		int idRobo = 1;
+		
+		try {
+			RoboFazNada ar = new RoboFazNada();
+			ServidorRobo serv = new ServidorRobo(idRobo, ar);
+			serv.iniciar(true);
+			
+			//lookup
+			ClienteRobo cli = new ClienteRobo();
+			RoboFazNada r1 = cli.recuperarRobo(1);
+			System.out.println("Resposta: " + r1);
+			
+//			 Registry registry = LocateRegistry.getRegistry("localhost", 3637); /*ip, porta*/
+//			 IRMIRobo _msg = (IRMIRobo) registry.lookup("ServidorROBOT"+idRobo);  
+//		     CheckerCallBack _checker = new CheckerCallBack(_msg);
+			
+		     //_msg.getRobo(_checker);
+			
+		} catch (RemoteException e) {
+			System.err.println("1 err: " + e.getMessage()); 
+		} catch (NotBoundException e) {
+			System.err.println("2 err: " + e.getMessage());
+		}
 	}
 	
 	private static void ClienteRMI(){
 		try {
 			ClienteRobo cli = new ClienteRobo();
-			cli.consultar(1);
-			RoboFazNada r1 = cli.doneIt();
+			RoboFazNada r1 = cli.recuperarRobo(1);
 			System.out.println("ROBO 1 " + r1);
+			
+			//if (r1 == null) return;
 			
 			r1.Hello();
 			
@@ -56,7 +65,7 @@ public class MainTeste {
 			acoes.add(2+"");
 			acoes.add(3+"");
 			r1.SetAcoes(acoes);
-			r1.notify();
+			//r1.notify();
 						
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -65,29 +74,27 @@ public class MainTeste {
 		}
 	}
 	
-	//
+//	private static void CriaRegistry(){
+//		try {
+//			LocateRegistry.createRegistry(3637); /* porta */
+//		} catch (RemoteException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	private static void roboBattle(){
-//		//new FrameServidorTCP().setVisible(true);
-//		new TCPServer(null).start();
-//		
-//		try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-//		
-//		new TCPClient().iniciarCliente();
-//		//new TCPClient().iniciarCliente();
-		
-		
 		//apenas para compilar
+		@SuppressWarnings("unused")
 		RoboFazNada rb;
 		
 		//copia os arquivos para o diretorio padrao do robocode
-		String pastaOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\parte1_integracao\\robocode001\\bin\\sample\\";
+		String pastaOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001\\bin\\sample\\";
 		String pastaDestino = "C:\\robocode\\robots\\sample\\";
 		
-		String pastaRMIOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\parte1_integracao\\robocode001\\bin\\RMI\\";
-		String pastaRMIDestino = "C:\\robocode\\robots\\RMI\\"; 
+		String pastaRMIOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001\\bin\\RMI\\";
+		String pastaRMIDestino = "C:\\robocode\\robots\\RMI\\";
 			
-		String[] arqOr = new String[7];
+		String[] arqOr = new String[6];
 		String[] arqDes = new String[arqOr.length];
 		
 		arqOr[0] = pastaOrigem + "RoboFazNada.class";
@@ -99,12 +106,10 @@ public class MainTeste {
 		
 		arqOr[3] = pastaRMIOrigem + "ClienteRobo.class";
 		arqDes[3] = pastaRMIDestino + "ClienteRobo.class";
-		arqOr[4] = pastaRMIOrigem + "INotify.class";
-		arqDes[4] = pastaRMIDestino + "INotify.class";
-		arqOr[5] = pastaRMIOrigem + "IRMIRobo.class";
-		arqDes[5] = pastaRMIDestino + "IRMIRobo.class";
-		arqOr[6] = pastaRMIOrigem + "ServidorRobo.class";
-		arqDes[6] = pastaRMIDestino + "ServidorRobo.class";
+		arqOr[4] = pastaRMIOrigem + "IRMIRobo.class";
+		arqDes[4] = pastaRMIDestino + "IRMIRobo.class";
+		arqOr[5] = pastaRMIOrigem + "ServidorRobo.class";
+		arqDes[5] = pastaRMIDestino + "ServidorRobo.class";
 		
 		for (int i = 0; i < arqOr.length; i++){
 			try {

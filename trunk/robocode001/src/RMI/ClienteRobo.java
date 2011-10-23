@@ -11,7 +11,7 @@ import sample.RoboFazNada;
 /**
  * Cliente robos console
  * */
-public class ClienteRobo extends UnicastRemoteObject implements INotify {
+public class ClienteRobo extends UnicastRemoteObject {
 	private static final long serialVersionUID = 1L;
 	//private IRMIRobo _msg;
 	//private CheckerCallBack _checker;
@@ -25,23 +25,12 @@ public class ClienteRobo extends UnicastRemoteObject implements INotify {
 //        //_msg.getRobo(_checker);
 //    }
 	
-	private IRMIRobo _irmiRobot;
 	public ClienteRobo() throws RemoteException, NotBoundException {}
 
-	public void consultar(int idRobo) throws RemoteException, NotBoundException{
-        final Registry registry = LocateRegistry.getRegistry("localhost", 3630); /*ip, porta*/
-        _irmiRobot = (IRMIRobo) registry.lookup("ServidorROBOT"+idRobo);
-        _irmiRobot.getRobo(this);
-	}
-	
-	@Override
-	public RoboFazNada doneIt() throws RemoteException {
-		try {
-			return _irmiRobot.getRobot();
-		} catch (Exception e) {
-			System.err.println("1 Erro CheckerCallBack " + e.getMessage());
-		}
-		return null;
+	public RoboFazNada recuperarRobo(int idRobo) throws RemoteException, NotBoundException{
+        final Registry registry = LocateRegistry.getRegistry("localhost", 3637); /*ip, porta*/
+        IRMIRobo _irmiRobot = (IRMIRobo) registry.lookup("ServidorROBOT"+idRobo);
+        return _irmiRobot.getRobo();
 	}
 
 }

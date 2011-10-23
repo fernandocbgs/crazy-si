@@ -52,7 +52,7 @@ public class BattleRunner {
     
     public static void criarServidorNomes(){
     	try {
-			Registry registry = LocateRegistry.createRegistry(3630);
+			LocateRegistry.createRegistry(3637);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -64,8 +64,8 @@ public class BattleRunner {
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
     	_meusRobos = "sample.RoboFazNada"
-    			     +",sample.RoboFazNada"
-    			     + ",sample.RoboFazNada" 
+    			     //+",sample.RoboFazNada"
+    			     //+ ",sample.RoboFazNada" 
     				 ;
     	
         // Create the RobocodeEngine
