@@ -1,5 +1,9 @@
 package controleambiente;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 import robocode.control.*;
 import robocode.control.events.*;
 
@@ -46,7 +50,17 @@ public class BattleRunner {
     	iniciar();
     }
     
+    public static void criarServidorNomes(){
+    	try {
+			Registry registry = LocateRegistry.createRegistry(3630);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+    }
+    
     public static void iniciar(){
+    	criarServidorNomes();
+    	
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
     	_meusRobos = "sample.RoboFazNada"
