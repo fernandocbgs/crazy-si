@@ -1,95 +1,81 @@
 package servidor_tcp.pacotes;
 
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import javax.swing.JTextArea;
+import java.util.ArrayList;
+import java.util.List;
+import sample.ControleTCPRobot;
 
 public class AnalisePacotes {
-	private String _ipRobo = "localhost";
-	private int _portaRobo = 7890;
+	public AnalisePacotes(){}
 	
-	private JTextArea _jta;
-	
-	public AnalisePacotes(JTextArea jta){
-		_jta = jta;
-	}
-	
-	public void Analisar(byte[] pacote) {
+	public List<String> Analisar(byte[] pacote) {
 		CriadorPacotes.TipoPacotes tp = getTipo(pacote);
-		print("[s] tp: " + tp.toString());
 		switch (tp) {
-		case oiMestre:AnaliseOi(pacote);break;
-		case oquedevoFazer:
-			respostaServidorRobo(AnaliseOQueDevoFazer(pacote));
-			break;
-		case respostaAcao:
-			AnaliseRespostaAcao(pacote);
-			break;
+			case oiMestre: return AnaliseOi(pacote);
+			case oquedevoFazer: return AnaliseOQueDevoFazer(pacote);
+			case respostaAcao: return AnaliseRespostaAcao(pacote);
 		}
+		return null;
 	}
-	
-	/**
-	 * resposta ao servidor TCP do robo
-	 * */
-	public void respostaServidorRobo(int numero){
-		Socket s = null;
-		try {
-			print("[s] numero resposta: " + numero);
-			s = new Socket(_ipRobo, _portaRobo); //servidor do robo
-			
-			DataOutputStream out = new DataOutputStream(s.getOutputStream());
-			out.write(new CriadorPacotes().getPacoteRespostaPerguntaMeuNumero(numero));
-			//out.writeUTF(mensagem); // UTF is a string encoding see Sn. 4.4
-			
-			//seria uma resposta do servidor
-			//DataInputStream in = new DataInputStream(s.getInputStream());
-			//String data = in.readUTF(); // read a line of data from the stream
-			//System.out.println("[c] Received: " + data);
-			
-		} catch (UnknownHostException e) {
-			System.err.println("[c resposta] Socket:" + e.getMessage());
-		} catch (EOFException e) {
-			System.err.println("[c resposta] EOF:" + e.getMessage());
-		} catch (IOException e) {
-			System.err.println("[c resposta] readline:" + e.getMessage());
-		} finally {
-			if (s != null)
-				try {
-					s.close();
-				} catch (IOException e) {
-					System.err.println("[c] close:" + e.getMessage());
-				}
-		}
-		
-	} 
 	
 	//--------------------------------------------------------------------
-	public void AnaliseOi(byte[] pacote){
+	private List<String> AnaliseOi(byte[] pacote){
+		List<String> rt = new ArrayList<String>();
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.getInt(); //tipo
-		print("[s] oi: " + readString(bb));
+		rt.add(bb.getInt()+""); //tipo
+		rt.add(bb.getShort()+"");//size
+		rt.add(readString(bb)); //mensagem
+		return rt;
 	}
-	public int AnaliseOQueDevoFazer(byte[] pacote){
+	private List<String> AnaliseOQueDevoFazer(byte[] pacote){
+		List<String> entrada = new ArrayList<String>();
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.getInt(); //tipo
-		return 3; //retorna o número
+		entrada.add(bb.getInt()+""); //tipo
+		int tam = bb.getShort();
+		entrada.add(tam+"");//size
+		for (int i = 0; i < tam; i++){
+			entrada.add(readString(bb));
+		}
+		//return entrada;
+		
+		return new ControleTCPRobot(entrada).getAcao();
+		
+//		System.out.println("---------------------------");
+//		for (String e:entrada){
+//			System.out.println("e: " + e);
+//		}
+//		System.out.println("---------------------------");
+		
+//		List<String> l = new ArrayList<String>();
+//		l.add("2");
+//		l.add("1.5");
+//		pacote = new CriadorPacotes().getPacote(TipoPacotes.respostaAcao, l);
+//		l = new ArrayList<String>();
+//		bb = ByteBuffer.wrap(pacote);
+//		bb.order(ByteOrder.BIG_ENDIAN);
+//		l.add(bb.getInt()+""); //tipo
+//		l.add(bb.getShort()+"");//size
+//		l.add(bb.getInt()+""); //acao
+//		l.add(bb.getDouble()+""); //força, dist, etc
+//		return l;
+		
 	}
-	public void AnaliseRespostaAcao(byte[] pacote){
+	private List<String> AnaliseRespostaAcao(byte[] pacote){
+		List<String> rt = new ArrayList<String>();
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.getInt(); //tipo
-		bb.getInt();
+		rt.add(bb.getInt()+""); //tipo
+		rt.add(bb.getShort()+"");//size
+		rt.add(bb.getInt()+""); //acao
+		rt.add(bb.getDouble()+""); //força, dist, etc
+		return rt;
 	}
 	//--------------------------------------------------------------------
 	//retorna o tipo do pacote
-	public CriadorPacotes.TipoPacotes getTipo(byte[] pacote){
+	private CriadorPacotes.TipoPacotes getTipo(byte[] pacote){
 		ByteBuffer bb = ByteBuffer.wrap(pacote);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		return new CriadorPacotes().getTipoPacote(bb.getInt());
@@ -112,13 +98,5 @@ public class AnalisePacotes {
 //		}
 //		return rt;
 //	}
-	
-	private void print(String msg){
-		if (_jta == null) {
-			System.out.println(msg);
-		} else {
-			_jta.setText(msg + "\n" + _jta.getText());
-		}			
-	}
 	
 }
