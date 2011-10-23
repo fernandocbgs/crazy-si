@@ -107,7 +107,7 @@ public class ControlRobot {
 	 * */
 	public List<String> getAcoesRobo2(){
 		List<String> rt = new ArrayList<String>();
-		double posicaoBottom = _hCampo -10 ;//- _wRobot; //ajuste
+		double posicaoBottom = _hCampo -60 ;//- _wRobot; //ajuste
 		
 		if (_numeroAcoesTomadas == 0 &&_heading != 0) {
 			rt.add("" + 4); //virar
