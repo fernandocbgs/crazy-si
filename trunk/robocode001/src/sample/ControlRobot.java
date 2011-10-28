@@ -129,9 +129,9 @@ public class ControlRobot {
 			rt.add("" + -getAnaliseValor(10, _x));//move para a frente
 			return rt;
 		}
-		if (_numeroAcoesTomadas == 4 &&_heading != 45.0) {
+		if (_numeroAcoesTomadas == 4 &&_heading != 125.0) {
 			rt.add("" + 4); //virar
-			rt.add("" + getAnaliseValor(45, _heading)); //vira de volta ao campo
+			rt.add("" + getAnaliseValor(125, _heading)); //vira de volta ao campo
 			return rt;
 		}
 		
