@@ -1,9 +1,5 @@
 package controleambiente;
 
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
 import robocode.control.*;
 import robocode.control.events.*;
 
@@ -18,7 +14,7 @@ import robocode.control.events.*;
 //api pen drive: file:///F:/C_robocode/javadoc/index.html
 //ver http://protefun.googlecode.com/svn/trunk/ - desenvolvedores robocode
 
-/*
+/**
  * Se não Rodar, passar os parametros:
  * -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
  * Para carregar os robos proprios, copiar os robos do package sample para 'C:\robocode\robots\sample' (pasta padrão),
@@ -40,32 +36,23 @@ public class BattleRunner {
 	 * 
 	 * heading - face do robo
 	 * */
-	private static int _width = 800, _heigth = 600, _tamRobo = 18;
-	private static String posicaoRobo1  = (0-_tamRobo) + ","  +(0-_tamRobo) + ",90";
-	private static String posicaoRobo2  = "0.0,0.0,0";
-	//private static String posicaoRobo3  = "0.0,0.0,0";
-	private static String initialPositions = posicaoRobo1 ;//+ ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
+	private static int _width = 800, _heigth = 600;
+//	private static String posicaoRobo1  = (0-_tamRobo) + ","  +(0-_tamRobo) + ",90";
+//	private static String posicaoRobo2  = "0.0,0.0,0";
+//	//private static String posicaoRobo3  = "0.0,0.0,0";
+//	private static String initialPositions = posicaoRobo1 ;//+ ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
 	
     public static void main(String[] args) {
     	iniciar();
     }
-    
-    public static void criarServidorNomes(){
-    	try {
-			LocateRegistry.createRegistry(3637);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-    }
-    
+   
     public static void iniciar(){
-    	criarServidorNomes();
-    	
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
     	_meusRobos = "sample.RoboFazNada"
-    			     //+",sample.RoboFazNada"
-    			     //+ ",sample.RoboFazNada" 
+    			     +",sample.RoboFazNada"
+    			     + ",sample.RoboFazNada" 
+    			     + ",sample.RoboFazNada"
     				 ;
     	
         // Create the RobocodeEngine

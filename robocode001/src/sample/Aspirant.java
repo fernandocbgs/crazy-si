@@ -73,6 +73,7 @@ public class Aspirant extends Robot {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public void onHitWall(HitWallEvent e) {
 //		double x = 2.0;
 		{
