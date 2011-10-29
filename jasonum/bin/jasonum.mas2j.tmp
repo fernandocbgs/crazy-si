@@ -1,0 +1,31 @@
+/*
+    Jason Project
+
+    -- created on Outubro 17, 2011
+*/
+
+MAS mars {
+   infrastructure: Centralised
+
+   environment: ambiente.MarsEnv
+
+   agents:
+       //r1;
+       //r2;
+       ag_robot1;
+
+   aslSourcePath: "src/asl"; 
+}
+/*
+Como rodar o Jason
+
+Main class:
+jason.mas2j.parser.mas2j
+Program Arguments (run):
+"C:/Users/Emerson/workspace/jasonum\mars.mas2j" run
+
+
+para o debug:
+"C:/Users/Emerson/workspace/jasonum\mars.mas2j" debug
+*/
+

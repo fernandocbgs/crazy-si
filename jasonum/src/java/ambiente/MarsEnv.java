@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class MarsEnv extends Environment {
 	
-	public static final String ag_robot1 = "ag_robot1";
+	public static final String agRobot1 = "ag_robot1";
 	
     public static final int GSize = 7; // grid size
     //public static final int GARB  = 16; // garbage code in grid model
@@ -27,9 +27,6 @@ public class MarsEnv extends Environment {
 //    public static final Literal g2 = Literal.parseLiteral("garbage(r2)");
 
     static Logger logger = Logger.getLogger(MarsEnv.class.getName());
-    
-    static TesteClasseJava tcJ = new TesteClasseJava(logger);
-    
 
     private MarsModel model;
     private MarsView  view;
@@ -83,7 +80,7 @@ public class MarsEnv extends Environment {
         Location ag_robot1 = model.getAgPos(0);
        // Location r2Loc = model.getAgPos(1);
         
-        Literal pos1 = Literal.parseLiteral("pos("+ag_robot1+"," + ag_robot1.x + "," + ag_robot1.y + ")");
+        Literal pos1 = Literal.parseLiteral("pos("+agRobot1+"," + ag_robot1.x + "," + ag_robot1.y + ")");
        // Literal pos2 = Literal.parseLiteral("pos(r2," + r2Loc.x + "," + r2Loc.y + ")");
 
         addPercept(pos1);
@@ -154,8 +151,7 @@ public class MarsEnv extends Environment {
                 r1.y--;
             setAgPos(0, r1);
             
-            tcJ.getXY(x, y);
-            
+
             //posicao do agente r2
             //setAgPos(1, getAgPos(1)); // just to draw it in the view
         }
@@ -236,5 +232,5 @@ public class MarsEnv extends Environment {
 //            drawString(g, x, y, defaultFont, "G");
 //        }
 
-    }    
+    }
 }
