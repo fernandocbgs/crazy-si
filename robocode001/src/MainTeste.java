@@ -8,7 +8,7 @@ import servidor_tcp.gui.FrameServidor;
 
 /**
  * Compila e copia os arquivos .class para a pasta correta e executa o ambiente robocode
- * -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
+ * -Ddebug=true -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
  * */
 public class MainTeste {
 

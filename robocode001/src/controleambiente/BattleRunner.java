@@ -16,7 +16,7 @@ import robocode.control.events.*;
 
 /**
  * Se não Rodar, passar os parametros:
- * -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
+ * -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true -Ddebug=true
  * Para carregar os robos proprios, copiar os robos do package sample para 'C:\robocode\robots\sample' (pasta padrão),
  * compilar usando o proprio robocode (Ctrl+E, Abre as classe, Ctrl+B), o package dos robos deve ser 'sample'
  * cria o arquivo .properties com as informações dos robos

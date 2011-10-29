@@ -9,7 +9,9 @@ import robocode.ScannedRobotEvent;
 
 /**
  * a ideia é fazer esta classe se comunicar com o Jason e controlar o robo
+ * Não usar esta classe, usar o método com o TCP 
  * */
+@Deprecated
 public class ControlRobot {
 	private int _ultimaAcao, _numeroAcoesTomadas = 0;
 	//private boolean bateuParede = false;
