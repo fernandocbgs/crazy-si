@@ -1,4 +1,4 @@
-package servidor_tcp.pacotes;
+package tcp.pacotes;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

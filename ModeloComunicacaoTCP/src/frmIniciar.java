@@ -6,19 +6,16 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
-
-import servidor_tcp.TCPClient;
-import servidor_tcp.TCPServer;
-import servidor_tcp.interfaces.IClienteTCP;
-import servidor_tcp.interfaces.IServidorTCP;
-
+import tcp.TCPClient;
+import tcp.TCPServer;
+import tcp.interfaces.IServidorTCP;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class frmIniciar extends JFrame implements IServidorTCP, IClienteTCP {
+public class frmIniciar extends JFrame implements IServidorTCP {
 	private static final long serialVersionUID = 8646011828941723155L;
 	private JPanel contentPane;
 	private JTextArea JTA;
@@ -133,7 +130,7 @@ public class frmIniciar extends JFrame implements IServidorTCP, IClienteTCP {
 	
 	private TCPClient getClienteTCP(){
 		if (_clienteTCP == null)
-			_clienteTCP = new TCPClient(this);
+			_clienteTCP = new TCPClient();
 		return _clienteTCP;
 	}
 	

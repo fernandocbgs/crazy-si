@@ -1,4 +1,4 @@
-package servidor_tcp.interfaces;
+package tcp.interfaces;
 
 import java.util.List;
 
