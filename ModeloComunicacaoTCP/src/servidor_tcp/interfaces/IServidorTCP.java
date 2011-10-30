@@ -1,4 +1,4 @@
-package servidor_tcp.gui;
+package servidor_tcp.interfaces;
 
 import java.util.List;
 
