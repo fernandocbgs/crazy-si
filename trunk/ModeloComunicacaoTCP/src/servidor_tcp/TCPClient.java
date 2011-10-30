@@ -8,7 +8,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import servidor_tcp.gui.IClienteTCP;
+
+import servidor_tcp.interfaces.IClienteTCP;
 import servidor_tcp.pacotes.CriadorPacotes;
 import servidor_tcp.pacotes.CriadorPacotes.TipoPacotes;
 

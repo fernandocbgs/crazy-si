@@ -4,7 +4,7 @@ import java.net.*;
 import java.util.List;
 import java.io.*;
 
-import servidor_tcp.gui.IServidorTCP;
+import servidor_tcp.interfaces.IServidorTCP;
 import servidor_tcp.pacotes.AnalisePacotes;
 
 public class TCPServer extends Thread {

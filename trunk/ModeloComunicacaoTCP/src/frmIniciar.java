@@ -9,8 +9,9 @@ import javax.swing.JButton;
 
 import servidor_tcp.TCPClient;
 import servidor_tcp.TCPServer;
-import servidor_tcp.gui.IClienteTCP;
-import servidor_tcp.gui.IServidorTCP;
+import servidor_tcp.interfaces.IClienteTCP;
+import servidor_tcp.interfaces.IServidorTCP;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
