@@ -1,3 +1,4 @@
+package executor;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * OBS: Referenciar o projeto do Jasonum e descomentar as linhas
+ * sobre o TCPClient
+ * 
+ * por algum motivo, o eclipse não permite que um projeto referenciado por ele mesmo
+ * seja referenciado nas properties, acho que para evitar redundancia
+ */
 
 /**
  * Este é um formulario de controle dos Robos Via TCP<br />
@@ -125,6 +134,7 @@ public class FrmTesteClienteJason extends JFrame {
 		cboAcao.setBounds(191, 34, 117, 20);
 		contentPane.add(cboAcao);
 	}
+	
 	private int getPortaCliente(){
 		return Integer.valueOf(cboPortaServidorTCPRobo.getSelectedItem().toString());
 	}

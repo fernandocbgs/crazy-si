@@ -1,3 +1,4 @@
+package executor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,7 +21,7 @@ public class MainTeste {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void roboBattle(){
+	public static void roboBattle(){
 		//apenas para compilar
 		RoboFazNada rb;
 		
