@@ -26,6 +26,7 @@ public class BattleRunner {
 	private String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
 	private String pastaRoboCode = "C:/Robocode"; //C:/Robocode
 	private int numberOfRounds = 1; //os servidores TCP dos robos não são reiniciados no inicio de novas batalhas
+	private int _width = 800, _heigth = 600;
 	
 	/**
 	 * initialPositions - a comma or space separated list like: 
@@ -36,17 +37,18 @@ public class BattleRunner {
 	 * 
 	 * heading - face do robo
 	 * */
-	private int _width = 800, _heigth = 600;
-	private static String posicaoRobo1  = "0.0,0.0,180";
-	private static String posicaoRobo2  = "600.0,600.0,0";
-//	//private static String posicaoRobo3  = "0.0,0.0,0";
-	private static String initialPositions = posicaoRobo1  + ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
+	private String _initialPositions;
 	
-    public void setPastaRoboCode(String pastaRoboCode) { this.pastaRoboCode = pastaRoboCode; }
+    public void setInitialPositions(String initialPositions) { this._initialPositions = initialPositions; }
+	public String getInitialPositions() { return _initialPositions; }
+	public void setPastaRoboCode(String pastaRoboCode) { this.pastaRoboCode = pastaRoboCode; }
 	public String getPastaRoboCode() { return pastaRoboCode; }
    
 	public BattleRunner(){}
-	public BattleRunner(String pastaRoboCode){ setPastaRoboCode(pastaRoboCode); }
+	public BattleRunner(String pastaRoboCode, String posicoesIniciais){ 
+		setPastaRoboCode(pastaRoboCode);
+		setInitialPositions(posicoesIniciais);
+	}
 	
     public void iniciar(){
     	//FRAME Servidor TCP
@@ -75,8 +77,12 @@ public class BattleRunner {
        // Run our specified battle and let it run till it is over
         
         //initialPositions
+        if (!getInitialPositions().equals("")) {
+        	engine.runBattle(battleSpec, getInitialPositions(), true);	
+        } else {
+        	engine.runBattle(battleSpec, true);
+        }
         
-        engine.runBattle(battleSpec, initialPositions, true); // waits till the battle finishes
         //engine.printRunningThreads();
         // Cleanup our RobocodeEngine
         engine.close();

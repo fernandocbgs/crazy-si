@@ -25,6 +25,9 @@ public class MainTeste {
 		//apenas para compilar
 		RoboFazNada rb;
 		
+		String posicoesIniciais = "0,0,180, 500,500,270";
+		posicoesIniciais = "";
+		
 		//copia os arquivos para o diretorio padrao do robocode
 		String p1 = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001";
 		String pastaRobocode = "C:\\robocode";
@@ -68,7 +71,7 @@ public class MainTeste {
 		}
 		
 		//C:/Robocode
-		new BattleRunner(pastaRobocode).iniciar();
+		new BattleRunner(pastaRobocode, posicoesIniciais).iniciar();
 	}
 	
 	/**

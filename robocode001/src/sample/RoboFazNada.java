@@ -62,7 +62,8 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 			if (_listaAcoes != null && _listaAcoes.size() >= 2) { executar(); 
 			} else {
 				//faz um ahead, apenas para não matar o processo
-				ahead(1);ahead(-1);
+				//ahead(1);ahead(-1);
+				turnRadarLeft(1);
 			}
 		}
 	}
@@ -79,14 +80,6 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	
 	public void executar(){
 		if (_listaAcoes == null && _listaAcoes.size() <= 1) return;
-		/**
-		 * 0 - parar
-		 * 1 - reiniciar robo
-		 * 2 - atirar
-		 * 3 - virar esquerda
-		 * 4 - virar direita
-		 * 5 - andar
-		 **/
 		int tipo = Integer.valueOf(_listaAcoes.get(0)); //tipo acao
 		switch(tipo){
 			case 2: 
@@ -99,6 +92,8 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 				ahead(Double.parseDouble(_listaAcoes.get(1))); break;
 		}
 		
+		//_listaAcoes.remove(1);
+		//_listaAcoes.remove(0);
 		_listaAcoes.clear(); //limpa as ações executadas
 	}
 
@@ -149,7 +144,13 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		}
 	}
 	
-	private void parar(){ pausar = true; }
-	private void reiniciar(){ pausar = false; }
+	private void parar(){ 
+		//doNothing();
+		pausar = true; if (_listaAcoes!=null) _listaAcoes.clear(); 
+	}
+	private void reiniciar(){
+		//execute();
+		pausar = false; 
+	}
 	
 }
