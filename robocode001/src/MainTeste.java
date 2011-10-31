@@ -2,9 +2,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import controleambiente.BattleRunner;
 import sample.RoboFazNada;
-import servidor_tcp.gui.FrameServidor;
 
 /**
  * Compila e copia os arquivos .class para a pasta correta e executa o ambiente robocode
@@ -12,76 +14,60 @@ import servidor_tcp.gui.FrameServidor;
  * */
 public class MainTeste {
 
-
 	public static void main(String[] args) {
-		testeTCP();
+		new FrmTesteClienteJason().setVisible(true);
 		roboBattle();
 	}
-	
-	private static void testeTCP(){
-		FrameServidor frm = new FrameServidor();
-		frm.setVisible(true);
-//		TCPServer sr = new TCPServer(7890);
-//		sr.iniciarServidor();
-//		
-////		TCPServer srRobo = new TCPServer(7891);
-////		srRobo.iniciarServidor();
-//		
-//		
-//		TCPClient clienteRobo = new TCPClient(7890, "localhost");
-//		clienteRobo.iniciarCliente();
-		
-	} 
 	
 	@SuppressWarnings("unused")
 	private static void roboBattle(){
 		//apenas para compilar
-		@SuppressWarnings("unused")
 		RoboFazNada rb;
 		
 		//copia os arquivos para o diretorio padrao do robocode
-		String pastaOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001\\bin\\sample\\";
-		String pastaDestino = "C:\\robocode\\robots\\sample\\";
+		String p1 = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001";
+		String pastaRobocode = "C:\\robocode";
 		
-		String pastaTCPOrigem = "D:\\Meus Documentos\\Emerson\\UTFPR\\6º Semestre\\Sistemas Inteligentes\\Parte 2\\TrabalhoFinal\\robocode001\\bin\\servidor_tcp\\";
-		String pastaTCPDestino = "C:\\robocode\\robots\\servidor_tcp\\";
-			
-		String[] arqOr = new String[11];
-		String[] arqDes = new String[arqOr.length];
+		String pastaOrigem = p1 + "\\bin\\sample\\";
+		String pastaDestino = pastaRobocode + "\\robots\\sample\\";
 		
-		arqOr[0] = pastaOrigem + "RoboFazNada.class";
-		arqDes[0] = pastaDestino + "RoboFazNada.class";
-		arqOr[1] = pastaOrigem + "ControlRobot.class";
-		arqDes[1] = pastaDestino + "ControlRobot.class";
-		arqOr[2] = pastaOrigem + "RobosScaneados.class";
-		arqDes[2] = pastaDestino + "RobosScaneados.class";
-		arqOr[3] = pastaOrigem + "ControleTCPRobot.class";
-		arqDes[3] = pastaDestino + "ControleTCPRobot.class";
+		String pastaTCPOrigem = p1 + "\\bin\\tcp\\";
+		String pastaTCPDestino = pastaRobocode + "\\robots\\tcp\\";
 		
-		arqOr[4] = pastaTCPOrigem + "TCPClient.class";
-		arqDes[4] = pastaTCPDestino + "TCPClient.class";
-		arqOr[5] = pastaTCPOrigem + "TCPServer.class";
-		arqDes[5] = pastaTCPDestino + "TCPServer.class";
-		arqOr[6] = pastaTCPOrigem + "gui\\IAcoesTCP.class";
-		arqDes[6] = pastaTCPDestino + "gui\\IAcoesTCP.class";
-		arqOr[7] = pastaTCPOrigem + "gui\\ThreadIniciaServidor.class";
-		arqDes[7] = pastaTCPDestino + "gui\\ThreadIniciaServidor.class";
-		arqOr[8] = pastaTCPOrigem + "pacotes\\AnalisePacotes.class";
-		arqDes[8] = pastaTCPDestino + "pacotes\\AnalisePacotes.class";
-		arqOr[9] = pastaTCPOrigem + "pacotes\\CriadorPacotes$TipoPacotes.class";
-		arqDes[9] = pastaTCPDestino + "pacotes\\CriadorPacotes$TipoPacotes.class";
-		arqOr[10] = pastaTCPOrigem + "pacotes\\CriadorPacotes.class";
-		arqDes[10] = pastaTCPDestino + "pacotes\\CriadorPacotes.class";
+		List<String> arqOr = new ArrayList<String>();
+		List<String> arqDes = new ArrayList<String>(arqOr.size());
 		
-		for (int i = 0; i < arqOr.length; i++){
-			if (!arqOr[i].equals("") && !arqDes[i].equals("")){
+		arqOr.add(pastaOrigem + "RoboFazNada.class");
+		arqDes.add(pastaDestino + "RoboFazNada.class");
+		arqOr.add(pastaOrigem + "ControlRobot.class");
+		arqDes.add(pastaDestino + "ControlRobot.class");
+		arqOr.add(pastaOrigem + "RobosScaneados.class");
+		arqDes.add(pastaDestino + "RobosScaneados.class");
+		arqOr.add(pastaOrigem + "ControleTCPRobot.class");
+		arqDes.add(pastaDestino + "ControleTCPRobot.class");
+		arqOr.add(pastaTCPOrigem + "TCPServer.class");
+		arqDes.add(pastaTCPDestino + "TCPServer.class");
+		arqOr.add(pastaTCPOrigem + "ServerThread.class");
+		arqDes.add(pastaTCPDestino + "ServerThread.class");
+		arqOr.add(pastaTCPOrigem + "interfaces\\IServidorTCP.class");
+		arqDes.add(pastaTCPDestino + "interfaces\\IServidorTCP.class");
+		arqOr.add(pastaTCPOrigem + "pacotes\\AnalisePacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes\\AnalisePacotes.class");
+		arqOr.add(pastaTCPOrigem + "pacotes\\CriadorPacotes$TipoPacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes\\CriadorPacotes$TipoPacotes.class");
+		arqOr.add(pastaTCPOrigem + "pacotes\\CriadorPacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes\\CriadorPacotes.class");
+
+		for (int i = 0; i < arqOr.size(); i++){
+			if (!arqOr.get(i).equals("") && !arqDes.get(i).equals("")){
 				try {
-					copy(new File(arqOr[i]), new File(arqDes[i]));
+					copy(new File(arqOr.get(i)), new File(arqDes.get(i)));
 				} catch (IOException e) { e.printStackTrace(); }
 			}
 		}
 		
-		BattleRunner.iniciar();
+		//C:/Robocode
+		new BattleRunner(pastaRobocode).iniciar();
 	}
 	
 	/**
