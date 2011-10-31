@@ -29,7 +29,7 @@ public class EnvSalvarRefem extends Environment {
     
     @Override public void init(String[] args) {
     	configuracoes();
-        model = new ModelSalvarRefem(r1, r2);
+        model = new ModelSalvarRefem();
         //view = new ViewSalvarRefem(model);
         //model.setView(view);
         updatePercepts();
@@ -102,8 +102,8 @@ public class EnvSalvarRefem extends Environment {
         //Location ag_save = model.getAgPos(0);
         //Location ag_refem = model.getAgPos(1);
         
-        r1 = getDadosR(0); //recupera os dados dos robos via TCP
-        r2 = getDadosR(1);
+        atualizarDadosRobosViaTCP(); //recupera os dados dos robos via TCP
+
         
 //        Literal pos1 = Literal.parseLiteral("pos("+r1.getNomeRobo()+"," + ag_save.x + "," + ag_save.y + ")");
 //        Literal pos2 = Literal.parseLiteral("pos("+r2.getNomeRobo()+"," + ag_refem.x + "," + ag_refem.y + ")");
@@ -124,22 +124,26 @@ public class EnvSalvarRefem extends Environment {
 //        }
     }
     
+    private void atualizarDadosRobosViaTCP(){
+        r1 = getDadosR(0); //recupera os dados dos robos via TCP
+        r2 = getDadosR(1);
+    }
+    
     
     class ModelSalvarRefem extends GridWorldModel {
         //boolean r1HasGarb = false; // whether r1 is carrying garbage or not
-    	private DadosRobos _r1, _r2;
-    	
-        private ModelSalvarRefem(DadosRobos r1, DadosRobos r2) {
+
+        private ModelSalvarRefem() {
             super(Width, Height, 2); //3º parametro = nº agentes
             
-            _r1=r1;_r2=r2;
+            
 
             // initial location of agents
             try {
             	//tem que ser -1, se não estoura o tamanho do Desenho
-                setAgPos(0, (int)_r1.getX(), (int)_r1.getY()); //agente que deve salvar
+                setAgPos(0, (int)r1.getX(), (int)r1.getY()); //agente que deve salvar
                 //setAgPos(1, new java.util.Random().nextInt(GSize),new java.util.Random().nextInt(GSize)); //agente refem
-                setAgPos(1, (int)_r2.getX(), (int)_r2.getY()); //agente refem
+                setAgPos(1, (int)r2.getX(), (int)r2.getY()); //agente refem
                 //setAgPos(2, 2,2);//agInimigo
             } catch (Exception e) {
                 e.printStackTrace();
@@ -181,17 +185,21 @@ public class EnvSalvarRefem extends Environment {
         }
         
         void AproximarRefem() throws Exception {
+        	//atualiza r1 e r2
+        	atualizarDadosRobosViaTCP();
+        	
         	Location agSaveL = getAgPos(0); //agent Save
             Location agRefemL = getAgPos(1); //refem
-            Location agInimigoL = getAgPos(2); //inimigo
+            //Location agInimigoL = getAgPos(2); //inimigo
             
             if (pertoRefem()){
             	//adiciona a percepção que chegou perto do refem, então ele deve parar
             	//a caminhada em direção à ele
-            	addPercept(_r1.getNomeRobo(), Literal.parseLiteral("pertoRefem."));
+            	addPercept(r1.getNomeRobo(), Literal.parseLiteral("pertoRefem."));
             	return;
             }
-            
+
+            //backup
 //            //verifica se não esta atropelando o inimigo
 //            if (pertoInimigo(1)) {
 //            	
@@ -202,35 +210,35 @@ public class EnvSalvarRefem extends Environment {
 //            	addPercept(_r1.getNomeRobo(), Literal.parseLiteral("pertoInimigo."));
 //            	return;
 //            }
-            
-            if (agSaveL.x != agRefemL.x) {
-	            if (agSaveL.x < agRefemL.x && agSaveL.x < getWidth()) {
-	            	agSaveL.x++;
-	            } else if (agSaveL.x > 0) {
-	            	agSaveL.x--;
-	            }
-            }
-            if (agSaveL.y != agRefemL.y) {
-	            if (agSaveL.y < agRefemL.y && agSaveL.y < getHeight()) {
-	            	agSaveL.y++;
-	            } else if (agSaveL.y > 0) {
-	            	agSaveL.y--;
-	            }
-            }
-            if (agSaveL.x == getWidth()) { agSaveL.x--; }
-            if (agSaveL.y == getHeight()) { agSaveL.y--; }
-            
-            
-            //System.out.println("["+agSaveL.x + "," + agSaveL.y + "]");
-            
-            setAgPos(0, agSaveL);
-            //setAgPos(1, agRefemL);
-            //setAgPos(2, agInimigoL);
-            
-            List<String> ordens = new ArrayList<String>();
-            ordens.add("5"); 
-            ordens.add(agSaveL.x + "");
-            enviarOrdem(ordens, 0);
+
+//            if (agSaveL.x != agRefemL.x) {
+//	            if (agSaveL.x < agRefemL.x && agSaveL.x < getWidth()) {
+//	            	agSaveL.x++;
+//	            } else if (agSaveL.x > 0) {
+//	            	agSaveL.x--;
+//	            }
+//            }
+//            if (agSaveL.y != agRefemL.y) {
+//	            if (agSaveL.y < agRefemL.y && agSaveL.y < getHeight()) {
+//	            	agSaveL.y++;
+//	            } else if (agSaveL.y > 0) {
+//	            	agSaveL.y--;
+//	            }
+//            }
+//            if (agSaveL.x == getWidth()) { agSaveL.x--; }
+//            if (agSaveL.y == getHeight()) { agSaveL.y--; }
+//            
+//            
+//            //System.out.println("["+agSaveL.x + "," + agSaveL.y + "]");
+//            
+//            setAgPos(0, agSaveL);
+//            //setAgPos(1, agRefemL);
+//            //setAgPos(2, agInimigoL);
+//            
+//            List<String> ordens = new ArrayList<String>();
+//            ordens.add("5"); 
+//            ordens.add(agSaveL.x + "");
+            enviarOrdem(new CalculosRoboCode(agSaveL, agRefemL).getOrdems(), 0);
             
         }
         
@@ -256,126 +264,121 @@ public class EnvSalvarRefem extends Environment {
         
         //------------------------ não usado
         
-        void moveTowards() throws Exception {
-            Location agSave = getAgPos(0);
-            Location agRefem = getAgPos(1);
-            
-            if (agSave.x < agRefem.x) {
-            	agSave.x++;
-            } else {
-            	agSave.x--;
-            }
-            if (agSave.y < agRefem.y) {
-            	agSave.y++;
-            } else {
-            	agSave.y--;
-            }
-            
-            if (agSave.x == getWidth()) { agSave.x = 0; }
-            //if (agSave.y == getHeight()) { return; }
-
-            // finished searching the whole grid
-            
-            setAgPos(0, agSave);
-            
-            //desenho agente r2
-            //setAgPos(1, getAgPos(1)); // just to draw it in the view
-        }
-        
-//        void moveTowards(int x, int y) throws Exception {
-//            Location r1 = getAgPos(0);
-//            if (r1.x < x)
-//                r1.x++;
-//            else if (r1.x > x)
-//                r1.x--;
-//            if (r1.y < y)
-//                r1.y++;
-//            else if (r1.y > y)
-//                r1.y--;
-//            setAgPos(0, r1);
-//            
-//
-//            //posicao do agente r2
-//            //setAgPos(1, getAgPos(1)); // just to draw it in the view
-//        }
-        
-//        void pickGarb() {
-//            // r1 location has garbage
-////            if (model.hasObject(GARB, getAgPos(0))) {
-////                // sometimes the "picking" action doesn't work
-////                // but never more than MErr times
-////                if (random.nextBoolean() || nerr == MErr) {
-////                    remove(GARB, getAgPos(0));
-////                    nerr = 0;
-////                    r1HasGarb = true;
-////                } else {
-////                    nerr++;
-////                }
-////            }
-//        }
-//        void dropGarb() {
-//            if (r1HasGarb) {
-//                r1HasGarb = false;
-//                //add(GARB, getAgPos(0));
-//            }
-//        }
-//        void burnGarb() {
-//            // r2 location has garbage
-//            if (model.hasObject(GARB, getAgPos(1))) {
-//                remove(GARB, getAgPos(1));
-//            }
-//        }
+ 
     }
     
     //-----------------------------------------------------------
-//    class ViewSalvarRefem extends GridWorldView {
-//        /**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//		public ViewSalvarRefem(ModelSalvarRefem model) {
-//            super(model, "Salvar Refem", 600);
-//            defaultFont = new Font("Arial", Font.BOLD, 10); // change default font
-//            setVisible(true);
-//            repaint();
-//        }
-//
-//        /** draw application objects */
-//        @Override
-//        public void draw(Graphics g, int x, int y, int object) {
-//            switch (object) {
-//                //case MarsEnv.GARB: drawGarb(g, x, y);  break;
-//            }
-//        }
-//
-//        @Override
-//        public void drawAgent(Graphics g, int x, int y, Color c, int id) {
-//            String label = "R"+(id+1);
-//            c = Color.blue;
-//            
-//            if (id == 0) {
-//                c = Color.yellow;
-////                if (((MarsModel)model).r1HasGarb) {
-////                    label += " - G";
-////                    c = Color.orange;
-////                }
-//            }
-//            super.drawAgent(g, x, y, c, id-1);
-//            if (id == 0) {
-//                g.setColor(Color.black);
-//            } else {
-//                g.setColor(Color.white);
-//            }
-//            super.drawString(g, x, y, defaultFont, label);
-//        }
-//
-////        public void drawGarb(Graphics g, int x, int y) {
-////            super.drawObstacle(g, x, y);
-////            g.setColor(Color.white);
-////            drawString(g, x, y, defaultFont, "G");
-////        }
-//
-//    }
+    class CalculosRoboCode {
+    	private Location _rSalvador, _rRefem;
+
+    	public CalculosRoboCode(Location rSal, Location rRefem){
+    		_rSalvador = rSal; _rRefem = rRefem;
+    	}
+    	
+    	public List<String> getOrdems(){
+    		List<String> ordens = new ArrayList<String>();
+    		
+    		if (estaAnguloCerto()) {
+    			//segue em frente
+    			ordens.add("5");
+    			ordens.add("50"); //50 unidades
+    		} else {
+    			ordens.add("4"); //virar direita
+    			
+    			double angulo = getAngulo();
+    			System.out.println("angulo: " + angulo);
+    			
+    			ordens.add(""+ getAnaliseValor(angulo, r1.getHeading())); 
+    		}
+    		
+    		//Math.abs
+    		
+    		return ordens;
+    	}
+    	
+    	private boolean estaAnguloCerto(){
+    		//verifica se esta no angulo certo
+    		return r1.getHeading() == getAngulo();
+    	}
+    	
+    	private double getAnaliseValor(double angulo, double heading){
+    		double vlr;
+    		vlr = angulo - heading;
+    		//informa o lado à ser rotacionado
+    		//if (getHeading() < headingEscolhido) {if (vlr<0) vlr *=-1;}
+    		return vlr;
+    	}
+    	
+    	private double getAngulo(){
+    		double rt= 0.0;
+    		rt = Matematica.CalculoVetores.AnguloTeste( 
+    				new Matematica.XY(r1.getX(), r1.getY()),
+    				new Matematica.XY(r2.getX(), r2.getY())
+    			  );
+    		System.out.println("Retorno: " + rt);
+    		return rt;
+    	}
+    	
+//    	private double getAngulo(){
+//    		return getAngulo(r1.getX(), r1.getY(), r2.getX(), r2.getY());
+//    	}
+//    	
+//    	private double getAngulo(double x1, double y1, double x2, double y2){
+//    		
+//    		System.out.println(x1+"-"+y1+"-"+x2+"-"+y2);
+//    		return Math.acos(x1*x2+y1*y2 / Math.sqrt(x1*x1 + y1*y1)*Math.sqrt(x2*y2 + y2*y2));
+//    	}
+        
+//    	/**Move in the direction of an x and y coordinate**/
+//    	private double goTo(double x, double y, double heading) {
+//    	    double dist = 20; 
+//    	    double angle = Math.toDegrees(absbearing(Width,Height,x,y));
+//    	    double r = turnTo(angle, heading);
+//    	    return dist * r;
+//    	}
+
+//    	/**Turns the shortest angle possible to come to a heading, then returns 
+//    	the direction the bot needs to move in.**/
+//    	private int turnTo(double x, double y, double heading) {
+//    		double angle = Math.toDegrees(absbearing(Width,Height,x,y)); //absbearing
+//    	    double ang;
+//    	    int dir;
+//    	    //ang = normalisebearing(heading - angle);
+//    	    ang = getAnaliseValor(angle, heading);
+//    	    if (ang > 90) {
+//    	        ang -= 180;
+//    	        dir = -1;
+//    	    }
+//    	    else if (ang < -90) {
+//    	        ang += 180;
+//    	        dir = -1;
+//    	    }
+//    	    else {
+//    	        dir = 1;
+//    	    }
+//    	    setTurnLeft(ang);
+//    	    return dir;
+//    	}
+    	
+//    	/**
+//    	 * Returns the distance between two points
+//    	 * */
+//    	private double getDistancia(double x1,double y1, double x2,double y2) {
+//    	    double x = x2-x1;
+//    	    double y = y2-y1;
+//    	    double range = Math.sqrt(x*x + y*y);
+//    	    return range;	
+//    	}
+    	
+    }
     
 }
+
+/**
+ * 0 - parar
+ * 1 - reiniciar robo
+ * 2 - atirar
+ * 3 - virar esquerda
+ * 4 - virar direita
+ * 5 - andar
+ **/
