@@ -10,6 +10,10 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import DadosRobos.DadosRobos;
+import Matematica.CalculoVetores;
+import Matematica.XY;
 import tcp.TCPClient;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -133,6 +137,55 @@ public class FrmTesteClienteJason extends JFrame {
 		cboAcao.setSelectedIndex(0);
 		cboAcao.setBounds(191, 34, 117, 20);
 		contentPane.add(cboAcao);
+		
+		JButton btnAngulo = new JButton("Angulo");
+		btnAngulo.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnAngulo.setBackground(Color.WHITE);
+		btnAngulo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				TCPClient cli1 = new TCPClient(7891);
+				TCPClient cli2 = new TCPClient(7892);
+				
+				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
+				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
+				//dados dos robos 1 e robos 2
+				
+				double angulo1 =
+					AnguloTeste(
+						new XY(r1.getX(), r1.getY()), 
+						new XY(r2.getX(), r2.getY())
+					);
+				double angulo2 = 					
+					AnguloTeste(
+						new XY(r2.getX(), r2.getY()),
+						new XY(r2.getX(), r1.getY())
+					);
+				//ajuste do robocode
+				//angulo1 -= 90;
+				//angulo2 -= 90;
+				
+				System.out.println("angulo1: " + angulo1);
+				System.out.println("angulo2: " + angulo2);
+				
+				if (r1.getHeading() != angulo1) {
+					List<String> ordens1 = new ArrayList<String>();
+					ordens1.add("4");
+					ordens1.add(""+getAnaliseValor(angulo1, r1.getHeading()));
+					cli1.enviarOrdem(ordens1);
+				}
+				
+				if (r2.getHeading() != angulo2) {
+					List<String> ordens2 = new ArrayList<String>();
+					ordens2.add("4");
+					ordens2.add(""+getAnaliseValor(angulo2, r2.getHeading()));
+					cli2.enviarOrdem(ordens2);
+				}
+				
+			}
+		});
+		btnAngulo.setBounds(318, 11, 89, 23);
+		contentPane.add(btnAngulo);
 	}
 	
 	private int getPortaCliente(){
@@ -152,5 +205,33 @@ public class FrmTesteClienteJason extends JFrame {
 		_tcpcli = new TCPClient(getPortaCliente());
 		return _tcpcli;
 	}
+	
+	//---------------------------------------------
+	private double getAnaliseValor(double angulo, double heading){
+		double vlr;
+		vlr = angulo - heading;
+		//informa o lado à ser rotacionado
+		//if (getHeading() < headingEscolhido) {if (vlr<0) vlr *=-1;}
+		return vlr;
+	}
+	
+	//#####################################
+	//enviar este método para dentro da classe CalculoVetores
+    public static double AnguloTeste(XY p1, XY p2){
+    	XY v1 = CalculoVetores.getVetor(p1, p2);
+    	XY v2 = CalculoVetores.getVetor(
+    				new XY(p1.X(),p2.Y())
+    				,
+    				new XY(p1.X(),p1.Y())
+    			); //vetor criado, base de calculo do angulo
+    	
+    	//System.out.println("v1: " + v1 + ", v2: " + v2);
+    	
+    	//o = arccos( u * v / |v|*|u| )
+    	double o = Math.acos(CalculoVetores.multiplicao(v1, v2) / (CalculoVetores.norma(v1) * CalculoVetores.norma(v2)));
+    	o = Math.toDegrees(o); //(float)
+    	//System.out.println("o: " + o);
+    	return o;
+    }
 	
 }
