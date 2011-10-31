@@ -23,9 +23,9 @@ import robocode.control.events.*;
  * */
 public class BattleRunner {
 	
-	private static String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
-	private static String pastaRoboCode = "C:/Robocode"; //C:/Robocode
-	private static int numberOfRounds = 5;
+	private String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
+	private String pastaRoboCode = "C:/Robocode"; //C:/Robocode
+	private int numberOfRounds = 1; //os servidores TCP dos robos não são reiniciados no inicio de novas batalhas
 	
 	/**
 	 * initialPositions - a comma or space separated list like: 
@@ -36,28 +36,31 @@ public class BattleRunner {
 	 * 
 	 * heading - face do robo
 	 * */
-	private static int _width = 800, _heigth = 600;
-//	private static String posicaoRobo1  = (0-_tamRobo) + ","  +(0-_tamRobo) + ",90";
-//	private static String posicaoRobo2  = "0.0,0.0,0";
+	private int _width = 800, _heigth = 600;
+	private static String posicaoRobo1  = "0.0,0.0,180";
+	private static String posicaoRobo2  = "600.0,600.0,0";
 //	//private static String posicaoRobo3  = "0.0,0.0,0";
-//	private static String initialPositions = posicaoRobo1 ;//+ ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
+	private static String initialPositions = posicaoRobo1  + ", " + posicaoRobo2 ;//+ ", " +posicaoRobo3;
 	
-    public static void main(String[] args) {
-    	iniciar();
-    }
+    public void setPastaRoboCode(String pastaRoboCode) { this.pastaRoboCode = pastaRoboCode; }
+	public String getPastaRoboCode() { return pastaRoboCode; }
    
-    public static void iniciar(){
+	public BattleRunner(){}
+	public BattleRunner(String pastaRoboCode){ setPastaRoboCode(pastaRoboCode); }
+	
+    public void iniciar(){
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
+    	//só vou colocar 2 robos
     	_meusRobos = "sample.RoboFazNada"
     			     +",sample.RoboFazNada"
-    			     + ",sample.RoboFazNada" 
-    			     + ",sample.RoboFazNada"
+    			     //+ ",sample.RoboFazNada" 
+    			     //+ ",sample.RoboFazNada"
     				 ;
     	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
-        RobocodeEngine engine = new RobocodeEngine(new java.io.File(pastaRoboCode)); // pasta padrão C:/Robocode
+        RobocodeEngine engine = new RobocodeEngine(new java.io.File(getPastaRoboCode())); // pasta padrão C:/Robocode
         // Add our own battle listener to the RobocodeEngine 
         engine.addBattleListener(new BattleObserver());
         // Show the Robocode battle view
@@ -68,15 +71,12 @@ public class BattleRunner {
         RobotSpecification[] selectedRobots = engine.getLocalRepository(_meusRobos);
         BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
         
-        //---------------- testes emerson -------------
-//        TestesEmerson(battleSpec);
-        //---------------- testes emerson -------------
-        
+       
        // Run our specified battle and let it run till it is over
         
         //initialPositions
         
-        engine.runBattle(battleSpec, true); // waits till the battle finishes
+        engine.runBattle(battleSpec, initialPositions, true); // waits till the battle finishes
         //engine.printRunningThreads();
         // Cleanup our RobocodeEngine
         engine.close();
