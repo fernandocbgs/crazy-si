@@ -30,6 +30,17 @@ public class TCPServer extends Thread {
 		iniciarServidor();
 	}
 	
+	public void parar(){
+		try {
+			_clientSocket.close();
+			_clientSocket = null;
+			_serverSocket.close();
+			_serverSocket = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void iniciarServidor() {
 		System.out.println("Usage: java MultiThreadChatServer \n" + "Now using port number=" + _portaServidor);
 

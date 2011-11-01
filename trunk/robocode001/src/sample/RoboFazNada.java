@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import robocode.AdvancedRobot;
+import robocode.BattleEndedEvent;
+import robocode.DeathEvent;
+import robocode.RobotDeathEvent;
 import robocode.StatusEvent;
+import robocode.WinEvent;
 import tcp.TCPServer;
 import tcp.interfaces.IServidorTCP;
 
@@ -38,6 +42,11 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 			_server = new TCPServer(getPortaServidorRobo(), this);
 			_server.start();
 		}
+	}
+	
+	private void killServidorTCP(){
+		_server.parar(); //_server.stop();
+		_server = null;
 	}
 	
 	private int getPortaServidorRobo(){
@@ -121,6 +130,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		dadosRobo.add(getHeading()+"");
 		dadosRobo.add(getWidth()+"");
 		dadosRobo.add(getHeight()+"");
+		dadosRobo.add(getNumRounds()+""); //numero do round
 		return dadosRobo;
 	}
 
@@ -150,6 +160,19 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	private void reiniciar(){
 		//execute();
 		pausar = false; 
+	}
+	
+	@Override public void onDeath(DeathEvent event) {
+		killServidorTCP(); //super.onDeath(event);
+	}
+	@Override public void onWin(WinEvent event) { 
+		killServidorTCP(); //super.onWin(event); 
+	}
+	@Override public void onBattleEnded(BattleEndedEvent event) {
+		killServidorTCP(); //super.onBattleEnded(event);
+	}
+	@Override public void onRobotDeath(RobotDeathEvent event) {
+		killServidorTCP(); //super.onRobotDeath(event);
 	}
 	
 }
