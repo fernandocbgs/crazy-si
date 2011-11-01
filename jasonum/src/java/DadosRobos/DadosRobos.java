@@ -15,7 +15,8 @@ public class DadosRobos {
 	private double _heading;
 	private double _width;
 	private double _height;
-	
+	private int _numeroRound;
+
 	public void setIndiceRobo(int indiceRobo) { this._indiceRobo = indiceRobo; }
 	public int getIndiceRobo() { return _indiceRobo; }
 	public void setNomeRobo(String nomeRobo) { this._nomeRobo = nomeRobo; }
@@ -34,6 +35,8 @@ public class DadosRobos {
 	public double getWidth() { return _width; }
 	public void setHeight(double height) { this._height = height; }
 	public double getHeight() { return _height; }
+	public void setNumeroRound(int _numeroRound) { this._numeroRound = _numeroRound; }
+	public int getNumeroRound() { return _numeroRound; }
 	
 	public DadosRobos(){}
 	public DadosRobos(List<String> l) {
@@ -46,6 +49,7 @@ public class DadosRobos {
 		setHeading(Double.parseDouble(l.get(6)));
 		setWidth(Double.parseDouble(l.get(7)));
 		setHeight(Double.parseDouble(l.get(8)));
+		setNumeroRound(Integer.valueOf(l.get(9)));
 	}
 	
 	public DadosRobos getDadosRobos(List<String> l) {
@@ -55,7 +59,7 @@ public class DadosRobos {
 	@Override
 	public String toString() {
 		return _indiceRobo + "-"+_nomeRobo+"-"+_energia+"-["+_x + "," + _y +"]" + "-" +
-			   _velocidade+"-"+_heading+"-"+_width+"-"+_height;
+			   _velocidade+"-"+_heading+"-"+_width+"-"+_height + "-" + _numeroRound;
 	}
 	
 	
