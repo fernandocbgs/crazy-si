@@ -58,6 +58,8 @@ public class BattleRunner {
     			     +",sample.RoboFazNada"
     			     //+ ",sample.RoboFazNada" 
     			     //+ ",sample.RoboFazNada"
+    			     //+",sample.Definitivo"
+    			     //+",sample.Definitivo"
     				 ;
     	
         // Create the RobocodeEngine
