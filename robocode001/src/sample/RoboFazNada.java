@@ -10,7 +10,7 @@ import tcp.interfaces.IServidorTCP;
 
 /**
  * Robo Faz Nada<br />
- * ideia é ser controlado via Jason 
+ * ideia e ser controlado via Jason 
  * @author Emerson Shigueo Sugimoto
  * @author Lucas Del Castanhel
  * */
@@ -52,7 +52,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		setBulletColor(Color.green);
 		setScanColor(Color.GREEN);
 		
-//		//arruma a posição inicial do robo
+//		//arruma a posicao inicial do robo
 //		double vlr = getAnaliseValor(90, getHeading());
 //		turnRight(vlr);
 		
@@ -61,7 +61,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 			//ahead(1);
 			if (_listaAcoes != null && _listaAcoes.size() >= 2) { executar(); 
 			} else {
-				//faz um ahead, apenas para não matar o processo
+				//faz um ahead, apenas para nao matar o processo
 				//ahead(1);ahead(-1);
 				turnRadarLeft(1);
 			}
@@ -92,18 +92,17 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 				ahead(Double.parseDouble(_listaAcoes.get(1))); break;
 		}
 		
-		//_listaAcoes.remove(1);
-		//_listaAcoes.remove(0);
-		_listaAcoes.clear(); //limpa as ações executadas
+		System.out.println("_listaAcoes: " + _listaAcoes);
+		
+		_listaAcoes.remove(1);
+		_listaAcoes.remove(0);
+		//_listaAcoes.clear(); //limpa as acoes executadas
+		if (_listaAcoes.size() >= 2) {
+			//aguarda um pouco antes de chamar novamente
+			try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
+			executar(); 
+		}
 	}
-
-//	private double getAnaliseValor(double valorEscolhido, double referencia){
-//		double vlr;
-//		vlr = valorEscolhido - referencia;
-//		//informa o lado à ser rotacionado
-//		//if (getHeading() < headingEscolhido) {if (vlr<0) vlr *=-1;}
-//		return vlr;
-//	}
 
 	@Override
 	public void print(String msg) {
