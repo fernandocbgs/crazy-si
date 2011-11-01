@@ -25,7 +25,7 @@ public class BattleRunner {
 	
 	private String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
 	private String pastaRoboCode = "C:/Robocode"; //C:/Robocode
-	private int numberOfRounds = 1; //os servidores TCP dos robos não são reiniciados no inicio de novas batalhas
+	private int numberOfRounds = 1; //Falta reiniciar o jason após o inicio da batalha
 	private int _width = 800, _heigth = 600;
 	
 	/**
