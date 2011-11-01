@@ -13,7 +13,7 @@
 
 /* Plans */
 
-+!aproximarRefem : not pertoRefem & not pertoInimigo
++!aproximarRefem : not pertoRefem //& not pertoInimigo
 	<- aproximar;
 	   !!aproximarRefem;
 	   .print("Tentando se aproximar do refem").
