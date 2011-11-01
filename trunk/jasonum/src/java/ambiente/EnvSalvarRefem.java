@@ -10,13 +10,12 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
 import jason.environment.grid.GridWorldModel;
-import jason.environment.grid.Location;
 
 public class EnvSalvarRefem extends Environment {
 	private List<Integer> _portaRobos;
 	private String _ip;
 	private TCPClient[] _tcpcli;
-	//private int _portaServidor = 7896;
+	private int _numeroRound = 0;
 	
 	public static final String agSave = "agRobotSaver";
 //	public static final String agRefem = "agRefem";
@@ -25,14 +24,12 @@ public class EnvSalvarRefem extends Environment {
 	public static final int Width = 800;
 	public static final int Height = 600;
     static Logger logger = Logger.getLogger(EnvSalvarRefem.class.getName());
-    private ModelSalvarRefem model; //private ViewSalvarRefem view;
+    private ModelSalvarRefem model;
     private DadosRobos r1, r2;
     
     @Override public void init(String[] args) {
     	configuracoes();
         model = new ModelSalvarRefem();
-        //view = new ViewSalvarRefem(model);
-        //model.setView(view);
         updatePercepts();
     }
     
@@ -48,7 +45,8 @@ public class EnvSalvarRefem extends Environment {
     	_tcpcli = new TCPClient[_portaRobos.size()];
     	for (int i = 0; i < _tcpcli.length; i++) _tcpcli[i] = new TCPClient(_portaRobos.get(i), _ip);
 		
-    	r1 = getDadosR(0); //recupera os dados dos robos via TCP
+    	//recupera os dados dos robos via TCP
+    	r1 = getDadosR(0); 
         r2 = getDadosR(1);
     }
     
@@ -104,10 +102,6 @@ public class EnvSalvarRefem extends Environment {
         //Location ag_refem = model.getAgPos(1);
         
         atualizarDadosRobosViaTCP(); //recupera os dados dos robos via TCP
-
-        
-//        Literal pos1 = Literal.parseLiteral("pos("+r1.getNomeRobo()+"," + ag_save.x + "," + ag_save.y + ")");
-//        Literal pos2 = Literal.parseLiteral("pos("+r2.getNomeRobo()+"," + ag_refem.x + "," + ag_refem.y + ")");
         
         if (r1 == null || r2 == null) {return;}
         
@@ -116,18 +110,21 @@ public class EnvSalvarRefem extends Environment {
         
         addPercept(pos1);
         addPercept(pos2);
-        
-//        if (model.hasObject(GARB, r1Loc)) {
-//            addPercept(g1);
-//        }
-//        if (model.hasObject(GARB, r2Loc)) {
-//            addPercept(g2);
-//        }
     }
     
     private void atualizarDadosRobosViaTCP(){
         r1 = getDadosR(0); //recupera os dados dos robos via TCP
         r2 = getDadosR(1);
+        
+        if (r1.getNumeroRound() > _numeroRound) {
+        	_numeroRound = r1.getNumeroRound();
+        	//remove a percepção que ele esta perto do refém
+        	//seria a reinicilização do jason
+        	removePercept(agSave,Literal.parseLiteral("pertoRefem."));
+        	//problema: ao reiniciar o robocode, o jason pode não rechamar este método
+        	//System.out.println("#inicio jason");
+        }
+        
     }
     
     
@@ -136,26 +133,15 @@ public class EnvSalvarRefem extends Environment {
 
         private ModelSalvarRefem() {
             super(Width, Height, 2); //3º parametro = nº agentes
-            
-            
 
             // initial location of agents
             try {
-            	//tem que ser -1, se não estoura o tamanho do Desenho
                 setAgPos(0, (int)r1.getX(), (int)r1.getY()); //agente que deve salvar
-                //setAgPos(1, new java.util.Random().nextInt(GSize),new java.util.Random().nextInt(GSize)); //agente refem
                 setAgPos(1, (int)r2.getX(), (int)r2.getY()); //agente refem
-                //setAgPos(2, 2,2);//agInimigo
+                //setAgPos(2, (int)r3.getX(), (int)r3.getY()); //agente Inimigo
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            // initial location of garbage
-//            add(GARB, 3, 0);
-//            add(GARB, GSize-1, 0);
-//            add(GARB, 1, 2);
-//            add(GARB, 0, GSize-2);
-//            add(GARB, GSize-1, GSize-1);
         }
 
         void LudibriarInimigo() throws Exception {
@@ -189,12 +175,11 @@ public class EnvSalvarRefem extends Environment {
         	//atualiza r1 e r2
         	atualizarDadosRobosViaTCP();
         	
-        	Location agSaveL = getAgPos(0); //agent Save
-            Location agRefemL = getAgPos(1); //refem
+//        	Location agSaveL = getAgPos(0); //agent Save
+//            Location agRefemL = getAgPos(1); //refem
             //Location agInimigoL = getAgPos(2); //inimigo
             
             if (pertoRefem()){
-            	//System.out.println("Esta PERTO !!!!!");
             	//adiciona a percepção que chegou perto do refem, então ele deve parar
             	//a caminhada em direção à ele
             	//addPercept(r1.getNomeRobo(), Literal.parseLiteral("pertoRefem."));
@@ -251,10 +236,6 @@ public class EnvSalvarRefem extends Environment {
         
         private boolean pertoRefem() {
         	atualizarDadosRobosViaTCP();
-//        	Location agSaveL = getAgPos(0); //agent Save
-//            Location agRefemL = getAgPos(1); //refem
-//        	return ((agSaveL.x == agRefemL.x+1 || agSaveL.x == agRefemL.x) 
-//            		&& (agSaveL.y == agRefemL.y+1 || agSaveL.y == agRefemL.y));
         	double dis = Matematica.CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
         	return dis <= 80;
         }
@@ -263,51 +244,23 @@ public class EnvSalvarRefem extends Environment {
     
     //-----------------------------------------------------------
     class CalculosRoboCode {
-    	
-
     	public CalculosRoboCode(){}
-    	
-//    	public CalculosRoboCode(Location rSal, Location rRefem){
-//    		_rSalvador = rSal; _rRefem = rRefem;
-//    	}
     	
     	public List<String> getOrdems(){
     		List<String> ordens = new ArrayList<String>();
     		
-    		
 			ordens.add("3"); //virar esquerda
 			ordens.add(""+ getAngulo());
 			
+			ordens.add("5");
 			double distancia = getDistanciaRefem();
 			System.out.println("distancia: " + distancia);
-			if (distancia > 75) {distancia-=75;} 
-			else {return ordens;} // não tem mais o que fazer
+			if (distancia <= 50) {
+				ordens.add(distancia + "");
+			}  else {
+				ordens.add(50 + "");
+			}
 			
-			ordens.add("5");
-			//ordens.add(distancia + "");
-			ordens.add(50 + ""); //50 unidades
-    		
-//    		System.out.println("ajustouAngulo: " + ajustouAngulo);
-//    		
-//    		if (/*estaAnguloCerto() &&*/ ajustouAngulo) {
-//    			//segue em frente
-//    			ordens.add("5");
-//    			ordens.add((getDistanciaRefem()-50) + ""); //50 unidades
-//    			
-//    			ajustouAngulo = false;
-//    		} else {
-//    			double angulo = getAngulo();
-//    			if (angulo < 0 && CalculoVetores.pertoParede(Width, Height, r1.getX(), r1.getY())) {
-//    				angulo = 0;
-//    			}
-//    			System.out.println("angulo: " + angulo);
-//    			
-//    			ordens.add("3"); //virar esquerda
-//    			ordens.add(""+ angulo);
-//    			
-//    			ajustouAngulo = true;
-//    		}
-    		
     		return ordens;
     	}
     	
@@ -315,11 +268,6 @@ public class EnvSalvarRefem extends Environment {
     		atualizarDadosRobosViaTCP();
     		return Matematica.CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
     	}
-    	
-//    	private boolean estaAnguloCerto(){
-//    		//verifica se esta no angulo certo
-//    		return r1.getHeading() == getAngulo() && ajustouAngulo;
-//    	}
     	
     	private double getAngulo(){
     		double rt= 0.0;

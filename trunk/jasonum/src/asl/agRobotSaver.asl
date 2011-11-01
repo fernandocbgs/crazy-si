@@ -22,8 +22,6 @@
 	<-  ludibriar;
 	    !!aproximarRefem;
 		.print("perto inimigo").
-
-
 	
 //+!check(slots) : not visited(r1)
 //   <- next(slot);
