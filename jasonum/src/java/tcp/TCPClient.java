@@ -37,6 +37,7 @@ public class TCPClient /*implements Runnable*/ {
 
 		try {
 			_clientSocket = new Socket(_ip, _portaServidor);
+			//_clientSocket.setSoTimeout(300);
 			_out = new DataOutputStream(_clientSocket.getOutputStream());
 			_in = new DataInputStream(_clientSocket.getInputStream());
 		} catch (UnknownHostException e) {
@@ -55,19 +56,29 @@ public class TCPClient /*implements Runnable*/ {
 				// resposta do servidor
 				List<String> l = new ArrayList<String>();
 				int tamanho = Integer.valueOf(_in.readInt()); // tamanho
-				// System.out.println("tamanho: " + tamanho);
-				for (int i = 0; i < tamanho; i++) {
-					l.add(_in.readUTF());
+				//System.out.println("#tamanho: " + tamanho);
+				
+				if (tamanho > 0) {
+					for (int i = 0; i < tamanho; i++) {
+						//try { Thread.sleep(5); } catch (InterruptedException e) { e.printStackTrace(); }
+						l.add(_in.readUTF());
+					}
 				}
 				
 				_out.close();
 				_in.close();
-				_clientSocket.close();
-				_clientSocket = null;
+				
+//				System.out.println("### FECHANDO SOCKET #####");
+//				System.out.println("### FECHANDO SOCKET #####");
+//				System.out.println("### FECHANDO SOCKET #####");
+//				
+//				_clientSocket.close();
+//				_clientSocket = null;
 				
 				return l;
 			} catch (IOException e) {
-				System.err.println("IOException:  " + e);
+				System.err.println("[1] IOException:  " + e + ", mensagem: " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return null;
@@ -103,7 +114,8 @@ public class TCPClient /*implements Runnable*/ {
 				_clientSocket.close();
 				_clientSocket = null;
 			} catch (IOException e) {
-				System.err.println("IOException:  " + e);
+				System.err.println("[2] IOException:  " + e);
+				e.printStackTrace();
 			}
 		}
 	}

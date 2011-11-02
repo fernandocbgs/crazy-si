@@ -40,6 +40,7 @@ public class DadosRobos {
 	
 	public DadosRobos(){}
 	public DadosRobos(List<String> l) {
+		if (l == null) {return;}
 		setIndiceRobo(Integer.valueOf(l.get(0)));
 		setNomeRobo(l.get(1));
 		setEnergia(Double.parseDouble(l.get(2)));
