@@ -6,4 +6,9 @@
 
 /* Plans */
 
-
++refemSeguir 
+	<-  !!seguirSalvador;
+		.print("Devo seguir o robo salvador").
++!seguirSalvador : not campoSeguro
+	<- seguirRbSalvador; !!seguirSalvador.
++!seguirSalvador : campoSeguro <- .print("Campo Seguro").
