@@ -15,17 +15,20 @@ public class EnvSalvarRefem extends Environment {
 	private List<Integer> _portaRobos;
 	private String _ip;
 	private TCPClient[] _tcpcli;
-	private int _numeroRound = 0;
+	private static int _numeroRound = 0;
 	
 	public static final String agSave = "agRobotSaver";
-//	public static final String agRefem = "agRefem";
+	public static final String agRefem = "agRefem";
 //	public static final String agInimigo = "agInimigo";
 	
 	public static final int Width = 800;
 	public static final int Height = 600;
+	static double xF = 750.0; static double yF = 550.0; //minha area
+	
     static Logger logger = Logger.getLogger(EnvSalvarRefem.class.getName());
     private ModelSalvarRefem model;
-    private DadosRobos r1, r2;
+    private static DadosRobos r1;
+	private static DadosRobos r2;
     
     @Override public void init(String[] args) {
     	configuracoes();
@@ -76,6 +79,10 @@ public class EnvSalvarRefem extends Environment {
             	model.AproximarRefem();
         	}else if (action.equals(Literal.parseLiteral("ludibriar"))){	
             	model.LudibriarInimigo();
+        	} else if (action.equals(Literal.parseLiteral("seguirRbSalvador"))) {
+        		model.SeguirRoboSalvador();
+        	} else if (action.equals(Literal.parseLiteral("voltarMA"))) {
+        		model.VoltarMinhaArea();
 //            } else if (action.getFunctor().equals(move_towards)) {
 //                //int x = (int)((NumberTerm)action.getTerm(0)).solve();
 //                //int y = (int)((NumberTerm)action.getTerm(1)).solve();
@@ -121,6 +128,7 @@ public class EnvSalvarRefem extends Environment {
         	//remove a percepção que ele esta perto do refém
         	//seria a reinicilização do jason
         	removePercept(agSave,Literal.parseLiteral("pertoRefem."));
+        	removePercept(agRefem, Literal.parseLiteral("refemSeguir."));
         	//problema: ao reiniciar o robocode, o jason pode não rechamar este método
         	//System.out.println("#inicio jason");
         }
@@ -183,99 +191,127 @@ public class EnvSalvarRefem extends Environment {
             	//adiciona a percepção que chegou perto do refem, então ele deve parar
             	//a caminhada em direção à ele
             	//addPercept(r1.getNomeRobo(), Literal.parseLiteral("pertoRefem."));
-            	addPercept(agSave,Literal.parseLiteral("pertoRefem."));
+            	addPercept(agSave, Literal.parseLiteral("pertoRefem."));
+            	addPercept(agRefem, Literal.parseLiteral("refemSeguir."));
             	return;
             }
 
-            //backup
-//            //verifica se não esta atropelando o inimigo
-//            if (pertoInimigo(1)) {
-//            	
-//            	//send(agInimigo,achieve,write(book)); // sent by Bob
-//            	
-//            	//addPercept(agInimigo, Literal.parseLiteral("agenteProximo.")); //informa ao inimigo que esta proximo
-//            	//perto inimigo
-//            	addPercept(_r1.getNomeRobo(), Literal.parseLiteral("pertoInimigo."));
-//            	return;
-//            }
-
-//            if (agSaveL.x != agRefemL.x) {
-//	            if (agSaveL.x < agRefemL.x && agSaveL.x < getWidth()) {
-//	            	agSaveL.x++;
-//	            } else if (agSaveL.x > 0) {
-//	            	agSaveL.x--;
-//	            }
-//            }
-//            if (agSaveL.y != agRefemL.y) {
-//	            if (agSaveL.y < agRefemL.y && agSaveL.y < getHeight()) {
-//	            	agSaveL.y++;
-//	            } else if (agSaveL.y > 0) {
-//	            	agSaveL.y--;
-//	            }
-//            }
-//            if (agSaveL.x == getWidth()) { agSaveL.x--; }
-//            if (agSaveL.y == getHeight()) { agSaveL.y--; }
-//            
-//            
-//            //System.out.println("["+agSaveL.x + "," + agSaveL.y + "]");
-//            
-//            setAgPos(0, agSaveL);
-//            //setAgPos(1, agRefemL);
-//            //setAgPos(2, agInimigoL);
-//            
-//            List<String> ordens = new ArrayList<String>();
-//            ordens.add("5"); 
-//            ordens.add(agSaveL.x + "");
-            
             //agSaveL, agRefemL
-            List<String> ordems = new CalculosRoboCode().getOrdems();
-            if (ordems != null)
-            	enviarOrdem(ordems, 0);
-            
+            List<String> ordens = CalculosRoboCode.getOrdensSalvarRefem();
+            if (ordens != null) enviarOrdem(ordens, 0);
+        }
+        
+        void SeguirRoboSalvador(){
+        	//System.out.println("SeguirRoboSalvador");
+        	atualizarDadosRobosViaTCP();
+
+        	if (campoSeguroRefem()) {
+        		removePercept(agRefem, Literal.parseLiteral("refemSeguir."));
+        		addPercept(agRefem, Literal.parseLiteral("campoSeguro."));
+        		return;
+        	}
+        	
+        	List<String> ordens = CalculosRoboCode.getOrdensRefemSeguirRoboSalvador();
+        	if (ordens != null) enviarOrdem(ordens, 1);
+        } 
+        
+        void VoltarMinhaArea(){
+        	atualizarDadosRobosViaTCP();
+        	
+        	if (volteiMinhaArea()) { 
+        		addPercept(agSave, Literal.parseLiteral("voltei.")); return; 
+        	}
+        	
+        	List<String> ordens = CalculosRoboCode.getOrdensVoltarMinhaArea();
+        	if (ordens != null) enviarOrdem(ordens, 0);
         }
         
         private boolean pertoRefem() {
-        	atualizarDadosRobosViaTCP();
-        	double dis = Matematica.CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
-        	return dis <= 80;
+        	//atualizarDadosRobosViaTCP();
+        	return CalculosRoboCode.getDistanciaRefem() <= 80;
         }
-
+        private boolean volteiMinhaArea(){
+        	return CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF) <= 20;
+        }
+        private boolean campoSeguroRefem(){
+        	return r2.getX() >= 400 && r2.getY() >= 500;
+        }
     }
     
     //-----------------------------------------------------------
-    class CalculosRoboCode {
+    static class CalculosRoboCode {
     	public CalculosRoboCode(){}
     	
-    	public List<String> getOrdems(){
+    	public static List<String> getOrdensSalvarRefem(){
     		List<String> ordens = new ArrayList<String>();
     		
-			ordens.add("3"); //virar esquerda
-			ordens.add(""+ getAngulo());
-			
+    		//double anguloCalculo = CalculoVetores.getAngulo(r1, r2);
+    		double qtdVirar = CalculoVetores.getQuantidadeVirar(r1, r2);
+//    		System.out.println("anguloCalculo: " + anguloCalculo);
+//    		System.out.println("heading: " + r1.getHeading());
+//    		System.out.println("virar: " + qtdVirar);
+    		
+    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
+    			ordens.add("3"); //virar esquerda
+    			ordens.add(""+ qtdVirar);
+    		}
+    		
 			ordens.add("5");
 			double distancia = getDistanciaRefem();
-			System.out.println("distancia: " + distancia);
+			
+			//System.out.println("distancia: " + distancia);
 			if (distancia <= 50) {
 				ordens.add(distancia + "");
 			}  else {
-				ordens.add(50 + "");
+				
+				if (distancia > 100) {
+					ordens.add((distancia-50.0) + "");
+				} else {
+					ordens.add(50 + "");
+				}
+			}
+    		return ordens;
+    	}
+    	
+    	public static List<String> getOrdensRefemSeguirRoboSalvador(){
+    		List<String> ordens = new ArrayList<String>();
+    		double qtdVirar = CalculoVetores.getQuantidadeVirar(r2, r1);
+    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
+    			ordens.add("3"); //virar esquerda
+    			ordens.add(""+ qtdVirar);
+    		}
+    		
+			ordens.add("5");
+			double distancia = getDistanciaRefem();
+			//System.out.println("distancia: " + distancia);
+			if (distancia <= 50) {
+				ordens.add(distancia + "");
+			}  else {
+				if (distancia > 100) {
+					ordens.add((distancia-50.0) + "");
+				} else {
+					ordens.add(50 + "");
+				}
 			}
 			
     		return ordens;
     	}
     	
-    	public double getDistanciaRefem() {
-    		atualizarDadosRobosViaTCP();
-    		return Matematica.CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
+    	public static List<String> getOrdensVoltarMinhaArea(){
+    		List<String> ordens = new ArrayList<String>();
+    		
+			double qtdVirar = CalculoVetores.getQuantidadeVirar(r1.getX(), r1.getY(), xF, yF, r1.getHeading());
+    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
+    			ordens.add("3"); //virar esquerda
+    			ordens.add(""+ qtdVirar);
+    		}
+			ordens.add("5");
+			ordens.add("" + CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF));
+    		return ordens;
     	}
     	
-    	private double getAngulo(){
-    		double rt= 0.0;
-    		rt = CalculoVetores.getAnguloDoisPontos(
-    				r1.getX(), r1.getY(),r2.getX(), r2.getY(),
-    				r1.getHeading()
-    		 	);
-    		return rt;
+    	public static double getDistanciaRefem() {
+    		return CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
     	}
     	
     }
