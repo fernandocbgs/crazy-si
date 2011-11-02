@@ -58,7 +58,8 @@ public class EnvSalvarRefem extends Environment {
     }
     
     private DadosRobos getDadosR(int indice){
-    	return new DadosRobos(getDados(indice));
+    	List<String> l = getDados(indice); if (l==null) { return null; }
+    	return new DadosRobos(l);
     }
     private List<String> getDados(int indice) {
     	return getTCPClient(indice).pedirDados();
@@ -227,7 +228,6 @@ public class EnvSalvarRefem extends Environment {
         }
         
         private boolean pertoRefem() {
-        	//atualizarDadosRobosViaTCP();
         	return CalculosRoboCode.getDistanciaRefem() <= 80;
         }
         private boolean volteiMinhaArea(){
@@ -300,13 +300,35 @@ public class EnvSalvarRefem extends Environment {
     	public static List<String> getOrdensVoltarMinhaArea(){
     		List<String> ordens = new ArrayList<String>();
     		
+    		//tenho que verificar se não vou bater no robo refém (ou outros robos)
+    		//captura o angulo onde esta o robo refem 
+    		double anguloRoboRefem = CalculoVetores.getAngulo(r1, r2);
+    		double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
+    		double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
+    		
+    		System.out.println("dif: " + dif);
+
 			double qtdVirar = CalculoVetores.getQuantidadeVirar(r1.getX(), r1.getY(), xF, yF, r1.getHeading());
-    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
-    			ordens.add("3"); //virar esquerda
-    			ordens.add(""+ qtdVirar);
-    		}
-			ordens.add("5");
-			ordens.add("" + CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF));
+			
+			if (dif <= 50.0) {
+				qtdVirar = r1.getHeading() - anguloPosicaoFinal + (50.0);
+				System.out.println("qtdVirar: " + qtdVirar );
+				
+	    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
+	    			ordens.add("3"); //virar esquerda
+	    			ordens.add(""+ qtdVirar);
+	    		}
+				ordens.add("5");
+				ordens.add("" + 50.0);
+				
+			} else {
+	    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
+	    			ordens.add("3"); //virar esquerda
+	    			ordens.add(""+ qtdVirar);
+	    		}
+				ordens.add("5");
+				ordens.add("" + CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF));
+			}
     		return ordens;
     	}
     	
