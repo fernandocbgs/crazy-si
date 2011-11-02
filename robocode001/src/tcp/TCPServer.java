@@ -87,7 +87,7 @@ class ServerThread extends Thread {
 			_in = new DataInputStream(_clientSocket.getInputStream());
 			_out = new DataOutputStream(_clientSocket.getOutputStream());
 			
-			byte[] pacote = new byte[1000];
+			byte[] pacote = new byte[10000];
 			_in.read(pacote); //le o pacote
 		
 			List<String> rt = analisePacote(pacote); //analise do pacote
@@ -96,12 +96,20 @@ class ServerThread extends Thread {
 			}
 			_out.writeInt(rt.size()); //tamanho da resposta
 			for (String str : rt) {
+				
+				System.out.println("####str: "+ str);
+				
 				_out.writeUTF(str);
 			}
 
 			_in.close();
 			_out.close();
-			_clientSocket.close();
+			
+//			System.out.println("### FECHANDO SOCKET SERVER #####");
+//			System.out.println("### FECHANDO SOCKET SERVER #####");
+//			System.out.println("### FECHANDO SOCKET SERVER #####");
+			
+			//_clientSocket.close();
 		} catch (IOException e) {}
 	}
 	

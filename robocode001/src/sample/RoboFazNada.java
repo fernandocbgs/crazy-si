@@ -125,17 +125,25 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		List<String> dadosRobo = new ArrayList<String>();
 		dadosRobo.add(getIndiceRobo()+"");
 		dadosRobo.add(getName());
-		dadosRobo.add(getEnergy()+"");
-		dadosRobo.add(getX()+"");
-		dadosRobo.add(getY()+"");
-		dadosRobo.add(getVelocity()+"");
-		dadosRobo.add(getHeading()+"");
-		dadosRobo.add(getWidth()+"");
-		dadosRobo.add(getHeight()+"");
+		dadosRobo.add(getStringDbl(getEnergy())+"");
+		dadosRobo.add(getStringDbl(getX())+"");
+		dadosRobo.add(getStringDbl(getY())+"");
+		dadosRobo.add(getStringDbl(getVelocity())+"");
+		dadosRobo.add(getStringDbl(getHeading())+"");
+		dadosRobo.add(getStringDbl(getWidth())+"");
+		dadosRobo.add(getStringDbl(getHeight())+"");
 		dadosRobo.add(getNumRounds()+""); //numero do round
 		return dadosRobo;
 	}
-
+	
+	private String getStringDbl(double d){
+		return Truncagem(d)+"";
+	}
+	
+	private double Truncagem(double vlr){
+		return ((int)(vlr*1000))/1000.0; 
+	}
+	
 	@Override
 	public void ExecutarAcoes(List<String> l) {
 		if (l.size() <= 1) return;
