@@ -42,6 +42,7 @@ public class FrmTesteClienteJason extends JFrame {
 	private JComboBox cboAcao;
 	private TCPClient _tcpcli;
 	private JTextField txtVirar;
+	private JComboBox cboNumeroPlano;
 
 	/**
 	 * Launch the application.
@@ -78,8 +79,7 @@ public class FrmTesteClienteJason extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// recupera os dados do robo
 				List<String> dados = getTcpClient().pedirDados();
-				print("------------Dados do robo da porta: "
-						+ getPortaCliente() + "----------------");
+				print("------------Dados do robo da porta: " + getPortaCliente() + "----------------");
 				for (String d : dados) {
 					print(d);
 				}
@@ -91,7 +91,7 @@ public class FrmTesteClienteJason extends JFrame {
 		contentPane.add(btnGetDadosRobo);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 61, 487, 225);
+		scrollPane.setBounds(10, 92, 487, 194);
 		contentPane.add(scrollPane);
 
 		JTA = new JTextArea();
@@ -148,36 +148,32 @@ public class FrmTesteClienteJason extends JFrame {
 
 				TCPClient cli1 = new TCPClient(7891);
 				TCPClient cli2 = new TCPClient(7892);
-
 				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
 				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
-				// dados dos robos 1 e robos 2
-
-				Double angulo1;
-				Double angulo2;
+				String tx = "r1 ["+ (int)r1.getX()+","+ (int)r1.getY()+"]" + "\n";
+				tx += "r2 ["+ (int)r2.getX()+","+ (int)r2.getY()+"]" + "\n";
+			
+				//tenta rodar os robos:
+				List<String> ordem = new ArrayList<String>();
+				ordem.add("3");
+				//ordem.add("" + (r1.getHeading()- (angulo+180.0) )); //caso 1
+				//ordem.add("" + (r1.getHeading()- (angulo+90.0) )); //caso 2
+				//ordem.add("" + (r1.getHeading()- (angulo) )); //caso 3
+				//ordem.add("" + (r1.getHeading()- (angulo+270.0) )); //caso 4
+				ordem.add("" + CalculoVetores.getQuantidadeVirar(r1, r2));
 				
-				angulo1 = CalculoVetores.getAnguloDoisPontos(r1.getX(), r1.getY(), r2.getX(), r2.getY(), r1.getHeading());
-				angulo2 = CalculoVetores.getAnguloDoisPontos(r2.getX(), r2.getY(), r1.getX(), r1.getY(), r2.getHeading());
-				//angulo2 = anguloRelativo(angulo2);
+				cli1.enviarOrdem(ordem);
+				ordem.clear();
+				ordem.add("3");
+				//ordem.add("" + (r2.getHeading()-(angulo) )); //caso 1
+				//ordem.add("" + (r2.getHeading()-(angulo+270.0) )); //caso 2
+				//ordem.add("" + (r2.getHeading()-(angulo+180.0) )); //caso 3
+				//ordem.add("" + (r2.getHeading()-(angulo+90.0) )); //caso 4
+				ordem.add("" + CalculoVetores.getQuantidadeVirar(r2, r1, r2.getHeading()));
+				cli2.enviarOrdem(ordem);
 				
-				if (angulo1.isNaN() || angulo2.isNaN()) {
-					System.err.println("Erro");
-					return;
-				}
-
-				if (r1.getHeading() != angulo1) {
-					List<String> ordens1 = new ArrayList<String>();
-					ordens1.add("3");
-					ordens1.add("" + angulo1);
-					cli1.enviarOrdem(ordens1);
-				}
-
-				if (r2.getHeading() != angulo2) {
-					List<String> ordens2 = new ArrayList<String>();
-					ordens2.add("3");
-					ordens2.add("" + angulo2);
-					cli2.enviarOrdem(ordens2);
-				}
+				//System.out.println(tx);
+				JTA.setText(tx);
 
 			}
 		});
@@ -215,11 +211,261 @@ public class FrmTesteClienteJason extends JFrame {
 		txtVirar.setBounds(412, 33, 85, 23);
 		contentPane.add(txtVirar);
 		txtVirar.setColumns(10);
+		
+		JButton btnExecutarPlano = new JButton("Executar Plano");
+		btnExecutarPlano.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TCPClient cli1 = new TCPClient(7891);
+				TCPClient cli2 = new TCPClient(7892);
+				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
+				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
+				List<String> ordem = new ArrayList<String>();
+				
+				int p = Integer.valueOf(cboNumeroPlano.getSelectedItem().toString());
+				if (p == 1) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600 - r1.getY() - 50)); //envia ele para cima
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800 - r1.getX() - 50)); //canto superior direito
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 2) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600 - r1.getY() - 50)); //envia ele para cima
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (-r1.getX() + 50)); //canto superior esquerdo
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 3) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (- r1.getY() + 50)); //envia ele para baixo
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (-r1.getX() + 50)); //canto inferior esquerdo
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 4) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (- r1.getY() + 50)); //envia ele para baixo
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800 - r1.getX() - 50)); //canto inferior direito
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 5) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600 - r1.getY() - 50)); //envia ele para cima
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800/2 - r1.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 6) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600/2 - r1.getY() - 50)); //envia ele para cima
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (- r1.getX() + 50));
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 7) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (- r1.getY() + 50)); //envia ele para baixo
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800/2 - r1.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 8) {
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600/2 - r1.getY() - 50)); //envia ele para o meio
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800 - r1.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-90.0));
+					ordem.add("5");
+					ordem.add("" + (800/2 - r2.getX() - 50));
+					ordem.add("3");
+					ordem.add("" + 90.0); //agora o heading é de 90º
+					ordem.add("5");
+					ordem.add("" + (600/2 - r2.getY() - 50));
+					cli2.enviarOrdem(ordem);
+				} else if (p == 9) {
+					//teste de resgate
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r1.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (600 - r1.getY() - 50)); //envia ele para cima
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (800 - r1.getX() - 50)); //canto superior direito
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli1.enviarOrdem(ordem);
+					
+					ordem.clear();
+					ordem.add("3");
+					ordem.add("" + (r2.getHeading()-0.0));
+					ordem.add("5");
+					ordem.add("" + (- r2.getY() + 50)); //envia ele para baixo
+					ordem.add("4");
+					ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+					ordem.add("5");
+					ordem.add("" + (-r2.getX() + 50)); //canto inferior esquerdo
+					ordem.add("3");
+					ordem.add("" + 90);
+					cli2.enviarOrdem(ordem);
+					
+				}
+			}
+		});
+		btnExecutarPlano.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnExecutarPlano.setBackground(Color.WHITE);
+		btnExecutarPlano.setBounds(10, 60, 171, 23);
+		contentPane.add(btnExecutarPlano);
+		
+		cboNumeroPlano = new JComboBox();
+		cboNumeroPlano.setBackground(Color.WHITE);
+		cboNumeroPlano.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		cboNumeroPlano.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}));
+		cboNumeroPlano.setSelectedIndex(8);
+		cboNumeroPlano.setBounds(191, 60, 117, 20);
+		contentPane.add(cboNumeroPlano);
 	}
+	
+	
+	
 
+	//------------------------------------------------------
+	
 	private int getPortaCliente() {
-		return Integer.valueOf(cboPortaServidorTCPRobo.getSelectedItem()
-				.toString());
+		return Integer.valueOf(cboPortaServidorTCPRobo.getSelectedItem().toString());
 	}
 
 	private int getAcao() {
@@ -241,6 +487,14 @@ public class FrmTesteClienteJason extends JFrame {
 		_tcpcli = new TCPClient(getPortaCliente());
 		return _tcpcli;
 	}
-
 }
 //http://www.it.uc3m.es/jvillena/irc/practicas/05-06/robocode/Definitivo.pdf
+
+/**
+ * 0 - parar
+ * 1 - reiniciar robo
+ * 2 - atirar
+ * 3 - virar esquerda
+ * 4 - virar direita
+ * 5 - andar
+ **/

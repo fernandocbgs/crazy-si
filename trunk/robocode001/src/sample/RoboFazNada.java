@@ -25,6 +25,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	private List<String> _listaAcoes = null;
 	private TCPServer _server = null;
 	
+	
 	public RoboFazNada() { }
 	
 	private int getIndiceRobo(){
@@ -62,13 +63,13 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		setScanColor(Color.GREEN);
 		
 //		//arruma a posicao inicial do robo
-//		double vlr = getAnaliseValor(90, getHeading());
-//		turnRight(vlr);
+//		turnRight(90 - getHeading());
 		
 		while(executar){
 			while(pausar) {try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }}
 			//ahead(1);
-			if (_listaAcoes != null && _listaAcoes.size() >= 2) { executar(); 
+			if (_listaAcoes != null && _listaAcoes.size() >= 2) {
+				executar(); 
 			} else {
 				//faz um ahead, apenas para nao matar o processo
 				//ahead(1);ahead(-1);
@@ -101,16 +102,17 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 				ahead(Double.parseDouble(_listaAcoes.get(1))); break;
 		}
 		
-		System.out.println("_listaAcoes: " + _listaAcoes);
-		
-		_listaAcoes.remove(1);
-		_listaAcoes.remove(0);
-		//_listaAcoes.clear(); //limpa as acoes executadas
+		//System.out.println("_listaAcoes: " + _listaAcoes);
 		if (_listaAcoes.size() >= 2) {
-			//aguarda um pouco antes de chamar novamente
-			try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
-			executar(); 
+			_listaAcoes.remove(1);
+			_listaAcoes.remove(0);
 		}
+		//_listaAcoes.clear(); //limpa as acoes executadas
+//		if (_listaAcoes.size() >= 2) {
+//			//aguarda um pouco antes de chamar novamente
+//			try { Thread.sleep(70); } catch (InterruptedException e) { e.printStackTrace(); }
+//			executar(); 
+//		}
 	}
 
 	@Override
@@ -137,19 +139,24 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	@Override
 	public void ExecutarAcoes(List<String> l) {
 		if (l.size() <= 1) return;
-		/**
-		 * 0 - parar
-		 * 1 - reiniciar robo
-		 * 2 - atirar
-		 * 3 - virar esquerda
-		 * 4 - virar direita
-		 * 5 - andar
-		 **/
 		int tipo = Integer.valueOf(l.get(0)); //tipo acao
 		switch(tipo){
 			case 0: parar(); break; //parar
 			case 1: reiniciar(); break; //reiniciar
-			case 2: case 3: case 4: case 5: _listaAcoes = l; break;
+			case 2: case 3: case 4: case 5:
+				if (l == null || l.size() <= 0) {
+					//se vier uma lista vazia.
+					//if (_listaAcoes != null) {_listaAcoes.clear();}
+					break; 
+				} 
+				if (_listaAcoes==null || _listaAcoes.size() <= 0) {
+					_listaAcoes = l;
+					//System.out.println("_listaAcoes: " + _listaAcoes);
+					
+				}/* else {
+					_listaAcoes.addAll(l);
+				}*/
+			break;
 		}
 	}
 	
@@ -176,3 +183,12 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	}
 	
 }
+
+/**
+ * 0 - parar
+ * 1 - reiniciar robo
+ * 2 - atirar
+ * 3 - virar esquerda
+ * 4 - virar direita
+ * 5 - andar
+ **/
