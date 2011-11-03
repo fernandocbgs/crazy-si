@@ -13,6 +13,7 @@
 	<classpathentry kind="lib" path="C:/robocode/libs/robocode.ui.editor-1.7.3.2.jar"/>
 	<classpathentry kind="lib" path="C:/robocode/libs/robocode.ui-1.7.3.2.jar"/>
 	<classpathentry kind="lib" path="C:/robocode/libs/roborumble.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TCPComunicacao"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jasonum"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
