@@ -49,40 +49,44 @@ public class EnvSalvarRefem extends Environment {
     	for (int i = 0; i < _tcpcli.length; i++) _tcpcli[i] = new TCPClient(_portaRobos.get(i), _ip);
 		
     	//recupera os dados dos robos via TCP
-    	r1 = getDadosR(0); 
-        r2 = getDadosR(1);
+    	atualizarDadosRobosViaTCP();
     }
     
     private TCPClient getTCPClient(int indice){
     	return _tcpcli[indice];
     }
     
-    private DadosRobos getDadosR(int indice){
-    	List<String> l = getDados(indice); if (l==null) { return null; }
-    	return new DadosRobos(l);
-    }
-    private List<String> getDados(int indice) {
+    private DadosRobos getDados(int indice) {
     	return getTCPClient(indice).pedirDados();
     }
     private void enviarOrdem(List<String> ordens, int indice) {
     	getTCPClient(indice).enviarOrdem(ordens);
     }
     
+    private void aguardar(long tempo){
+    	try { Thread.sleep(tempo); } catch (InterruptedException e) { e.printStackTrace(); }
+    }
     
     @Override public boolean executeAction(String ag, Structure action) {
         logger.info(ag+" doing: "+ action);
         
+        atualizarDadosRobosViaTCP();
+        if (r1 == null || r2 == null) {return false;}
         //action.getFunctor().equals
         //System.err.println("action: " + action);
         
         try {
-        	if (action.equals(Literal.parseLiteral("aproximar"))){
+        	if (action.equals(Literal.parseLiteral("aproximar")) ){
+                //if (r1.isExecutandoAlgo()) { aguardar(100); }
             	model.AproximarRefem();
-        	}else if (action.equals(Literal.parseLiteral("ludibriar"))){	
+        	}else if (action.equals(Literal.parseLiteral("ludibriar"))){
+        		//if (r1.isExecutandoAlgo()) { aguardar(100); }
             	model.LudibriarInimigo();
         	} else if (action.equals(Literal.parseLiteral("seguirRbSalvador"))) {
+        		//if (r2.isExecutandoAlgo()) { aguardar(100); }
         		model.SeguirRoboSalvador();
         	} else if (action.equals(Literal.parseLiteral("voltarMA"))) {
+        		//if (r1.isExecutandoAlgo()) { aguardar(100); }
         		model.VoltarMinhaArea();
 //            } else if (action.getFunctor().equals(move_towards)) {
 //                //int x = (int)((NumberTerm)action.getTerm(0)).solve();
@@ -98,7 +102,7 @@ public class EnvSalvarRefem extends Environment {
         updatePercepts();
 
         //para nós humanos
-        try {Thread.sleep(200);} catch (Exception e) {}
+        aguardar(200);
         return true;
     }
     
@@ -110,7 +114,6 @@ public class EnvSalvarRefem extends Environment {
         //Location ag_refem = model.getAgPos(1);
         
         atualizarDadosRobosViaTCP(); //recupera os dados dos robos via TCP
-        
         if (r1 == null || r2 == null) {return;}
         
         Literal pos1 = Literal.parseLiteral("pos("+agSave+"," + r1.getX() + "," + r1.getY() + ")");
@@ -121,8 +124,28 @@ public class EnvSalvarRefem extends Environment {
     }
     
     private void atualizarDadosRobosViaTCP(){
-        r1 = getDadosR(0); //recupera os dados dos robos via TCP
-        r2 = getDadosR(1);
+    	//recupera os dados dos robos via TCP
+    	r1 = getDados(0);
+    	r2 = getDados(1);
+//    	if (r1 == null) {
+//    		r1 = getDados(0);
+//    	} else {
+//    		if (r1.isExecutandoAlgo()) { aguardar(20); } else {
+//    			r1 = getDados(0);
+//    		}
+//    	}
+//    	if (r2 == null) {
+//    		r2 = getDados(1);
+//    	} else {
+//    		if (r2.isExecutandoAlgo()) { aguardar(20); } else {
+//    			r2 = getDados(1);
+//    		}
+//    	}
+        
+        if (r1 == null || r2 == null) {return;}
+        
+        //System.out.println("#r1: " + r1.isExecutandoAlgo());
+        //System.out.println("##r2: " + r2.isExecutandoAlgo());
         
         if (r1.getNumeroRound() > _numeroRound) {
         	_numeroRound = r1.getNumeroRound();
@@ -142,7 +165,9 @@ public class EnvSalvarRefem extends Environment {
 
         private ModelSalvarRefem() {
             super(Width, Height, 2); //3º parametro = nº agentes
-
+            
+            if (r1 == null || r2 == null) {return;}
+            
             // initial location of agents
             try {
                 setAgPos(0, (int)r1.getX(), (int)r1.getY()); //agente que deve salvar
@@ -183,6 +208,7 @@ public class EnvSalvarRefem extends Environment {
         void AproximarRefem() throws Exception {
         	//atualiza r1 e r2
         	atualizarDadosRobosViaTCP();
+        	if (r1 == null || r2 == null) {return;}
         	
 //        	Location agSaveL = getAgPos(0); //agent Save
 //            Location agRefemL = getAgPos(1); //refem
@@ -199,13 +225,14 @@ public class EnvSalvarRefem extends Environment {
 
             //agSaveL, agRefemL
             List<String> ordens = CalculosRoboCode.getOrdensSalvarRefem();
-            if (ordens != null) enviarOrdem(ordens, 0);
+            if (ordens != null && ordens.size() > 0) enviarOrdem(ordens, 0);
         }
         
         void SeguirRoboSalvador(){
         	//System.out.println("SeguirRoboSalvador");
         	atualizarDadosRobosViaTCP();
-
+        	if (r1 == null || r2 == null) {return;}
+        	
         	if (campoSeguroRefem()) {
         		removePercept(agRefem, Literal.parseLiteral("refemSeguir."));
         		addPercept(agRefem, Literal.parseLiteral("campoSeguro."));
@@ -213,18 +240,19 @@ public class EnvSalvarRefem extends Environment {
         	}
         	
         	List<String> ordens = CalculosRoboCode.getOrdensRefemSeguirRoboSalvador();
-        	if (ordens != null) enviarOrdem(ordens, 1);
+        	if (ordens != null && ordens.size() > 0) enviarOrdem(ordens, 1);
         } 
         
         void VoltarMinhaArea(){
         	atualizarDadosRobosViaTCP();
+        	if (r1 == null || r2 == null) {return;}
         	
         	if (volteiMinhaArea()) { 
         		addPercept(agSave, Literal.parseLiteral("voltei.")); return; 
         	}
         	
         	List<String> ordens = CalculosRoboCode.getOrdensVoltarMinhaArea();
-        	if (ordens != null) enviarOrdem(ordens, 0);
+        	if (ordens != null && ordens.size() > 0) enviarOrdem(ordens, 0);
         }
         
         private boolean pertoRefem() {
@@ -275,6 +303,15 @@ public class EnvSalvarRefem extends Environment {
     	
     	public static List<String> getOrdensRefemSeguirRoboSalvador(){
     		List<String> ordens = new ArrayList<String>();
+    		
+    		double anguloRoboRefem = CalculoVetores.getAngulo(r2, r1);
+    		double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
+    		double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
+    		
+    		System.out.println("anguloRoboRefem: " + anguloRoboRefem);
+    		System.out.println("anguloPosicaoFinal: " + anguloPosicaoFinal);
+    		System.out.println("dif: " + dif);
+    		
     		double qtdVirar = CalculoVetores.getQuantidadeVirar(r2, r1);
     		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
     			ordens.add("3"); //virar esquerda
@@ -284,7 +321,7 @@ public class EnvSalvarRefem extends Environment {
 			ordens.add("5");
 			double distancia = getDistanciaRefem();
 			//System.out.println("distancia: " + distancia);
-			if (distancia <= 50) {
+			if (distancia <= 50.0) {
 				ordens.add(distancia + "");
 			}  else {
 				if (distancia > 100) {
@@ -306,13 +343,13 @@ public class EnvSalvarRefem extends Environment {
     		double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
     		double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
     		
-    		System.out.println("dif: " + dif);
+    		//System.out.println("dif: " + dif);
 
 			double qtdVirar = CalculoVetores.getQuantidadeVirar(r1.getX(), r1.getY(), xF, yF, r1.getHeading());
 			
 			if (dif <= 50.0) {
 				qtdVirar = r1.getHeading() - anguloPosicaoFinal + (50.0);
-				System.out.println("qtdVirar: " + qtdVirar );
+				//System.out.println("qtdVirar: " + qtdVirar );
 				
 	    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
 	    			ordens.add("3"); //virar esquerda
