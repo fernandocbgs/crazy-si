@@ -1,7 +1,13 @@
 /*
     Jason Project
 
-    -- created on Outubro 29, 2011
+	Como rodar o Jason 
+	Main class: jason.mas2j.parser.mas2j 
+	Program Arguments (run): 
+	"C:/Users/Emerson/workspace/jasonum\mars.mas2j" run 
+	
+	para o debug: 
+	"C:/Users/Emerson/workspace/jasonum\mars.mas2j" debug
 */
 
 MAS mars {
@@ -12,7 +18,7 @@ MAS mars {
    agents:
        agRobotSaver;
        agRefem;
-       //agInimigo; //por enquanto não
+       //agInimigo; //por enquanto nï¿½o
 
    aslSourcePath: "src/asl"; 
 }
