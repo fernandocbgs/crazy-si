@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TCPComunicacao"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jasonum"/>
 	<classpathentry kind="lib" path="C:/robocode/libs/codesize-1.1.jar"/>
 	<classpathentry kind="lib" path="C:/robocode/libs/picocontainer-2.6.jar"/>
