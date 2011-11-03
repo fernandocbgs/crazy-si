@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import controleambiente.BattleRunner;
 import sample.RoboFazNada;
 import tcp.interfaces.IRoboTCP;
@@ -32,13 +31,13 @@ public class MainTeste {
 		
 		//copia os arquivos para o diretorio padrao do robocode
 		String pProjeto = "D:/Meus Documentos/Emerson/UTFPR/6º Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
-		String pProjetoTCP = "D:/Meus Documentos/Emerson/UTFPR/6º Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/TCPComunicacao";
+		String pJason = "C:/Users/Emerson/workspace/jasonum/bin/classes";
 		String pRobocode = "C:/robocode";
 		
 		String pastaOrigem = pProjeto + "/bin/sample/";
 		String pastaDestino = pRobocode + "/robots/sample/";
 		
-		String pastaTCPOrigem = pProjetoTCP + "/bin/tcp/";
+		String pastaTCPOrigem = pJason + "/tcp/";
 		String pastaTCPDestino = pRobocode + "/robots/tcp/";
 		
 		List<String> arqOr = new ArrayList<String>();
@@ -75,6 +74,7 @@ public class MainTeste {
 		for (int i = 0; i < arqOr.size(); i++){
 			if (!arqOr.get(i).equals("") && !arqDes.get(i).equals("")){
 				try {
+					CriarPastas(arqDes.get(i));
 					copy(new File(arqOr.get(i)), new File(arqDes.get(i)));
 				} catch (IOException e) { e.printStackTrace(); }
 			}
@@ -82,6 +82,18 @@ public class MainTeste {
 		
 		//C:/Robocode
 		new BattleRunner(pRobocode, posicoesIniciais).iniciar();
+	}
+	
+	/**
+	 * Remove a parte do arquivo e cria a pasta destino se ela não existir
+	 * */
+	private static void CriarPastas(String pastaDestino){
+		pastaDestino = pastaDestino.replace("\\", "/");
+		String pasta = pastaDestino;
+		if (pastaDestino.lastIndexOf("/") > 0) {
+			pasta = pastaDestino.substring(0, pastaDestino.lastIndexOf("/")) + "/";
+		}
+		funcoes.FuncoesGerais.VerificaECriaDiretorio(pasta);
 	}
 	
 	/**
