@@ -78,11 +78,9 @@ public class FrmTesteClienteJason extends JFrame {
 		btnGetDadosRobo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// recupera os dados do robo
-				List<String> dados = getTcpClient().pedirDados();
+				DadosRobos dados = getTcpClient().pedirDados();
 				print("------------Dados do robo da porta: " + getPortaCliente() + "----------------");
-				for (String d : dados) {
-					print(d);
-				}
+				print(dados.toString());
 			}
 		});
 		btnGetDadosRobo.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -148,8 +146,8 @@ public class FrmTesteClienteJason extends JFrame {
 
 				TCPClient cli1 = new TCPClient(7891);
 				TCPClient cli2 = new TCPClient(7892);
-				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
-				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
+				DadosRobos r1 = cli1.pedirDados();
+				DadosRobos r2 = cli2.pedirDados();
 				String tx = "r1 ["+ (int)r1.getX()+","+ (int)r1.getY()+"]" + "\n";
 				tx += "r2 ["+ (int)r2.getX()+","+ (int)r2.getY()+"]" + "\n";
 			
@@ -188,8 +186,8 @@ public class FrmTesteClienteJason extends JFrame {
 				
 				TCPClient cli1 = new TCPClient(7891);
 				TCPClient cli2 = new TCPClient(7892);
-				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
-				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
+				DadosRobos r1 = cli1.pedirDados();
+				DadosRobos r2 = cli2.pedirDados();
 				List<String> ordem = new ArrayList<String>();
 				ordem.add("3");
 				ordem.add("" + (r1.getHeading()-v));
@@ -217,8 +215,8 @@ public class FrmTesteClienteJason extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				TCPClient cli1 = new TCPClient(7891);
 				TCPClient cli2 = new TCPClient(7892);
-				DadosRobos r1 = new DadosRobos(cli1.pedirDados());
-				DadosRobos r2 = new DadosRobos(cli2.pedirDados());
+				DadosRobos r1 = cli1.pedirDados();
+				DadosRobos r2 = cli2.pedirDados();
 				List<String> ordem = new ArrayList<String>();
 				
 				int p = Integer.valueOf(cboNumeroPlano.getSelectedItem().toString());

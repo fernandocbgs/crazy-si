@@ -1,8 +1,8 @@
 package sample;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
+import DadosRobos.DadosRobos;
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
 import robocode.DeathEvent;
@@ -10,21 +10,21 @@ import robocode.RobotDeathEvent;
 import robocode.StatusEvent;
 import robocode.WinEvent;
 import tcp.TCPServer;
-import tcp.interfaces.IServidorTCP;
+import tcp.interfaces.IRoboTCP;
 
 /**
  * Robo Faz Nada<br />
- * ideia e ser controlado via Jason 
+ * sera controlado via Jason 
  * @author Emerson Shigueo Sugimoto
  * @author Lucas Del Castanhel
  * */
-public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
+public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	private boolean executar = true;
+	private boolean _executandoAlgo = false;
 	private boolean pausar = false;
 	private int _portaServidorTCP = 7890;
 	private List<String> _listaAcoes = null;
 	private TCPServer _server = null;
-	
 	
 	public RoboFazNada() { }
 	
@@ -39,6 +39,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	 * Inicia o Servidor TCP do robo
 	 * */
 	private void iniciaServidorTCP(){
+		_executandoAlgo = false;
 		if (_server == null) {
 			_server = new TCPServer(getPortaServidorRobo(), this);
 			_server.start();
@@ -46,6 +47,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	}
 	
 	private void killServidorTCP(){
+		_executandoAlgo = false;
 		_server.parar(); //_server.stop();
 		_server = null;
 	}
@@ -69,11 +71,10 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 			while(pausar) {try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }}
 			//ahead(1);
 			if (_listaAcoes != null && _listaAcoes.size() >= 2) {
+				_executandoAlgo = true;
 				executar(); 
 			} else {
-				//faz um ahead, apenas para nao matar o processo
-				//ahead(1);ahead(-1);
-				turnRadarLeft(1);
+				turnRadarLeft(1); //apenas para nao matar o processo
 			}
 		}
 	}
@@ -84,12 +85,13 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		if (getEnergy() <= 0) {
 			//System.out.println("StatusEvent -- " + e.getStatus());
 			executar = false;
+			_executandoAlgo = false;
 			stop();
 		}
 	}
 	
 	public void executar(){
-		if (_listaAcoes == null && _listaAcoes.size() <= 1) return;
+		if (_listaAcoes == null && _listaAcoes.size() <= 1) { _executandoAlgo = false; return;}
 		int tipo = Integer.valueOf(_listaAcoes.get(0)); //tipo acao
 		switch(tipo){
 			case 2: 
@@ -106,6 +108,10 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 		if (_listaAcoes.size() >= 2) {
 			_listaAcoes.remove(1);
 			_listaAcoes.remove(0);
+			_executandoAlgo = true;
+		} else {
+			_listaAcoes.clear();
+			_executandoAlgo = false;
 		}
 		//_listaAcoes.clear(); //limpa as acoes executadas
 //		if (_listaAcoes.size() >= 2) {
@@ -121,28 +127,25 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	}
 
 	@Override
-	public List<String> getDadosRobo() {
-		List<String> dadosRobo = new ArrayList<String>();
-		dadosRobo.add(getIndiceRobo()+"");
-		dadosRobo.add(getName());
-		dadosRobo.add(getStringDbl(getEnergy())+"");
-		dadosRobo.add(getStringDbl(getX())+"");
-		dadosRobo.add(getStringDbl(getY())+"");
-		dadosRobo.add(getStringDbl(getVelocity())+"");
-		dadosRobo.add(getStringDbl(getHeading())+"");
-		dadosRobo.add(getStringDbl(getWidth())+"");
-		dadosRobo.add(getStringDbl(getHeight())+"");
-		dadosRobo.add(getNumRounds()+""); //numero do round
-		return dadosRobo;
+	public DadosRobos getDadosRobo() {
+		DadosRobos d = new DadosRobos();
+		d.setIndiceRobo(getIndiceRobo());
+		d.setNomeRobo(getName());
+		d.setEnergia(getEnergy());
+		d.setX(getX());
+		d.setY(getY());
+		d.setVelocidade(getVelocity());
+		d.setHeading(getHeading());
+		d.setWidth(getWidth());
+		d.setHeight(getHeight());
+		d.setNumeroRound(getNumRounds()); //numero do round
+		d.setExecutandoAlgo(_executandoAlgo);
+		return d;
 	}
 	
-	private String getStringDbl(double d){
-		return Truncagem(d)+"";
-	}
-	
-	private double Truncagem(double vlr){
-		return ((int)(vlr*1000))/1000.0; 
-	}
+//	private double Truncagem(double vlr){
+//		return ((int)(vlr*1000))/1000.0; 
+//	}
 	
 	@Override
 	public void ExecutarAcoes(List<String> l) {
@@ -155,6 +158,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 				if (l == null || l.size() <= 0) {
 					//se vier uma lista vazia.
 					//if (_listaAcoes != null) {_listaAcoes.clear();}
+					_executandoAlgo = false;
 					break; 
 				} 
 				if (_listaAcoes==null || _listaAcoes.size() <= 0) {
@@ -170,6 +174,7 @@ public class RoboFazNada extends AdvancedRobot implements IServidorTCP {
 	
 	private void parar(){ 
 		//doNothing();
+		_executandoAlgo = false;
 		pausar = true; if (_listaAcoes!=null) _listaAcoes.clear(); 
 	}
 	private void reiniciar(){
