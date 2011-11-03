@@ -31,14 +31,9 @@ public class MainTeste {
 		posicoesIniciais = "";
 		
 		//copia os arquivos para o diretorio padrao do robocode
-		//linux
-		String pProjeto = "/home/todos/alunos/ct/a529818/workspace/robocode001";
-		String pRobocode = "/home/todos/alunos/ct/a529818/√Årea de Trabalho/C_robocode";
-		String pProjetoTCP = "/home/todos/alunos/ct/a529818/workspace/TCPComunicacao";
-		
-		//String p1 = "D:/Meus Documentos/Emerson/UTFPR/6ÔøΩ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
-		//String pRobocode = "C:/robocode";
-		//String pastaProjetoTCP = "D:/Meus Documentos/Emerson/UTFPR/6ÔøΩ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/TCPComunicacao/";
+		String pProjeto = "D:/Meus Documentos/Emerson/UTFPR/6∫ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
+		String pProjetoTCP = "D:/Meus Documentos/Emerson/UTFPR/6∫ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/TCPComunicacao";
+		String pRobocode = "C:/robocode";
 		
 		String pastaOrigem = pProjeto + "/bin/sample/";
 		String pastaDestino = pRobocode + "/robots/sample/";

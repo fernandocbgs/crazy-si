@@ -4,16 +4,16 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TCPComunicacao"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jasonum"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/codesize-1.1.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/picocontainer-2.6.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.battle-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.core-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.host-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.repository-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.sound-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.ui.editor-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/robocode.ui-1.7.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/todos/alunos/ct/a529818/Área de Trabalho/C_robocode/libs/roborumble.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/codesize-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/picocontainer-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.battle-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.core-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.host-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.repository-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.sound-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.ui.editor-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/robocode.ui-1.7.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/robocode/libs/roborumble.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
