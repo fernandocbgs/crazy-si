@@ -32,17 +32,18 @@ public class MainTeste {
 		
 		//copia os arquivos para o diretorio padrao do robocode
 		//linux
-		//String p1 = "/home/todos/alunos/ct/a529818/Area de Trabalho/ProjetosSI/robocode001";
-		//String pastaRobocode = "/home/todos/alunos/ct/a529818/Area de Trabalho/ProjetosSI/C_robocode";
-		String p1 = "D:/Meus Documentos/Emerson/UTFPR/6∫ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
-		String pRobocode = "C:/robocode";
-
-		String pastaProjetoTCP = "D:/Meus Documentos/Emerson/UTFPR/6∫ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/TCPComunicacao/";
+		String pProjeto = "/home/todos/alunos/ct/a529818/workspace/robocode001";
+		String pRobocode = "/home/todos/alunos/ct/a529818/√Årea de Trabalho/C_robocode";
+		String pProjetoTCP = "/home/todos/alunos/ct/a529818/workspace/TCPComunicacao";
 		
-		String pastaOrigem = p1 + "/bin/sample/";
+		//String p1 = "D:/Meus Documentos/Emerson/UTFPR/6ÔøΩ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
+		//String pRobocode = "C:/robocode";
+		//String pastaProjetoTCP = "D:/Meus Documentos/Emerson/UTFPR/6ÔøΩ Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/TCPComunicacao/";
+		
+		String pastaOrigem = pProjeto + "/bin/sample/";
 		String pastaDestino = pRobocode + "/robots/sample/";
 		
-		String pastaTCPOrigem = p1 + "/bin/tcp/";
+		String pastaTCPOrigem = pProjetoTCP + "/bin/tcp/";
 		String pastaTCPDestino = pRobocode + "/robots/tcp/";
 		
 		List<String> arqOr = new ArrayList<String>();
@@ -63,18 +64,18 @@ public class MainTeste {
 		arqOr.add(pastaOrigem + "Enemigo.class");
 		arqDes.add(pastaDestino + "Enemigo.class");
 		
-//		arqOr.add(pastaTCPOrigem + "TCPServer.class");
-//		arqDes.add(pastaTCPDestino + "TCPServer.class");
-//		arqOr.add(pastaTCPOrigem + "ServerThread.class");
-//		arqDes.add(pastaTCPDestino + "ServerThread.class");
-//		arqOr.add(pastaTCPOrigem + "interfaces/IServidorTCP.class");
-//		arqDes.add(pastaTCPDestino + "interfaces/IServidorTCP.class");
-//		arqOr.add(pastaTCPOrigem + "pacotes/AnalisePacotes.class");
-//		arqDes.add(pastaTCPDestino + "pacotes/AnalisePacotes.class");
-//		arqOr.add(pastaTCPOrigem + "pacotes/CriadorPacotes$TipoPacotes.class");
-//		arqDes.add(pastaTCPDestino + "pacotes/CriadorPacotes$TipoPacotes.class");
-//		arqOr.add(pastaTCPOrigem + "pacotes/CriadorPacotes.class");
-//		arqDes.add(pastaTCPDestino + "pacotes/CriadorPacotes.class");
+		arqOr.add(pastaTCPOrigem + "TCPServer.class");
+		arqDes.add(pastaTCPDestino + "TCPServer.class");
+		arqOr.add(pastaTCPOrigem + "ServerThread.class");
+		arqDes.add(pastaTCPDestino + "ServerThread.class");
+		arqOr.add(pastaTCPOrigem + "interfaces/IRoboTCP.class");
+		arqDes.add(pastaTCPDestino + "interfaces/IRoboTCP.class");
+		arqOr.add(pastaTCPOrigem + "pacotes/AnalisePacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes/AnalisePacotes.class");
+		arqOr.add(pastaTCPOrigem + "pacotes/CriadorPacotes$TipoPacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes/CriadorPacotes$TipoPacotes.class");
+		arqOr.add(pastaTCPOrigem + "pacotes/CriadorPacotes.class");
+		arqDes.add(pastaTCPDestino + "pacotes/CriadorPacotes.class");
 
 		for (int i = 0; i < arqOr.size(); i++){
 			if (!arqOr.get(i).equals("") && !arqDes.get(i).equals("")){
