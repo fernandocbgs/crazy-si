@@ -345,21 +345,26 @@ public class EnvSalvarRefem extends Environment implements IJason {
     		System.out.println("dif: " + dif);
     		
     		double qtdVirar = CalculoVetores.getQuantidadeVirar(r2, r1);
-    		addOrdemVirar(ordens, qtdVirar);
     		
-			ordens.add("5");
+			
 			double distancia = getDistanciaRefem();
+			double vlrSeguir = 0.0;
 			//System.out.println("distancia: " + distancia);
-			if (distancia <= 50.0) {
-				ordens.add(distancia + "");
-			}  else {
-				if (distancia > 100) {
-					ordens.add((distancia-50.0) + "");
+			if (distancia > 100) {
+				vlrSeguir = distancia-50.0;
+			} else {
+				if (distancia > 60.0) {
+					vlrSeguir = 50.0;
 				} else {
-					ordens.add(50 + "");
+					vlrSeguir = -30.0; //dá a ré
 				}
 			}
-			
+			if (Math.abs(vlrSeguir) > 0.0) {
+				//if (vlrSeguir > 0)
+				addOrdemVirar(ordens, qtdVirar);
+				ordens.add("5");
+				ordens.add(vlrSeguir + "");
+			}
     		return ordens;
     	}
     	
@@ -399,8 +404,8 @@ public class EnvSalvarRefem extends Environment implements IJason {
     	
     	private static void addOrdemVirar(List<String> ordens, double qtdVirar){
     		if (
-    				!Matematica.CalculoVetores.Entre(qtdVirar, 0, 3.0) && 
-    				!Matematica.CalculoVetores.Entre(qtdVirar, 360, 3.0)
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 0, 7.0) && 
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 360, 10.0)
     			) {
     			ordens.add("3"); //virar esquerda
     			ordens.add(""+ qtdVirar);
