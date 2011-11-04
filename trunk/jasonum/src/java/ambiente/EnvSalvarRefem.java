@@ -3,10 +3,12 @@ package ambiente;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import ambiente.EnviarMsgTCP.TipoEnvio;
 import DadosRobos.DadosRobos;
 import Matematica.CalculoVetores;
 import tcp.TCPClient;
-import tcp.TCPServer;
+//import tcp.TCPServer;
 import tcp.interfaces.IJason;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
@@ -14,13 +16,12 @@ import jason.environment.Environment;
 import jason.environment.grid.GridWorldModel;
 
 public class EnvSalvarRefem extends Environment implements IJason {
-	private boolean _esperar = false;
+	//private boolean _esperar = false;
 	private List<Integer> _portaRobos;
 	private String _ip;
-	private TCPClient[] _tcpcli;
 	private static int _numeroRound = 0;
-	private TCPServer _server = null;
-	private int _portaServidorTCPJason = 7770;
+	//private TCPServer _server = null;
+	//private int _portaServidorTCPJason = 7770;
 	
 	public static final String agSave = "agRobotSaver";
 	public static final String agRefem = "agRefem";
@@ -36,16 +37,16 @@ public class EnvSalvarRefem extends Environment implements IJason {
 	private static DadosRobos r2;
     
     @Override public void init(String[] args) {
-    	iniciaServidorTCP();
+    	//iniciaServidorTCP();
     	configuracoes();
         model = new ModelSalvarRefem();
         updatePercepts();
     }
     
-	public synchronized void Continuar(DadosRobos dados) {
-		System.out.println("### DEVO CONTINUAR");
-		_esperar = false;
-	}
+//	public void Continuar(DadosRobos dados) {
+//		System.out.println("### DEVO CONTINUAR");
+//		_esperar = false;
+//	}
     
     /**
      * seta as configurações dos clientes tcp
@@ -55,36 +56,38 @@ public class EnvSalvarRefem extends Environment implements IJason {
     	_portaRobos.add(7891);
     	_portaRobos.add(7892);
     	_ip = "localhost";
-    	
-    	_tcpcli = new TCPClient[_portaRobos.size()];
-    	for (int i = 0; i < _tcpcli.length; i++) _tcpcli[i] = new TCPClient(_portaRobos.get(i), _ip);
 		
     	//recupera os dados dos robos via TCP
     	atualizarDadosRobosViaTCP();
     }
     
-    private TCPClient getTCPClient(int indice){
-    	return _tcpcli[indice];
+    private void enviarOrdem(List<String> ordens, int indice){
+    	EnviarMsgTCP en = new EnviarMsgTCP(TipoEnvio.enviarOrdens, _portaRobos.get(indice), _ip);
+    	en.setOrdens(ordens);
+    	en.start();
+//    	if (en.isTerminou()) { //enviou uma ordem
+//    		_esperar = true;
+//    	}
     }
     
     private DadosRobos getDados(int indice) {
-    	return getTCPClient(indice).pedirDados();
-    }
-    private void enviarOrdem(List<String> ordens, int indice) {
-    	getTCPClient(indice).enviarOrdem(ordens);
+    	EnviarMsgTCP en = new EnviarMsgTCP(TipoEnvio.pedirDados, _portaRobos.get(indice), _ip);
+    	en.start();
+    	if (!en.isTerminou()) { aguardar(20);}
+    	return en.getDados();
     }
     
     private void aguardar(long tempo){
     	try { Thread.sleep(tempo); } catch (InterruptedException e) { e.printStackTrace(); }
     }
     
-	private void iniciaServidorTCP(){
-		if (_server == null) {
-			_server = new TCPServer(_portaServidorTCPJason);
-			_server.setIJason(this);
-			_server.start();
-		}
-	}
+//	private void iniciaServidorTCP(){
+//		if (_server == null) {
+//			_server = new TCPServer(_portaServidorTCPJason);
+//			_server.setIJason(this);
+//			_server.start();
+//		}
+//	}
 	
 //	private void killServidorTCP(){
 //		_server.parar(); //_server.stop();
@@ -92,13 +95,13 @@ public class EnvSalvarRefem extends Environment implements IJason {
 //	}
     //-------------------------------
     
-    @Override public synchronized boolean executeAction(String ag, Structure action) {
+    @Override public boolean executeAction(String ag, Structure action) {
         logger.info(ag+" doing: "+ action);
 
-        while (_esperar) {
-        	System.out.println("### JASON ESTOU ESPERANDO....");
-        	aguardar(600);
-        } //espera, até que o robo termine a sua execução
+//        while (_esperar) { //espera, até que o robo termine a sua execução
+//        	System.out.println("### JASON ESTOU ESPERANDO....");
+//        	aguardar(600);
+//        }
         
         atualizarDadosRobosViaTCP();
         if (r1 == null || r2 == null) {return false;}
@@ -132,8 +135,9 @@ public class EnvSalvarRefem extends Environment implements IJason {
         updatePercepts();
 
         //para nós humanos
-        //aguardar(200);
-        _esperar = true;
+        aguardar(200);
+        //aguardar(600);
+        //_esperar = true;
         return true;
     }
     
@@ -310,10 +314,7 @@ public class EnvSalvarRefem extends Environment implements IJason {
 //    		System.out.println("heading: " + r1.getHeading());
 //    		System.out.println("virar: " + qtdVirar);
     		
-    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
-    			ordens.add("3"); //virar esquerda
-    			ordens.add(""+ qtdVirar);
-    		}
+    		addOrdemVirar(ordens, qtdVirar);
     		
 			ordens.add("5");
 			double distancia = getDistanciaRefem();
@@ -344,10 +345,7 @@ public class EnvSalvarRefem extends Environment implements IJason {
     		System.out.println("dif: " + dif);
     		
     		double qtdVirar = CalculoVetores.getQuantidadeVirar(r2, r1);
-    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
-    			ordens.add("3"); //virar esquerda
-    			ordens.add(""+ qtdVirar);
-    		}
+    		addOrdemVirar(ordens, qtdVirar);
     		
 			ordens.add("5");
 			double distancia = getDistanciaRefem();
@@ -382,18 +380,13 @@ public class EnvSalvarRefem extends Environment implements IJason {
 				qtdVirar = r1.getHeading() - anguloPosicaoFinal + (50.0);
 				//System.out.println("qtdVirar: " + qtdVirar );
 				
-	    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
-	    			ordens.add("3"); //virar esquerda
-	    			ordens.add(""+ qtdVirar);
-	    		}
+				addOrdemVirar(ordens, qtdVirar);
+				
 				ordens.add("5");
 				ordens.add("" + 50.0);
 				
 			} else {
-	    		if ((int)qtdVirar != 0 && (int)qtdVirar != 360) {
-	    			ordens.add("3"); //virar esquerda
-	    			ordens.add(""+ qtdVirar);
-	    		}
+				addOrdemVirar(ordens, qtdVirar);
 				ordens.add("5");
 				ordens.add("" + CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF));
 			}
@@ -404,8 +397,64 @@ public class EnvSalvarRefem extends Environment implements IJason {
     		return CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),r2.getX(), r2.getY());
     	}
     	
+    	private static void addOrdemVirar(List<String> ordens, double qtdVirar){
+    		if (
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 0, 3.0) && 
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 360, 3.0)
+    			) {
+    			ordens.add("3"); //virar esquerda
+    			ordens.add(""+ qtdVirar);
+    		}
+    		
+    	}
+    	
     }
 
+}
+
+class EnviarMsgTCP extends Thread {
+	public enum TipoEnvio {pedirDados, enviarOrdens}
+	private TipoEnvio _tipo;
+	private int _porta; private String _ip;
+	private List<String> _ordens = null;
+	private DadosRobos _dados = null;
+	private boolean _terminou = false;
+	
+	public void setTerminou(boolean enviouDados) { this._terminou = enviouDados; }
+	public boolean isTerminou() { return _terminou; }
+	public void setOrdens(List<String> ordens) { this._ordens = ordens; }
+	public List<String> getOrdens() { return _ordens; }
+	public void setDados(DadosRobos dados) { this._dados = dados; }
+	public DadosRobos getDados() { return _dados; }
+	
+	public EnviarMsgTCP(TipoEnvio tp, int porta, String ip){
+		_tipo = tp;
+		_porta = porta;
+		_ip = ip;
+		setTerminou(false);
+	}
+	
+	public void run(){
+		setDados(null); setTerminou(false);
+		switch(_tipo){
+			case enviarOrdens: EnviarOrdens(); break;
+			case pedirDados: pedirDados(); break;
+		}
+	}
+	
+	private void pedirDados(){
+		TCPClient cli = new TCPClient(_porta, _ip);
+		setDados(cli.pedirDados());
+		cli = null;
+		setTerminou(true);
+	}
+	private void EnviarOrdens(){
+		TCPClient cli = new TCPClient(_porta, _ip);
+		cli.enviarOrdem(getOrdens());
+		cli = null;
+		setTerminou(true);
+	}
+	
 }
 
 /**
