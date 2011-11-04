@@ -301,13 +301,13 @@ public class EnvSalvarRefem extends Environment implements IJason {
     	public static List<String> getOrdensRefemSeguirRoboSalvador(){
     		List<String> ordens = new ArrayList<String>();
     		
-    		double anguloRoboRefem = CalculoVetores.getAngulo(r2, r1);
-    		double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
-    		double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
+    		//double anguloRoboRefem = CalculoVetores.getAngulo(r2, r1);
+    		//double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
+    		//double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
     		
-    		System.out.println("anguloRoboRefem: " + anguloRoboRefem);
-    		System.out.println("anguloPosicaoFinal: " + anguloPosicaoFinal);
-    		System.out.println("dif: " + dif);
+//    		System.out.println("anguloRoboRefem: " + anguloRoboRefem);
+//    		System.out.println("anguloPosicaoFinal: " + anguloPosicaoFinal);
+//    		System.out.println("dif: " + dif);
     		
     		double qtdVirar = CalculoVetores.getQuantidadeVirar(r2, r1);
     		
@@ -340,26 +340,43 @@ public class EnvSalvarRefem extends Environment implements IJason {
     		//captura o angulo onde esta o robo refem 
     		double anguloRoboRefem = CalculoVetores.getAngulo(r1, r2);
     		double anguloPosicaoFinal = CalculoVetores.getAngulo(r1.getX(), r1.getY(), xF, yF);
-    		double dif = Math.abs(anguloRoboRefem-anguloPosicaoFinal);
+    		double dif = anguloRoboRefem-anguloPosicaoFinal;
+    		
+    		double distancia = CalculoVetores.distanciaPontos(r1.getX(), r1.getY(), r2.getX(), r2.getY());
     		
     		//System.out.println("dif: " + dif);
 
 			double qtdVirar = CalculoVetores.getQuantidadeVirar(r1.getX(), r1.getY(), xF, yF, r1.getHeading());
 			
-			if (dif <= 50.0) {
-				qtdVirar = r1.getHeading() - anguloPosicaoFinal + (50.0);
-				//System.out.println("qtdVirar: " + qtdVirar );
-				
-				addOrdemVirar(ordens, qtdVirar);
-				
-				ordens.add("5");
-				ordens.add("" + 50.0);
-				
-			} else {
+			//deve dar a ré se o robo estiver na sua frente
+			//como ver que alguem esta no meu caminho ?
+			//if (dif <= 50.0){
+			if (distancia <= 50.0){
+				System.out.println("#####dif: " + dif + ",qtdVirar: " + qtdVirar + 
+								   ",r1.h: " + r1.getHeading() + ",dis: " + distancia);
+			}
+			
+//			if (dif <= 50.0) {
+//				addOrdemVirar(ordens, qtdVirar);
+//				ordens.add("5");
+//				ordens.add("" + (-30)); //ré
+//			} else {
+			
+//			if (dif <= 50.0) {
+//				qtdVirar = r1.getHeading() - anguloPosicaoFinal + (50.0);
+//				//System.out.println("qtdVirar: " + qtdVirar );
+//				
+//				addOrdemVirar(ordens, qtdVirar);
+//				
+//				ordens.add("5");
+//				ordens.add("" + 50.0);
+//				
+//			} else {
 				addOrdemVirar(ordens, qtdVirar);
 				ordens.add("5");
 				ordens.add("" + CalculoVetores.distanciaPontos(r1.getX(), r1.getY(),xF, yF));
-			}
+//			}
+			
     		return ordens;
     	}
     	
@@ -369,8 +386,8 @@ public class EnvSalvarRefem extends Environment implements IJason {
     	
     	private static void addOrdemVirar(List<String> ordens, double qtdVirar){
     		if (
-    				!Matematica.CalculoVetores.Entre(qtdVirar, 0, 7.0) && 
-    				!Matematica.CalculoVetores.Entre(qtdVirar, 360, 10.0)
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 0, 1.0) && 
+    				!Matematica.CalculoVetores.Entre(qtdVirar, 360, 1.0)
     			) {
     			ordens.add("3"); //virar esquerda
     			ordens.add(""+ qtdVirar);
