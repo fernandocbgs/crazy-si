@@ -18,12 +18,15 @@ public class CriadorPacotes {
 		pedirDados,
 		ordem,
 		retornoDados,
+		avisarJason, respostaJason
 	}
 	public int getIntTipo(TipoPacotes tp){
 		switch(tp){
 			case pedirDados: return 0;
 			case ordem: return 1;
 			case retornoDados: return 2;
+			case avisarJason: return 3;
+			case respostaJason: return 4;
 		}
 		return 0;
 	}
@@ -31,6 +34,8 @@ public class CriadorPacotes {
 		if(tp==0){return TipoPacotes.pedirDados;}
 		else if (tp==1) {return TipoPacotes.ordem;}
 		else if (tp==2) {return TipoPacotes.retornoDados;}
+		else if (tp==3) {return TipoPacotes.avisarJason;}
+		else if (tp==4) {return TipoPacotes.respostaJason;}
 		return null;
 	}
 	//---------------------------------------------------
@@ -48,13 +53,40 @@ public class CriadorPacotes {
 	}
 	
 	public byte[] pacoteDadosRobos(DadosRobos dados){
-		int s = 4 + 4 + (2 + dados.getNomeRobo().length()) + 
-				8 + 8 + 8 + 8 + 8 + 8 + 8 + 4 + 2;
+		int s = 4 + getTamPacoteRobo(dados);
 		byte[] conteudo = new byte[s];
 		ByteBuffer bb = ByteBuffer.wrap(conteudo);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		bb.putInt(getIntTipo(TipoPacotes.retornoDados)); //4
-		
+		pacoteDadosRobo(bb, dados); //escreve os dados do robô
+		return conteudo;
+	}
+	
+	public byte[] pacoteAvisarJason(DadosRobos dados) {
+		int s = 4 + getTamPacoteRobo(dados);
+		byte[] conteudo = new byte[s];
+		ByteBuffer bb = ByteBuffer.wrap(conteudo);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		bb.putInt(getIntTipo(TipoPacotes.avisarJason)); //4
+		pacoteDadosRobo(bb, dados); //escreve os dados do robô
+		return conteudo;
+	}
+	
+	public byte[] pacoteRespostaJason() {
+		int s = 4;
+		byte[] conteudo = new byte[s];
+		ByteBuffer bb = ByteBuffer.wrap(conteudo);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		bb.putInt(getIntTipo(TipoPacotes.respostaJason)); //4
+		return conteudo;
+	}
+	
+	//--------------------------------------------------------
+	private int getTamPacoteRobo(DadosRobos dados){
+		return 4 + (2 + dados.getNomeRobo().length()) + 
+			   8 + 8 + 8 + 8 + 8 + 8 + 8 + 4;
+	}
+	private void pacoteDadosRobo(ByteBuffer bb, DadosRobos dados) {
 		bb.putInt(dados.getIndiceRobo()); //4
 		writeString(bb, dados.getNomeRobo()); //2+size
 		bb.putDouble(dados.getEnergia()); //8
@@ -65,16 +97,8 @@ public class CriadorPacotes {
 		bb.putDouble(dados.getWidth()); //8
 		bb.putDouble(dados.getHeight()); //8
 		bb.putInt(dados.getNumeroRound()); //4
-		bb.putShort((short)(dados.isExecutandoAlgo() ? 1 : 0)); //2
-		
-		return conteudo;
 	}
-
-	//--------------------------------------------------------
 	
-	/**
-	 * generico
-	 * */
 	private byte[] pacoteList(TipoPacotes tp, List<String> params){
 		int tam = 0; for (String s:params){tam += 2 + s.length();} //2 - tam da String
 		int s = 4+2+tam;

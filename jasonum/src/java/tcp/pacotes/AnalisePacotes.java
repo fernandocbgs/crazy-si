@@ -49,7 +49,6 @@ public class AnalisePacotes {
 		dados.setWidth(bb.getDouble());
 		dados.setHeight(bb.getDouble());
 		dados.setNumeroRound(bb.getInt());
-		dados.setExecutandoAlgo(bb.getShort()==1);
 		return dados;
 	}
 	

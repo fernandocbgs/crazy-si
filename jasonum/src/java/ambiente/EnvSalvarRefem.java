@@ -6,16 +6,21 @@ import java.util.logging.Logger;
 import DadosRobos.DadosRobos;
 import Matematica.CalculoVetores;
 import tcp.TCPClient;
+import tcp.TCPServer;
+import tcp.interfaces.IJason;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
 import jason.environment.grid.GridWorldModel;
 
-public class EnvSalvarRefem extends Environment {
+public class EnvSalvarRefem extends Environment implements IJason {
+	private boolean _esperar = false;
 	private List<Integer> _portaRobos;
 	private String _ip;
 	private TCPClient[] _tcpcli;
 	private static int _numeroRound = 0;
+	private TCPServer _server = null;
+	private int _portaServidorTCPJason = 7770;
 	
 	public static final String agSave = "agRobotSaver";
 	public static final String agRefem = "agRefem";
@@ -31,10 +36,16 @@ public class EnvSalvarRefem extends Environment {
 	private static DadosRobos r2;
     
     @Override public void init(String[] args) {
+    	iniciaServidorTCP();
     	configuracoes();
         model = new ModelSalvarRefem();
         updatePercepts();
     }
+    
+	public synchronized void Continuar(DadosRobos dados) {
+		System.out.println("### DEVO CONTINUAR");
+		_esperar = false;
+	}
     
     /**
      * seta as configurações dos clientes tcp
@@ -67,8 +78,27 @@ public class EnvSalvarRefem extends Environment {
     	try { Thread.sleep(tempo); } catch (InterruptedException e) { e.printStackTrace(); }
     }
     
-    @Override public boolean executeAction(String ag, Structure action) {
+	private void iniciaServidorTCP(){
+		if (_server == null) {
+			_server = new TCPServer(_portaServidorTCPJason);
+			_server.setIJason(this);
+			_server.start();
+		}
+	}
+	
+//	private void killServidorTCP(){
+//		_server.parar(); //_server.stop();
+//		_server = null;
+//	}
+    //-------------------------------
+    
+    @Override public synchronized boolean executeAction(String ag, Structure action) {
         logger.info(ag+" doing: "+ action);
+
+        while (_esperar) {
+        	System.out.println("### JASON ESTOU ESPERANDO....");
+        	aguardar(600);
+        } //espera, até que o robo termine a sua execução
         
         atualizarDadosRobosViaTCP();
         if (r1 == null || r2 == null) {return false;}
@@ -102,7 +132,8 @@ public class EnvSalvarRefem extends Environment {
         updatePercepts();
 
         //para nós humanos
-        aguardar(200);
+        //aguardar(200);
+        _esperar = true;
         return true;
     }
     
@@ -374,7 +405,7 @@ public class EnvSalvarRefem extends Environment {
     	}
     	
     }
-    
+
 }
 
 /**
