@@ -6,6 +6,8 @@ import DadosRobos.DadosRobos;
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
 import robocode.DeathEvent;
+import robocode.HitRobotEvent;
+import robocode.HitWallEvent;
 import robocode.RobotDeathEvent;
 import robocode.StatusEvent;
 import robocode.WinEvent;
@@ -213,7 +215,21 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	@Override public void onRobotDeath(RobotDeathEvent event) {
 		killServidorTCP(); //super.onRobotDeath(event);
 	}
-
+	
+	@Override
+	public void onHitRobot(HitRobotEvent e) {
+		//super.onHitRobot(e);
+		ahead(-10);
+	}
+	
+	@Override
+	public void onHitWall(HitWallEvent e) {
+		//super.onHitWall(e);
+		
+		ahead(-10);
+		turnLeft(20);
+	}
+	
 }
 
 /**
