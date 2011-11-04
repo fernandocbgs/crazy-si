@@ -439,7 +439,8 @@ public class FrmTesteClienteJason extends JFrame {
 					ordem.add("3");
 					ordem.add("" + 90);
 					cli2.enviarOrdem(ordem);
-					
+				} else if (p == 10) {
+					ordem10(r1, r2, cli1, cli2);
 				}
 			}
 		});
@@ -451,17 +452,12 @@ public class FrmTesteClienteJason extends JFrame {
 		cboNumeroPlano = new JComboBox();
 		cboNumeroPlano.setBackground(Color.WHITE);
 		cboNumeroPlano.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		cboNumeroPlano.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}));
-		cboNumeroPlano.setSelectedIndex(8);
+		cboNumeroPlano.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"}));
+		cboNumeroPlano.setSelectedIndex(9);
 		cboNumeroPlano.setBounds(191, 60, 117, 20);
 		contentPane.add(cboNumeroPlano);
 	}
-	
-	
-	
-
 	//------------------------------------------------------
-	
 	private int getPortaCliente() {
 		return Integer.valueOf(cboPortaServidorTCPRobo.getSelectedItem().toString());
 	}
@@ -484,6 +480,33 @@ public class FrmTesteClienteJason extends JFrame {
 		}
 		_tcpcli = new TCPClient(getPortaCliente());
 		return _tcpcli;
+	}
+	//------------------------------------------------------
+	
+	private void ordem10(DadosRobos r1, DadosRobos r2, TCPClient cli1, TCPClient cli2){
+		List<String> ordem = new ArrayList<String>();
+		ordem.add("3");
+		ordem.add("" + (r1.getHeading()-0.0));
+		ordem.add("5");
+		ordem.add("" + (- r1.getY() + 50)); //envia ele para baixo
+		ordem.add("4");
+		ordem.add("" + 90); //tenho que lembrar que agora o heading é 0º
+		ordem.add("5");
+		ordem.add("" + (800 - r1.getX() - 100));
+		ordem.add("3");
+		ordem.add("" + 90);
+		cli1.enviarOrdem(ordem);
+		
+		ordem.clear();
+		ordem.add("3");
+		ordem.add("" + (r2.getHeading()-90.0));
+		ordem.add("5");
+		ordem.add("" + (800 - r2.getX() - 100));
+		ordem.add("3");
+		ordem.add("" + 90.0); //agora o heading é de 90º
+		ordem.add("5");
+		ordem.add("" + (600/2 - r2.getY() - 50));
+		cli2.enviarOrdem(ordem);
 	}
 }
 //http://www.it.uc3m.es/jvillena/irc/practicas/05-06/robocode/Definitivo.pdf
