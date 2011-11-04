@@ -225,7 +225,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	@Override
 	public void onHitWall(HitWallEvent e) {
 		//super.onHitWall(e);
-		
 		ahead(-10);
 		turnLeft(20);
 	}
