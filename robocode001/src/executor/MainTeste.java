@@ -64,6 +64,10 @@ public class MainTeste {
 		arqDes.add(pastaTCPDestino + "ServerThread.class");
 		arqOr.add(pastaTCPOrigem + "interfaces/IRoboTCP.class");
 		arqDes.add(pastaTCPDestino + "interfaces/IRoboTCP.class");
+		
+		arqOr.add(pastaTCPOrigem + "interfaces/IJason.class");
+		arqDes.add(pastaTCPDestino + "interfaces/IJason.class");
+		
 		arqOr.add(pastaTCPOrigem + "pacotes/AnalisePacotes.class");
 		arqDes.add(pastaTCPDestino + "pacotes/AnalisePacotes.class");
 		arqOr.add(pastaTCPOrigem + "pacotes/CriadorPacotes$TipoPacotes.class");
