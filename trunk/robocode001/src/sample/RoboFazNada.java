@@ -9,6 +9,7 @@ import robocode.DeathEvent;
 import robocode.RobotDeathEvent;
 import robocode.StatusEvent;
 import robocode.WinEvent;
+import tcp.TCPClient;
 import tcp.TCPServer;
 import tcp.interfaces.IRoboTCP;
 
@@ -20,9 +21,11 @@ import tcp.interfaces.IRoboTCP;
  * */
 public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	private boolean executar = true;
-	private boolean _executandoAlgo = false;
+	private boolean avisarJason = false;
 	private boolean pausar = false;
 	private int _portaServidorTCP = 7890;
+	private int _portaServidorTCPJason = 7770;
+	private String _ipTCPJason = "localhost";
 	private List<String> _listaAcoes = null;
 	private TCPServer _server = null;
 	
@@ -39,21 +42,42 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	 * Inicia o Servidor TCP do robo
 	 * */
 	private void iniciaServidorTCP(){
-		_executandoAlgo = false;
 		if (_server == null) {
-			_server = new TCPServer(getPortaServidorRobo(), this);
+			_server = new TCPServer(getPortaServidorRobo());
+			_server.setIstcp(this);
 			_server.start();
 		}
 	}
 	
 	private void killServidorTCP(){
-		_executandoAlgo = false;
 		_server.parar(); //_server.stop();
 		_server = null;
 	}
 	
 	private int getPortaServidorRobo(){
 		return _portaServidorTCP + getIndiceRobo();
+	}
+	
+	private void AvisarJason(){
+		System.out.println("# ROBO - AvisarJason() ");
+		TCPClient cli = new TCPClient(_portaServidorTCPJason, _ipTCPJason);
+		avisarJason = true;
+		
+		//ou não espera resposta nenhuma
+		
+		//while (avisarJason) {
+			cli.avisarJason(getDadosRobo());
+			//não pode ter sleep no robo...
+			//então como esperar
+			//try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); } //aguarda um pouco
+		//}
+		cli = null;
+	}
+	
+	@Override
+	public void JasonFoiAvisado() {
+		System.out.println("# ROBO - Jason FOI AVISADO ");
+		avisarJason = false;
 	}
 	
 	public void run(){
@@ -71,7 +95,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 			while(pausar) {try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }}
 			//ahead(1);
 			if (_listaAcoes != null && _listaAcoes.size() >= 2) {
-				_executandoAlgo = true;
 				executar(); 
 			} else {
 				turnRadarLeft(1); //apenas para nao matar o processo
@@ -85,13 +108,14 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 		if (getEnergy() <= 0) {
 			//System.out.println("StatusEvent -- " + e.getStatus());
 			executar = false;
-			_executandoAlgo = false;
 			stop();
 		}
 	}
 	
 	public void executar(){
-		if (_listaAcoes == null && _listaAcoes.size() <= 1) { _executandoAlgo = false; return;}
+		if (_listaAcoes == null && _listaAcoes.size() <= 1) { 
+			AvisarJason(); return; 
+		}
 		int tipo = Integer.valueOf(_listaAcoes.get(0)); //tipo acao
 		switch(tipo){
 			case 2: 
@@ -105,26 +129,24 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 		}
 		
 		//System.out.println("_listaAcoes: " + _listaAcoes);
+		
 		if (_listaAcoes.size() >= 2) {
 			_listaAcoes.remove(1);
 			_listaAcoes.remove(0);
-			_executandoAlgo = true;
 		} else {
 			_listaAcoes.clear();
-			_executandoAlgo = false;
+			AvisarJason(); //avisa o Jason que ele deve voltar a funcionar
 		}
-		//_listaAcoes.clear(); //limpa as acoes executadas
-//		if (_listaAcoes.size() >= 2) {
-//			//aguarda um pouco antes de chamar novamente
-//			try { Thread.sleep(70); } catch (InterruptedException e) { e.printStackTrace(); }
-//			executar(); 
-//		}
+		if (_listaAcoes.size() <= 1) {
+			AvisarJason(); //avisa o Jason que ele deve voltar a funcionar
+		}
+		
 	}
 
-	@Override
-	public void print(String msg) {
-		System.out.println("[robot] " + msg);
-	}
+//	@Override
+//	public void print(String msg) {
+//		System.out.println("[robot] " + msg);
+//	}
 
 	@Override
 	public DadosRobos getDadosRobo() {
@@ -139,7 +161,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 		d.setWidth(getWidth());
 		d.setHeight(getHeight());
 		d.setNumeroRound(getNumRounds()); //numero do round
-		d.setExecutandoAlgo(_executandoAlgo);
 		return d;
 	}
 	
@@ -149,7 +170,7 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	
 	@Override
 	public void ExecutarAcoes(List<String> l) {
-		if (l.size() <= 1) return;
+		if (l.size() <= 1) {return;}
 		int tipo = Integer.valueOf(l.get(0)); //tipo acao
 		switch(tipo){
 			case 0: parar(); break; //parar
@@ -158,7 +179,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 				if (l == null || l.size() <= 0) {
 					//se vier uma lista vazia.
 					//if (_listaAcoes != null) {_listaAcoes.clear();}
-					_executandoAlgo = false;
 					break; 
 				} 
 				if (_listaAcoes==null || _listaAcoes.size() <= 0) {
@@ -174,7 +194,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	
 	private void parar(){ 
 		//doNothing();
-		_executandoAlgo = false;
 		pausar = true; if (_listaAcoes!=null) _listaAcoes.clear(); 
 	}
 	private void reiniciar(){
@@ -194,7 +213,7 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	@Override public void onRobotDeath(RobotDeathEvent event) {
 		killServidorTCP(); //super.onRobotDeath(event);
 	}
-	
+
 }
 
 /**
