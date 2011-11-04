@@ -125,15 +125,16 @@ class ServerThread extends Thread {
 				getIstcp().ExecutarAcoes(AnalisePacotes.getLista(pacote)); //recebe as ordens para o robô
 				out.writeInt(0); //envia um int como resposta ao Jason
 				break;
-			case avisarJason:
-				//jason recebu um pacote do tipo 'continue a sua execução'
-				getIJason().Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
-				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
-				break;
-			case respostaJason: //atualiza o robô
-				//robô sendo avisado que deve parar de enviar mensagens ao Jason para ele acordar
-				getIstcp().JasonFoiAvisado();
-				break;
+				
+//			case avisarJason:
+//				//jason recebu um pacote do tipo 'continue a sua execução'
+//				getIJason().Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
+//				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
+//				break;
+//			case respostaJason: //atualiza o robô
+//				//robô sendo avisado que deve parar de enviar mensagens ao Jason para ele acordar
+//				getIstcp().JasonFoiAvisado();
+//				break;
 		}
 	}
 	

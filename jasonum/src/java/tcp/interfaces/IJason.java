@@ -1,7 +1,7 @@
 package tcp.interfaces;
 
-import DadosRobos.DadosRobos;
+//import DadosRobos.DadosRobos;
 
 public interface IJason {
-	public void Continuar(DadosRobos dados); //comando para o Jason para que ele continue a sua execução
+	//public void Continuar(DadosRobos dados); //comando para o Jason para que ele continue a sua execução
 }
