@@ -44,29 +44,11 @@ public class TCPClient /*implements Runnable*/ {
 				
 				//new Thread(new TCPClient(_portaServidor, _ip, _ictpc)).start();
 				_out.write(new CriadorPacotes().pacotePedirDados());
-				
-				System.out.println("resposta do servidor");
-				
+
 				// resposta do servidor
 				byte[] pacote = new byte[1000];
 				_in.read(pacote); //le o pacote
 				DadosRobos dadosR = AnalisePacotes.getDadosRobo(pacote);
-				
-//				DadosRobos dadosR = new DadosRobos();
-//				int tamanho = Integer.valueOf(_in.readInt()); // tamanho
-//				if (tamanho > 0) {
-//					dadosR.setIndiceRobo(_in.readInt());
-//					dadosR.setNomeRobo(_in.readUTF());
-//					dadosR.setEnergia(_in.readDouble());
-//					dadosR.setX(_in.readDouble());
-//					dadosR.setY(_in.readDouble());
-//					dadosR.setVelocidade(_in.readDouble());
-//					dadosR.setHeading(_in.readDouble());
-//					dadosR.setWidth(_in.readDouble());
-//					dadosR.setHeight(_in.readDouble());
-//					dadosR.setNumeroRound(_in.readInt());
-//					dadosR.setExecutandoAlgo(_in.readBoolean());
-//				}
 				
 				_out.close();
 				_in.close();
@@ -114,6 +96,34 @@ public class TCPClient /*implements Runnable*/ {
 			}
 		}
 	}
+	
+	/**
+	 * Avisa o Jason que o mesmo deve continuar a sua execução 
+	 * @dados dados do robo
+	 * */
+	public void avisarJason(DadosRobos dados){
+		try {
+			_clientSocket = new Socket(_ip, _portaServidor);
+			_out = new DataOutputStream(_clientSocket.getOutputStream());
+			_in = new DataInputStream(_clientSocket.getInputStream());
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host " + _ip);
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for the connection to the host " + _ip);
+		}
 
+		if (_clientSocket != null && _out != null && _in != null) {
+			try {
+				_out.write(new CriadorPacotes().pacoteAvisarJason(dados));
+				_out.close();
+				_in.close();
+				_clientSocket.close();
+				_clientSocket = null;
+			} catch (IOException e) {
+				System.err.println("[2] IOException:  " + e);
+				e.printStackTrace();
+			}
+		}
+	}
 	
 }

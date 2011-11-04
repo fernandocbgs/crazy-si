@@ -16,10 +16,7 @@ public class DadosRobos {
 	private double _width;
 	private double _height;
 	private int _numeroRound;
-	private boolean _executandoAlgo;
 	
-	public void setExecutandoAlgo(boolean _executandoAlgo) { this._executandoAlgo = _executandoAlgo;}
-	public boolean isExecutandoAlgo() { return _executandoAlgo; }
 	public void setIndiceRobo(int indiceRobo) { this._indiceRobo = indiceRobo; }
 	public int getIndiceRobo() { return _indiceRobo; }
 	public void setNomeRobo(String nomeRobo) { this._nomeRobo = nomeRobo; }
@@ -64,7 +61,7 @@ public class DadosRobos {
 	@Override
 	public String toString() {
 		return _indiceRobo + "-"+_nomeRobo+"-"+_energia+"-["+_x + "," + _y +"]" + "-" +
-			   _velocidade+"-"+_heading+"-"+_width+"-"+_height + "-" + _numeroRound+"-"+_executandoAlgo;
+			   _velocidade+"-"+_heading+"-"+_width+"-"+_height + "-" + _numeroRound;
 	}
 	
 	public void print(){
