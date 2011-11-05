@@ -46,6 +46,8 @@ public class MainTeste {
 		
 		arqOr.add(pastaOrigem + "RoboFazNada.class");
 		arqDes.add(pastaDestino + "RoboFazNada.class");
+		arqOr.add(pastaOrigem + "AvisarJason.class");
+		arqDes.add(pastaDestino + "AvisarJason.class");
 		arqOr.add(pastaOrigem + "ControlRobot.class");
 		arqDes.add(pastaDestino + "ControlRobot.class");
 		arqOr.add(pastaOrigem + "RobosScaneados.class");
