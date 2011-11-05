@@ -1,6 +1,8 @@
 package sample;
 
 import java.awt.Color;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 import robocode.DadosRobos.DadosRobos;
 import robocode.AdvancedRobot;
@@ -14,6 +16,8 @@ import robocode.WinEvent;
 //import tcp.TCPClient;
 import tcp.TCPServer;
 import tcp.interfaces.IRoboTCP;
+import tcp.pacotes.AnalisePacotes;
+import tcp.pacotes.CriadorPacotes;
 
 /**
  * Robo Faz Nada<br />
@@ -227,6 +231,29 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 		//super.onHitWall(e);
 		ahead(-10);
 		turnLeft(20);
+	}
+
+	/**
+     *analise de pacotes TCP 
+     * */
+	@Override
+	public void analisePacote(byte[] pacote, DataOutputStream out) throws IOException {
+		CriadorPacotes cp = new CriadorPacotes();
+		switch (AnalisePacotes.getTipo(pacote)) {
+			case pedirDados:
+				//servidor TCP do robo recebeu um pacote com a mensagem 'quero os seus dados'
+				out.write(cp.pacoteDadosRobos(getDadosRobo())); //envia os dados ao Jason
+				break;
+			case ordem:
+				//robo recebendo ordens
+				ExecutarAcoes(AnalisePacotes.getLista(pacote)); //recebe as ordens para o robô
+				out.writeInt(0); //envia um int como resposta ao Jason
+				break;
+//				case respostaJason: //atualiza o robô
+//				//robô sendo avisado que deve parar de enviar mensagens ao Jason para ele acordar
+//				getIstcp().JasonFoiAvisado();
+//				break;
+		}
 	}
 	
 }
