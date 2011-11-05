@@ -2,6 +2,8 @@ package ambiente;
 
 import interfaces.IMetodosJason;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,6 +12,7 @@ import robocode.DadosRobos.DadosRobos;
 import tcp.enviarmsg.EnviarMsgTCP;
 import tcp.enviarmsg.EnviarMsgTCP.TipoEnvio;
 import tcp.interfaces.IJason;
+import tcp.pacotes.AnalisePacotes;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
@@ -151,10 +154,22 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         }
         
     }
-
-
-
-
+    
+    
+    
+    /**
+     *analise de pacotes TCP 
+     * */
+	public void analisePacote(byte[] pacote, DataOutputStream out) throws IOException {
+		//CriadorPacotes cp = new CriadorPacotes();
+		switch (AnalisePacotes.getTipo(pacote)) {
+//			case avisarJason:
+//				//jason recebu um pacote do tipo 'continue a sua execução'
+//				getIJason().Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
+//				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
+//				break;
+		}
+	}
 
 }
 
