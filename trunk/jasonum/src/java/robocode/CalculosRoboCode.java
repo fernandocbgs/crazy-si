@@ -121,6 +121,71 @@ public class CalculosRoboCode {
 		return ordens;
 	}
 	
+	public List<String> getOrdensLudibriarInimigo(){
+//		List<String> ordens = new ArrayList<String>();
+//		
+//		double xRefem = _imj.getR2().getX();
+//    	double yI = _imj.getR3().getY();
+//    	double Ysalvador = _imj.getR1().getY();
+//        if (yI <= 200) { //por baixo
+//        	Ysalvador+=100;
+//        } else { //por cima
+//        	Ysalvador-=100;
+//        }
+//
+//		double qtdVirar = CalculoVetores.getQuantidadeVirar(
+//							_imj.getR1().getX(), _imj.getR1().getY(),  
+//							xRefem, Ysalvador, _imj.getR1().getHeading()
+//							);
+//		addOrdemVirar(ordens, qtdVirar);
+//		
+//		ordens.add("5");
+//		double distancia = getDistanciaInimigo();
+//		
+//		//System.out.println("distancia: " + distancia);
+//		if (distancia <= 50) {
+//			ordens.add(distancia + "");
+//		}  else {
+//			
+//			if (distancia > 100) {
+//				ordens.add((distancia-50.0) + "");
+//			} else {
+//				ordens.add(50 + "");
+//			}
+//		}
+//		return ordens;
+		
+		return getOrdensSalvarRefem(); //por enquanto....
+	}
+	
+	public List<String> getOrdensBloquearAgSave(){
+		List<String> ordens = new ArrayList<String>();
+		double qtdVirar = CalculoVetores.getQuantidadeVirar(
+		_imj.getR3().getX(), _imj.getR3().getY(),  
+		_imj.getR1().getX(), _imj.getR1().getY(), _imj.getR3().getHeading()
+		);
+		addOrdemVirar(ordens, qtdVirar);
+		
+		ordens.add("5");
+		double distancia = getDistanciaInimigo();
+		
+		//System.out.println("distancia: " + distancia);
+		if (distancia <= 50) {
+			ordens.add(distancia + "");
+		}  else {
+			
+			if (distancia > 100) {
+				ordens.add((distancia-50.0) + "");
+			} else {
+				ordens.add(50 + "");
+			}
+		}
+		return ordens;
+	}
+	
+	public double getDistanciaInimigo() {
+		return CalculoVetores.distanciaPontos(_imj.getR1().getX(), _imj.getR1().getY(),_imj.getR3().getX(), _imj.getR3().getY());
+	}
 	public double getDistanciaRefem() {
 		return CalculoVetores.distanciaPontos(_imj.getR1().getX(), _imj.getR1().getY(),_imj.getR2().getX(), _imj.getR2().getY());
 	}

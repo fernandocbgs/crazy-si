@@ -3,15 +3,13 @@
 /* Initial beliefs and rules */
 
 /* Initial goals */
-
-!bloquear.
+//!bloquear.
 
 /* Plans */
 
-+!bloquear : agenteProximo
-	<-  
-		.print("OPA TENHO QUE TRABALHAR");
-		!!bloquear.
-//+!bloquear : not agenteProximo <- .print("EITA").
-//+!bloquear <- !bloquear. //aguarda
-//+!bloquear : not agenteProximo <- .print("Ok").
++bloquear 
+	<-  !!bloquearSalvador;
+		.print("OPA TENHO QUE TRABALHAR").
++!bloquearSalvador : not pararBloquear
+	<- bloquearAction; !!bloquearSalvador.
++!bloquearAction : pararBloquear <- .print("#Parar de bloquear robo salvador").

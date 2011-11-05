@@ -30,7 +30,7 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
 	
 	public final String agSave = "agRobotSaver";
 	public final String agRefem = "agRefem";
-//	public final String agInimigo = "agInimigo";
+	public final String agInimigo = "agInimigo";
 	
 	public final int Width = 800;
 	public final int Height = 600;
@@ -40,16 +40,20 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
     private ModelSalvarRefem model;
     private DadosRobos r1 = null;
 	private DadosRobos r2 = null;
+	private DadosRobos r3 = null;
 	
 	public DadosRobos getR1() { return r1; }
 	public DadosRobos getR2() { return r2; }
+	public DadosRobos getR3() { return r3; }
 	
 	public String getAgSave() { return agSave; }
 	public String getAgRefem() { return agRefem; }
+	public String getAgInimigo() { return agInimigo; }
 	public double getXF() { return xF; }
 	public double getYF() { return yF; }
 	public int getPorta(int indice) { return _portaRobos.get(indice); }
 	public String getIp() { return _ip; }
+	
 	
     @Override public void init(String[] args) {
     	iniciaServidorTCP();
@@ -65,6 +69,7 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
     	_portaRobos = new ArrayList<Integer>();
     	_portaRobos.add(7891);
     	_portaRobos.add(7892);
+    	_portaRobos.add(7893);
     	_ip = "localhost";
     	//recupera os dados dos robos via TCP
     	atualizarDadosRobosViaTCP();
@@ -75,6 +80,8 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
 			r1 = r;
 		} else if (indice==1) {
 			r2 = r;
+		} else if (indice==2) {
+			r3 = r;
 		}
 	}
     
@@ -110,6 +117,10 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         		model.SeguirRoboSalvador();
         	} else if (action.equals(Literal.parseLiteral("voltarMA"))) {
         		model.VoltarMinhaArea();
+        	} else if (action.equals(Literal.parseLiteral("bloquearAction"))) {
+        		model.BloquearAgSave();
+        		//System.out.println("#########AG inimigo bloquearAction ");
+        		
 //            } else if (action.getFunctor().equals(move_towards)) {
 //                //int x = (int)((NumberTerm)action.getTerm(0)).solve();
 //                //int y = (int)((NumberTerm)action.getTerm(1)).solve();
@@ -139,20 +150,22 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         //Location ag_refem = model.getAgPos(1);
         
         atualizarDadosRobosViaTCP(); //recupera os dados dos robos via TCP
-        if (r1 == null || r2 == null) {return;}
+        if (r1 == null || r2 == null || r3 == null) {return;}
         
         Literal pos1 = Literal.parseLiteral("pos("+agSave+"," + r1.getX() + "," + r1.getY() + ")");
         Literal pos2 = Literal.parseLiteral("pos("+agSave+"," + r2.getX() + "," + r2.getX() + ")");
+        Literal pos3 = Literal.parseLiteral("pos("+agInimigo+"," + r3.getX() + "," + r3.getX() + ")");
         
         addPercept(pos1);
         addPercept(pos2);
+        addPercept(pos3);
     }
     
     public void atualizarDadosRobosViaTCP(){
     	//recupera os dados dos robos via TCP
-    	getDados(0); getDados(1);
+    	getDados(0); getDados(1); getDados(2);
         
-        if (r1 == null || r2 == null) {return;}
+    	if (r1 == null || r2 == null || r3 == null) {return;}
         
         if (r1.getNumeroRound() > _numeroRound) {
         	_numeroRound = r1.getNumeroRound();
@@ -168,8 +181,15 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
     
 	public void Continuar(DadosRobos dados) {
 		//System.out.println("### DEVO CONTINUAR");
+//		if (dados.getIndiceRobo()==0) {
+//			r1 = dados;
+//			getDados(1);
+//		} else {
+//			r2 = dados;
+//			getDados(0);
+//		}
 		_esperar = false;
-		atualizarDadosRobosViaTCP();
+		if (dados!=null) atualizarDadosRobosViaTCP();
 	}
 
 	private void iniciaServidorTCP() {
