@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.logging.Logger;
 import robocode.ModelSalvarRefem;
 import robocode.DadosRobos.DadosRobos;
+import tcp.TCPServer;
 import tcp.enviarmsg.EnviarMsgTCP;
 import tcp.enviarmsg.EnviarMsgTCP.TipoEnvio;
 import tcp.interfaces.IJason;
 import tcp.pacotes.AnalisePacotes;
+import tcp.pacotes.CriadorPacotes;
 import jason.asSyntax.Literal;
 import jason.asSyntax.Structure;
 import jason.environment.Environment;
@@ -22,6 +24,10 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
 	private String _ip;
 	private int _numeroRound = 0;
 
+	private boolean _esperar = false;
+	private TCPServer _server = null;
+	private int _portaServidorTCPJason = 7770;
+	
 	public final String agSave = "agRobotSaver";
 	public final String agRefem = "agRefem";
 //	public final String agInimigo = "agInimigo";
@@ -34,7 +40,7 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
     private ModelSalvarRefem model;
     private DadosRobos r1 = null;
 	private DadosRobos r2 = null;
-    
+	
 	public DadosRobos getR1() { return r1; }
 	public DadosRobos getR2() { return r2; }
 	
@@ -46,7 +52,7 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
 	public String getIp() { return _ip; }
 	
     @Override public void init(String[] args) {
-    	//iniciaServidorTCP();
+    	iniciaServidorTCP();
     	configuracoes();
         model = new ModelSalvarRefem(Width, Height, this, this);
         updatePercepts();
@@ -77,7 +83,6 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
     	en.start();
     }
     
-    @SuppressWarnings("unused")
 	private void aguardar(long tempo){
     	try { Thread.sleep(tempo); } catch (InterruptedException e) { e.printStackTrace(); }
     }
@@ -89,9 +94,13 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         atualizarDadosRobosViaTCP();
         if (r1 == null || r2 == null) {return false;}
         
+		while (_esperar) { // espera, até que o robo termine a sua execução
+			//System.out.println("### JASON ESTOU ESPERANDO....");
+			aguardar(600);
+		}
+		
         //action.getFunctor().equals
-        //System.err.println("action: " + action);
-        
+		
         try {
         	if (action.equals(Literal.parseLiteral("aproximar")) ){
             	model.AproximarRefem();
@@ -106,6 +115,7 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
 //                //int y = (int)((NumberTerm)action.getTerm(1)).solve();
 //                model.moveTowards();
             } else {
+            	//se nenhuma ação, significa que terminou os planos
                 return false;
             }
         } catch (Exception e) {
@@ -113,10 +123,11 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         }
         
         updatePercepts();
-
+        
+        _esperar = true;
+        
         //para nós humanos
-        //aguardar(200);
-        try { Thread.sleep(200); } catch (InterruptedException e) { e.printStackTrace(); }
+        aguardar(200);
         return true;
     }
     
@@ -155,24 +166,43 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         
     }
     
-    
+	public void Continuar(DadosRobos dados) {
+		//System.out.println("### DEVO CONTINUAR");
+		_esperar = false;
+		atualizarDadosRobosViaTCP();
+	}
+
+	private void iniciaServidorTCP() {
+		if (_server == null) {
+			_server = new TCPServer(_portaServidorTCPJason);
+			_server.setIJason(this);
+			_server.start();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private void killServidorTCP() {
+		_server.parar(); // _server.stop();
+		_server = null;
+	}
     
     /**
      *analise de pacotes TCP 
      * */
 	public void analisePacote(byte[] pacote, DataOutputStream out) throws IOException {
-		//CriadorPacotes cp = new CriadorPacotes();
+		CriadorPacotes cp = new CriadorPacotes();
 		switch (AnalisePacotes.getTipo(pacote)) {
-//			case avisarJason:
-//				//jason recebu um pacote do tipo 'continue a sua execução'
-//				getIJason().Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
-//				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
-//				break;
+			case avisarJasonToJason:
+				//System.out.println("RECEBI UM PACOTE - JASON");
+				//jason recebu um pacote do tipo 'continue a sua execução'
+				this.Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
+				//System.out.println("JASON - RESPOSTA via OUT - Cliente ROBOT TCP");
+				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
+				break;
 		}
 	}
 
 }
-
 
 /**
  * 0 - parar
@@ -182,33 +212,3 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
  * 4 - virar direita
  * 5 - andar
  **/
-//private boolean _esperar = false;
-//private TCPServer _server = null;
-//private int _portaServidorTCPJason = 7770;
-
-//while (_esperar) { //espera, até que o robo termine a sua execução
-//System.out.println("### JASON ESTOU ESPERANDO....");
-//aguardar(600);
-//}
-
-//public void Continuar(DadosRobos dados) {
-//System.out.println("### DEVO CONTINUAR");
-//_esperar = false;
-//}
-
-//if (en.isTerminou()) { //enviou uma ordem
-//_esperar = true;
-//}
-
-//private void iniciaServidorTCP(){
-//if (_server == null) {
-//	_server = new TCPServer(_portaServidorTCPJason);
-//	_server.setIJason(this);
-//	_server.start();
-//}
-//}
-
-//private void killServidorTCP(){
-//_server.parar(); //_server.stop();
-//_server = null;
-//}

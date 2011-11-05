@@ -14,27 +14,30 @@ public class CriadorPacotes {
 	// int = 4, short = 2, long = 8
 	
 	public enum TipoPacotes {
-		pedirDados,
-		ordem,
-		retornoDados,
-		avisarJason, respostaJason
+		pedirDadosToRobot,
+		ordemToRobot,
+		retornoDadosToJason,
+		avisarJasonToJason, respostaJasonToRobot
+		//modoAvisarJasonToRobot
 	}
 	public int getIntTipo(TipoPacotes tp){
 		switch(tp){
-			case pedirDados: return 0;
-			case ordem: return 1;
-			case retornoDados: return 2;
-			case avisarJason: return 3;
-			case respostaJason: return 4;
+			case pedirDadosToRobot: return 0;
+			case ordemToRobot: return 1;
+			case retornoDadosToJason: return 2;
+			case avisarJasonToJason: return 3;
+			case respostaJasonToRobot: return 4;
+			//case modoAvisarJasonToRobot: return 5;
 		}
 		return 0;
 	}
 	public TipoPacotes getTipoPacote(int tp){
-		if(tp==0){return TipoPacotes.pedirDados;}
-		else if (tp==1) {return TipoPacotes.ordem;}
-		else if (tp==2) {return TipoPacotes.retornoDados;}
-		else if (tp==3) {return TipoPacotes.avisarJason;}
-		else if (tp==4) {return TipoPacotes.respostaJason;}
+		if(tp==0){return TipoPacotes.pedirDadosToRobot;}
+		else if (tp==1) {return TipoPacotes.ordemToRobot;}
+		else if (tp==2) {return TipoPacotes.retornoDadosToJason;}
+		else if (tp==3) {return TipoPacotes.avisarJasonToJason;}
+		else if (tp==4) {return TipoPacotes.respostaJasonToRobot;}
+		//else if (tp==5) {return TipoPacotes.modoAvisarJasonToRobot;}
 		return null;
 	}
 	//---------------------------------------------------
@@ -43,12 +46,12 @@ public class CriadorPacotes {
 		byte[] conteudo = new byte[s];
 		ByteBuffer bb = ByteBuffer.wrap(conteudo);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.putInt(getIntTipo(TipoPacotes.pedirDados));
+		bb.putInt(getIntTipo(TipoPacotes.pedirDadosToRobot));
 		bb.putShort((short)0); //informa que não tem mais nada na msg além do tipo
 		return conteudo;
 	}
 	public byte[] pacoteOrdem(List<String> params){
-		return pacoteList(TipoPacotes.ordem, params);
+		return pacoteList(TipoPacotes.ordemToRobot, params);
 	}
 	
 	public byte[] pacoteDadosRobos(DadosRobos dados){
@@ -56,7 +59,7 @@ public class CriadorPacotes {
 		byte[] conteudo = new byte[s];
 		ByteBuffer bb = ByteBuffer.wrap(conteudo);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.putInt(getIntTipo(TipoPacotes.retornoDados)); //4
+		bb.putInt(getIntTipo(TipoPacotes.retornoDadosToJason)); //4
 		pacoteDadosRobo(bb, dados); //escreve os dados do robô
 		return conteudo;
 	}
@@ -66,7 +69,7 @@ public class CriadorPacotes {
 		byte[] conteudo = new byte[s];
 		ByteBuffer bb = ByteBuffer.wrap(conteudo);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.putInt(getIntTipo(TipoPacotes.avisarJason)); //4
+		bb.putInt(getIntTipo(TipoPacotes.avisarJasonToJason)); //4
 		pacoteDadosRobo(bb, dados); //escreve os dados do robô
 		return conteudo;
 	}
@@ -76,7 +79,7 @@ public class CriadorPacotes {
 		byte[] conteudo = new byte[s];
 		ByteBuffer bb = ByteBuffer.wrap(conteudo);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.putInt(getIntTipo(TipoPacotes.respostaJason)); //4
+		bb.putInt(getIntTipo(TipoPacotes.respostaJasonToRobot)); //4
 		return conteudo;
 	}
 	

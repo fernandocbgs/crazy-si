@@ -18,7 +18,7 @@ MAS mars {
    agents:
        agRobotSaver;
        agRefem;
-       //agInimigo; //por enquanto n�o
+       //agInimigo; //por enquanto not
 
    aslSourcePath: "src/asl"; 
 }
