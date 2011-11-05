@@ -12,6 +12,7 @@ import tcp.interfaces.IRoboTCP;
 /**
  * Compila e copia os arquivos .class para a pasta correta e executa o ambiente robocode
  * -Ddebug=true -Djava.security.main -DJava.security.policy=policy -Xmx512M -DNOSECURITY=true
+ * -Ddebug=true -DNOSECURITY=true
  * */
 public class MainTeste {
 

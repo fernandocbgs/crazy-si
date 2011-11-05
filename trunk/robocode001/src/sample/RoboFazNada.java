@@ -2,7 +2,7 @@ package sample;
 
 import java.awt.Color;
 import java.util.List;
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
 import robocode.DeathEvent;
