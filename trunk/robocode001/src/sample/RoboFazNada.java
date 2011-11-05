@@ -13,7 +13,6 @@ import robocode.HitWallEvent;
 import robocode.RobotDeathEvent;
 import robocode.StatusEvent;
 import robocode.WinEvent;
-//import tcp.TCPClient;
 import tcp.TCPClient;
 import tcp.TCPServer;
 import tcp.interfaces.IRoboTCP;
@@ -31,7 +30,6 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	private boolean pausar = false;
 	private int _portaServidorTCP = 7890;
 	
-	private boolean _pararAvisarJason = false;
 	private AvisarJason _avJ;
 	private int _portaServidorTCPJason = 7770;
 	private String _ipTCPJason = "localhost";
@@ -65,7 +63,7 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	}
 	private int getPortaServidorRobo(){ return _portaServidorTCP + getIndiceRobo(); }
 	private void AvisarJason(){
-		if (_pararAvisarJason) return; //modo para avisar o jason foi desabilitado
+		if (getIndiceRobo() == 3) { /*robô inimigo*/ return;}
 		_avJ = new AvisarJason(_portaServidorTCPJason, _ipTCPJason, this); _avJ.start(); 
 	}
 	
@@ -204,6 +202,7 @@ public class RoboFazNada extends AdvancedRobot implements IRoboTCP {
 	@Override
 	public void onHitRobot(HitRobotEvent e) {
 		ahead(-10); //super.onHitRobot(e);
+		turnLeft(20);
 	}
 	
 	@Override
