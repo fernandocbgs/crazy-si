@@ -1,6 +1,6 @@
 package Matematica;
 
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 
 public class CalculoVetores {
     public static XY getVetor(XY p1, XY p2){

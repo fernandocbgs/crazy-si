@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 import tcp.pacotes.AnalisePacotes;
 import tcp.pacotes.CriadorPacotes;
 
