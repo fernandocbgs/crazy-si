@@ -11,7 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 import Matematica.CalculoVetores;
 import tcp.TCPClient;
 import java.awt.event.ActionListener;
