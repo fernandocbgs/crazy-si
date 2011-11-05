@@ -6,13 +6,13 @@ import robocode.DadosRobos.DadosRobos;
 import tcp.TCPClient;
 
 public class EnviarMsgTCP extends Thread {
-	public enum TipoEnvio {pedirDados, enviarOrdens}
+	public enum TipoEnvio {pedirDados, enviarOrdens, atualizarModoAvisarJason}
 	private TipoEnvio _tipo;
 	private int _porta; private String _ip;
 	private List<String> _ordens = null;
 	private IMetodosJason _imj;
 	private int _indice;
-	
+
 	public void setOrdens(List<String> ordens) { this._ordens = ordens; }
 	public List<String> getOrdens() { return _ordens; }
 	
@@ -44,4 +44,5 @@ public class EnviarMsgTCP extends Thread {
 		cli.enviarOrdem(getOrdens());
 		cli = null;
 	}
+	
 }
