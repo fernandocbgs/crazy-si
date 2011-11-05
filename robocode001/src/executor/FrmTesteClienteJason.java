@@ -441,6 +441,8 @@ public class FrmTesteClienteJason extends JFrame {
 					cli2.enviarOrdem(ordem);
 				} else if (p == 10) {
 					ordem10(r1, r2, cli1, cli2);
+				} else if (p == 11) {
+					ordem11(r2);
 				}
 			}
 		});
@@ -453,7 +455,7 @@ public class FrmTesteClienteJason extends JFrame {
 		cboNumeroPlano.setBackground(Color.WHITE);
 		cboNumeroPlano.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		cboNumeroPlano.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"}));
-		cboNumeroPlano.setSelectedIndex(9);
+		cboNumeroPlano.setSelectedIndex(10);
 		cboNumeroPlano.setBounds(191, 60, 117, 20);
 		contentPane.add(cboNumeroPlano);
 	}
@@ -507,6 +509,24 @@ public class FrmTesteClienteJason extends JFrame {
 		ordem.add("5");
 		ordem.add("" + (600/2 - r2.getY() - 50));
 		cli2.enviarOrdem(ordem);
+	}
+	private void ordem11(DadosRobos r2) {
+		TCPClient cli3 = new TCPClient(7893);
+		DadosRobos r3 = cli3.pedirDados();
+
+		double qtdVirar = CalculoVetores.getQuantidadeVirar(
+				r3.getX(), r3.getY(),  
+				r2.getX(), r2.getY(), r3.getHeading()
+			);
+		
+		List<String> ordem = new ArrayList<String>();
+		ordem.add("3");
+		ordem.add("" + qtdVirar);
+		ordem.add("5");
+		double dis = CalculoVetores.distanciaPontos(r3.getX(), r3.getY(), r2.getX(), r2.getY());
+		dis -= 60.0;
+		ordem.add("" + dis);
+		cli3.enviarOrdem(ordem);
 	}
 }
 //http://www.it.uc3m.es/jvillena/irc/practicas/05-06/robocode/Definitivo.pdf

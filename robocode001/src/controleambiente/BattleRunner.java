@@ -54,9 +54,9 @@ public class BattleRunner {
     	//FRAME Servidor TCP
     	//new FrameServidorTCP().setVisible(true);
     	//só vou colocar 2 robos
-    	_meusRobos = "sample.RoboFazNada"
-    			     +",sample.RoboFazNada"
-    			     //+ ",sample.RoboFazNada" 
+    	_meusRobos = "sample.RoboFazNada" //ag save
+    			     +",sample.RoboFazNada" //ag refem
+    			     + ",sample.RoboFazNada" //ag inimigo
     			     //+ ",sample.RoboFazNada"
     			     //+",sample.Definitivo"
     			     //+",sample.Definitivo"
