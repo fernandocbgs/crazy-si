@@ -2,11 +2,8 @@ package tcp;
 
 import java.net.*;
 import java.io.*;
-
 import tcp.interfaces.IJason;
 import tcp.interfaces.IRoboTCP;
-import tcp.pacotes.AnalisePacotes;
-import tcp.pacotes.CriadorPacotes;
 
 /**
  * site base http://www.ase.md/~aursu/ClientServerThreads.html
@@ -97,45 +94,15 @@ class ServerThread extends Thread {
 			
 			byte[] pacote = new byte[1000];
 			_in.read(pacote); //le o pacote
-		
-			analisePacote(pacote, _out); //analise do pacote
 			
+			if (_irobotcp!=null) _irobotcp.analisePacote(pacote, _out); //analise do pacote
+			else if (_iJason!=null) _iJason.analisePacote(pacote, _out); //analise do pacote
+					
 			_in.close();
 			_out.close();
 			
 			_clientSocket.close();
 		} catch (IOException e) {}
-	}
-	
-	/**
-	 * Analise do pacote de dados recebido no servidor
-	 * */
-	private void analisePacote(byte[] pacote, DataOutputStream out) throws IOException{
-		//pacote - o que foi recebido pelo servidor
-		//out - o que será enviado ao cliente TCP
-		
-		CriadorPacotes cp = new CriadorPacotes();
-		switch (AnalisePacotes.getTipo(pacote)) {
-			case pedirDados:
-				//servidor TCP do robo recebeu um pacote com a mensagem 'quero os seus dados'
-				out.write(cp.pacoteDadosRobos(getIstcp().getDadosRobo())); //envia os dados ao Jason
-				break;
-			case ordem:
-				//robo recebendo ordens
-				getIstcp().ExecutarAcoes(AnalisePacotes.getLista(pacote)); //recebe as ordens para o robô
-				out.writeInt(0); //envia um int como resposta ao Jason
-				break;
-				
-//			case avisarJason:
-//				//jason recebu um pacote do tipo 'continue a sua execução'
-//				getIJason().Continuar(AnalisePacotes.getDadosRobo(pacote)); //recebe os dados do robô
-//				out.write(cp.pacoteRespostaJason()); //envia uma resposta ao cliente robô
-//				break;
-//			case respostaJason: //atualiza o robô
-//				//robô sendo avisado que deve parar de enviar mensagens ao Jason para ele acordar
-//				getIstcp().JasonFoiAvisado();
-//				break;
-		}
 	}
 	
 }
