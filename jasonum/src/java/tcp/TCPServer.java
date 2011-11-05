@@ -95,8 +95,8 @@ class ServerThread extends Thread {
 			byte[] pacote = new byte[1000];
 			_in.read(pacote); //le o pacote
 			
-			if (_irobotcp!=null) _irobotcp.analisePacote(pacote, _out); //analise do pacote
-			else if (_iJason!=null) _iJason.analisePacote(pacote, _out); //analise do pacote
+			if (getIstcp()!=null) getIstcp().analisePacote(pacote, _out); //analise do pacote
+			else if (getIJason()!=null) getIJason().analisePacote(pacote, _out); //analise do pacote
 					
 			_in.close();
 			_out.close();
