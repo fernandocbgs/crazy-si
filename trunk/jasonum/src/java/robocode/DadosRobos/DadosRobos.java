@@ -1,4 +1,4 @@
-package DadosRobos;
+package robocode.DadosRobos;
 
 //import java.util.List;
 

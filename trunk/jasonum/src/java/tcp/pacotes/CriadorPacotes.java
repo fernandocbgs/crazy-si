@@ -3,8 +3,7 @@ package tcp.pacotes;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
-
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 
 /**
  * Cria pacotes

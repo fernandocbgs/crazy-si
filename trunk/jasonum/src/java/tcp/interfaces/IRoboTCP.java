@@ -1,8 +1,7 @@
 package tcp.interfaces;
 
 import java.util.List;
-
-import DadosRobos.DadosRobos;
+import robocode.DadosRobos.DadosRobos;
 
 public interface IRoboTCP {
 	public DadosRobos getDadosRobo(); //lista com os dados do robo
