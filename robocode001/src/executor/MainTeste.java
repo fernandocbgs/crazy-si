@@ -23,6 +23,7 @@ public class MainTeste {
 	
 	@SuppressWarnings("unused")
 	public static void roboBattle(){
+		ConstantesExecucao constantes = new ConstantesExecucao();
 		//apenas para compilar
 		RoboFazNada rb; IRoboTCP is;
 		
@@ -31,9 +32,9 @@ public class MainTeste {
 		posicoesIniciais = "";
 		
 		//copia os arquivos para o diretorio padrao do robocode
-		String pProjeto = "D:/Meus Documentos/Emerson/UTFPR/6º Semestre/Sistemas Inteligentes/Parte 2/TrabalhoFinal/robocode001";
-		String pJason = "C:/Users/Emerson/workspace/jasonum/bin/classes";
-		String pRobocode = "C:/robocode";
+		String pProjeto =  constantes.caminhoProjetoRobocode;
+		String pJason = constantes.caminhoProjetoJason;
+		String pRobocode = constantes.caminhoRobocode;
 		
 		String pastaOrigem = pProjeto + "/bin/sample/";
 		String pastaDestino = pRobocode + "/robots/sample/";
@@ -92,7 +93,7 @@ public class MainTeste {
 	}
 	
 	/**
-	 * Remove a parte do arquivo e cria a pasta destino se ela não existir
+	 * Remove a parte do arquivo e cria a pasta destino se ela nï¿½o existir
 	 * */
 	private static void CriarPastas(String pastaDestino){
 		pastaDestino = pastaDestino.replace("\\", "/");
