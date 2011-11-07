@@ -1,5 +1,8 @@
 package controleambiente;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import robocode.control.*;
 import robocode.control.events.*;
 
@@ -23,7 +26,8 @@ import robocode.control.events.*;
  * */
 public class BattleRunner {
 	
-	private String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
+	//private String _meusRobos = "sample.RoboFazNada, sample.FnlBot, sample.Aspirant, sample.Candidate120, sample.MeuPrimeiroRobo";
+	private List<String> _robos;
 	private String pastaRoboCode = "C:/Robocode"; //C:/Robocode
 	private int numberOfRounds = 1; //Falta reiniciar o jason após o inicio da batalha
 	private int _width = 800, _heigth = 600;
@@ -39,29 +43,28 @@ public class BattleRunner {
 	 * */
 	private String _initialPositions;
 	
-    public void setInitialPositions(String initialPositions) { this._initialPositions = initialPositions; }
+    public void setRobos(List<String> _robos) { this._robos = _robos; }
+	public List<String> getRobos() { return _robos; }
+	public void setInitialPositions(String initialPositions) { this._initialPositions = initialPositions; }
 	public String getInitialPositions() { return _initialPositions; }
 	public void setPastaRoboCode(String pastaRoboCode) { this.pastaRoboCode = pastaRoboCode; }
 	public String getPastaRoboCode() { return pastaRoboCode; }
    
-	public BattleRunner(){}
-	public BattleRunner(String pastaRoboCode, String posicoesIniciais){ 
+	public BattleRunner(String pastaRoboCode, String posicoesIniciais){
 		setPastaRoboCode(pastaRoboCode);
 		setInitialPositions(posicoesIniciais);
+		_robos = new ArrayList<String>();
+		_robos.add("sample.RoboFazNada");
+		_robos.add("sample.RoboFazNada");
+		_robos.add("sample.RoboFazNada");
+	}
+	public BattleRunner(String pastaRoboCode, String posicoesIniciais, List<String> robos){ 
+		setPastaRoboCode(pastaRoboCode);
+		setInitialPositions(posicoesIniciais);
+		setRobos(robos);
 	}
 	
     public void iniciar(){
-    	//FRAME Servidor TCP
-    	//new FrameServidorTCP().setVisible(true);
-    	//só vou colocar 2 robos
-    	_meusRobos = "sample.RoboFazNada" //ag save
-    			     +",sample.RoboFazNada" //ag refem
-    			     + ",sample.RoboFazNada" //ag inimigo
-    			     //+ ",sample.RoboFazNada"
-    			     //+",sample.Definitivo"
-    			     //+",sample.Definitivo"
-    				 ;
-    	
         // Create the RobocodeEngine
         //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
         RobocodeEngine engine = new RobocodeEngine(new java.io.File(getPastaRoboCode())); // pasta padrão C:/Robocode
@@ -72,7 +75,7 @@ public class BattleRunner {
         
         // Setup the battle specification
         BattlefieldSpecification battlefield = new BattlefieldSpecification(_width, _heigth); // 800x600
-        RobotSpecification[] selectedRobots = engine.getLocalRepository(_meusRobos);
+        RobotSpecification[] selectedRobots = engine.getLocalRepository(getMyRobos());
         BattleSpecification battleSpec = new BattleSpecification(numberOfRounds, battlefield, selectedRobots);
         
        
@@ -90,6 +93,15 @@ public class BattleRunner {
         engine.close();
         // Make sure that the Java VM is shut down properly
         System.exit(0);
+    }
+    
+    private String getMyRobos(){
+    	String rt = "";
+    	for (String s : getRobos()) {
+    		rt += s + ",";
+    	}
+    	rt = rt.substring(0,rt.length()-1);
+    	return rt;
     }
     
 //    @SuppressWarnings("unused")

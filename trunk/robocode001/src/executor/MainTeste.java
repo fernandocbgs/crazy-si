@@ -88,8 +88,15 @@ public class MainTeste {
 			}
 		}
 		
+		
+		//ROBOS:
+		ArrayList<String> robos = new ArrayList<String>();
+		robos.add("sample.RoboFazNada");
+		robos.add("sample.RoboFazNada");
+		robos.add("sample.RoboFazNada");
+		
 		//C:/Robocode
-		new BattleRunner(pRobocode, posicoesIniciais).iniciar();
+		new BattleRunner(pRobocode, posicoesIniciais, robos).iniciar();
 	}
 	
 	/**
