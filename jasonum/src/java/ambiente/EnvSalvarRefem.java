@@ -20,6 +20,7 @@ import jason.asSyntax.Structure;
 import jason.environment.Environment;
 
 public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason {
+	private int _numeroRobos = 3;  //representa o número de robôs que existem no ambiente robocode
 	private List<Integer> _portaRobos;
 	private String _ip;
 	private int _numeroRound = 0;
@@ -118,7 +119,9 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         	} else if (action.equals(Literal.parseLiteral("voltarMA"))) {
         		model.VoltarMinhaArea();
         	} else if (action.equals(Literal.parseLiteral("bloquearAction"))) {
-        		model.BloquearAgSave();
+        		if (_numeroRobos >= 3) {
+        			model.BloquearAgSave();
+        		}
         		//System.out.println("#########AG inimigo bloquearAction ");
         		
 //            } else if (action.getFunctor().equals(move_towards)) {
@@ -150,22 +153,26 @@ public class EnvSalvarRefem extends Environment implements IJason, IMetodosJason
         //Location ag_refem = model.getAgPos(1);
         
         atualizarDadosRobosViaTCP(); //recupera os dados dos robos via TCP
-        if (r1 == null || r2 == null || r3 == null) {return;}
-        
-        Literal pos1 = Literal.parseLiteral("pos("+agSave+"," + r1.getX() + "," + r1.getY() + ")");
-        Literal pos2 = Literal.parseLiteral("pos("+agSave+"," + r2.getX() + "," + r2.getX() + ")");
-        Literal pos3 = Literal.parseLiteral("pos("+agInimigo+"," + r3.getX() + "," + r3.getX() + ")");
-        
-        addPercept(pos1);
-        addPercept(pos2);
-        addPercept(pos3);
+        if (r1 == null || r2 == null /*|| r3 == null*/) {return;}
+        if (r1!=null) {
+        	Literal pos1 = Literal.parseLiteral("pos("+agSave+"," + r1.getX() + "," + r1.getY() + ")");
+        	addPercept(pos1);
+        }
+        if (r2!=null) {
+        	Literal pos2 = Literal.parseLiteral("pos("+agSave+"," + r2.getX() + "," + r2.getX() + ")");
+        	addPercept(pos2);
+        }
+        if (r3!=null) {
+        	Literal pos3 = Literal.parseLiteral("pos("+agInimigo+"," + r3.getX() + "," + r3.getX() + ")");
+        	addPercept(pos3);
+        }
     }
     
     public void atualizarDadosRobosViaTCP(){
     	//recupera os dados dos robos via TCP
-    	getDados(0); getDados(1); getDados(2);
+    	for (int i = 0; i < _numeroRobos; i++) { getDados(i); }
         
-    	if (r1 == null || r2 == null || r3 == null) {return;}
+    	if (r1 == null || r2 == null /*|| r3 == null*/) {return;}
         
         if (r1.getNumeroRound() > _numeroRound) {
         	_numeroRound = r1.getNumeroRound();

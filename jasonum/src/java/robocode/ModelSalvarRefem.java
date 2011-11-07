@@ -115,6 +115,7 @@ public class ModelSalvarRefem extends GridWorldModel {
     }
     
     private boolean pertoInimigo() {
+    	if (_imj.getR3()==null) return false;
     	return new CalculosRoboCode(_imj).getDistanciaInimigo() <= 300.0;
     }
     private boolean pertoRefem() {
