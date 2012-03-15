@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class MarsEnv extends Environment {
 
-    public static final int GSize = 7; // grid size
+    public static final int GSize = 10; // grid size
     public static final int GARB  = 16; // garbage code in grid model
 
     public static final Term    ns = Literal.parseLiteral("next(slot)");
@@ -116,6 +116,8 @@ public class MarsEnv extends Environment {
             add(GARB, 3, 0);
             add(GARB, GSize-1, 0);
             add(GARB, 1, 2);
+            add(GARB, 5, 5);
+            add(GARB, 5, 6);
             add(GARB, 0, GSize-2);
             add(GARB, GSize-1, GSize-1);
         }
@@ -191,11 +193,16 @@ public class MarsEnv extends Environment {
         public void draw(Graphics g, int x, int y, int object) {
             switch (object) {
                 case MarsEnv.GARB: drawGarb(g, x, y);  break;
+                
             }
         }
 
         @Override
         public void drawAgent(Graphics g, int x, int y, Color c, int id) {
+        	if(id == 1)
+        	{
+        		return;
+        	}
             String label = "R"+(id+1);
             c = Color.blue;
             if (id == 0) {
