@@ -51,9 +51,11 @@ public class MarsEnv extends Environment {
                 model.pickGarb();
             } else if (action.equals(dg)) {
                 model.dropGarb();
-            } else if (action.equals(bg)) {
-                model.burnGarb();
-            } else {
+//            } else if (action.equals(bg)) {
+//                model.burnGarb();
+//            } else {
+            }
+           else {
                 return false;
             }
         } catch (Exception e) {
